@@ -5,7 +5,12 @@ export class Home extends Component {
 
   render() {
     return (
+
       <div>
+
+          <div className="bg-blue-500 text-white p-4 bg-red">
+              This is a Tailwind CSS styled div.
+          </div>
         <h1>Hello, world!</h1>
         <p>Welcome to your new single-page application, built with:</p>
         <ul>
