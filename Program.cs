@@ -1,3 +1,10 @@
+// EF Core uses this method at design time to access the DbContext
+static IHostBuilder CreateHostBuilder(string[] args)
+    => Host.CreateDefaultBuilder(args)
+           .ConfigureWebHostDefaults(webBuilder => webBuilder.UseStartup<Startup>());
+
+CreateHostBuilder(args).Build().Run();
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.

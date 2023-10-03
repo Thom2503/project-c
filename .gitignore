@@ -250,3 +250,5 @@ _Pvt_Extensions
 .[Vv]scode/
 
 [Tt]ests_lokaal/
+
+db/project.db
