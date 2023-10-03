@@ -15,5 +15,5 @@ public class Accounts
     public string Function { get; set; }
 
     [Required]
-    public int IsAdmin { get; set; }
+    public bool IsAdmin { get; set; }
 }
