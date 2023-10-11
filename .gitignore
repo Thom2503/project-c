@@ -251,4 +251,6 @@ _Pvt_Extensions
 
 [Tt]ests_lokaal/
 
-db/project.db
+db/*.db
+*.db
+*.sqlite3
