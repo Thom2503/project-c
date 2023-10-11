@@ -1,0 +1,90 @@
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700;800&display=swap');
+
+* {
+  font-family: 'Open Sans';
+}
+/* Provide sufficient contrast against white background */
+a {
+  color: #0366d6;
+}
+
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+code {
+  color: #E01A76;
+}
+
+.btn-primary {
+  color: #fff;
+  background-color: #1b6ec2;
+  border-color: #1861ac;
+}
+
+.container {
+  max-width: 100% !important;
+  padding: 0 !important;
+}
+
+/**( agenda )**/
+table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+td {
+  border: 2px solid #D7D7D7;
+  text-align: center;
+  padding: 0.5em;
+}
+
+td a {
+  display: block;
+  width: 100%;
+  height: 100%;
+  color: white;
+}
+
+td a:empty::after {
+  content: "new";
+}
+
+th {
+  text-align: center;
+  padding: 0.5em;
+}
+
+@media only screen and (max-width: 600px) {
+  .table-wrapper {
+    overflow-x: auto;
+  }
+
+  table {
+    width: 100%;
+  }
+
+  tr {
+    display: flex;
+    flex-wrap: nowrap;
+  }
+
+  td a, th a {
+    display: block;
+    text-align: center;
+    width: 60vw;
+  }
+
+  .fixed {
+    position: sticky;
+    left: 0;
+    z-index: 1;
+    background-color: white;
+    flex: 0 0 auto;
+    width: 40%;
+  }
+}
