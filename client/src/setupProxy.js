@@ -10,8 +10,7 @@ const target = process.env.PHP_API_HOST
 console.log('Target URL:', target);
 
 const context = [
-  "/weatherforecast",
-  "/users"
+  "/accounts",
 ];
 
 const onError = (err, req, resp, target) => {
