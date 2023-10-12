@@ -5,7 +5,6 @@
         Header set Access-Control-Allow-Methods "GET, POST, PUT, DELETE"
         Header set Content-Type "application/json"
     </IfModule>
-
     RewriteEngine On
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteRule ^ index.php [QSA,L]
