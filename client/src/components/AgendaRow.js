@@ -5,9 +5,14 @@ export class AgendaRow extends Component {
 
 	constructor(props) {
 		super(props);
-		this.state = {cells: this.getUserData(), user: props.user};
+		this.state = {cells: this.getUserData(), user: props.user, name: props.name};
 	}
-
+	
+	/**
+	 * Method om de specifieke data van de gebruiker te krijgen van deze week.
+	 *
+	 * @returns {Array} - agenda items van deze gebruiker
+	 */
 	getUserData() {
 		// bij de lijst moet nog datum komen
 		return [
@@ -45,7 +50,7 @@ export class AgendaRow extends Component {
 	render() {
 		return (
 			<tr>
-				<td className="fixed">{this.state.user}</td>
+				<td className="fixed">{this.state.name}</td>
 				{this.state.cells.map(cell =>
 					<td style={{backgroundColor: this.getCellColour(cell)}}>
 						<a href={`agenda?modal=1&user=${this.state.user}&ts=${cell.ts}`}>
