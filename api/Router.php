@@ -29,7 +29,6 @@ class Router {
         	$handler = $this->routes[$method][$uri] ?? null;
 		}
 
-
         if ($handler != null) {
 			if (isset($parameter) == true && $parameter >= 0) {
 				$this->callHandler($handler, $parameter);

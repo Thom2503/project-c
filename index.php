@@ -30,7 +30,7 @@ $router->get('/accounts/{string}', 'AccountsController@showEmail');
 /*{ Supplies Routing }*/
 $router->get('/supplies', 'SupplyController@index');
 $router->get('/supplies/{integer}', 'SupplyController@show');
-$router->post('/accounts', 'SupplyController@store');
+$router->post('/supplies', 'SupplyController@store');
 /* $router->put('/accounts/{id}', 'UserController@update'); */
 /* $router->delete('/accounts/{id}', 'UserController@destroy'); */
 
