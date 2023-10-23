@@ -22,6 +22,7 @@ export class SupplyModal extends Component {
 		const total = this.state.total;
 
 		// name en total mogen niet leeg zijn
+		// TODO: form validatie toevoegen voor als het fout gaat
 		if (name.trim() === "") return;
 		if (total <= 0) return;
 
@@ -37,7 +38,13 @@ export class SupplyModal extends Component {
 				body: JSON.stringify({name: name, total: total}),
 			});
 			const data = await response.json();
-			console.log(data);
+			// als er een id terug is -- dus successvol opgeslagen -- kan je naar het overzicht terug.
+			if (data['id'] > 0) {
+				window.location.replace("voorzieningen");
+			} else {
+				// TODO: form validatie toevoegen voor als het fout gaat.
+				console.log(data);
+			}
 		} catch(e) {
 			console.error("Error: ", e.message);
 		}
