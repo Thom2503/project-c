@@ -25,9 +25,21 @@ export class Supplies extends Component {
 	}
 
     render() {
+		// om vandaag de dag aan te geven
+		const currentDate = new Date();
+		const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun','Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
         return (
-			<div>
-				<h2>Voorzieningen</h2>
+			<div id='voorzieningen'>
+				<div className='under-header'>
+					<h2>Voorzieningen</h2>
+					<span className='add'><a href='supply-toevoegen'>Voorziening Toevoegen</a></span>
+					&nbsp;
+					<span className='date-picker'>
+						<a href='voorzieningen?pick-date'>
+							{`${currentDate.getDate()} ${months[currentDate.getMonth()]} ${currentDate.getFullYear()}`}
+						</a>
+					</span>
+				</div>
 				<div className="table-wrapper">
 					<table>
 						<thead>

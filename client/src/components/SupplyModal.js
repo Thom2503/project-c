@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import '../css/voorzieningen.css';
 
 export class SupplyModal extends Component {
     static displayName = SupplyModal.name;
