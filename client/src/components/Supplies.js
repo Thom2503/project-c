@@ -26,27 +26,34 @@ export class Supplies extends Component {
 
     render() {
         return (
-			<div className="table-wrapper">
-				<table>
-					<thead>
-						<tr>
-							<th>#&emsp;ID</th>
-							<th>Naam</th>
-							<th>Totaal aantal</th>
-							<th>Vandaag gebruikt</th>
-						</tr>
-					</thead>
-					<tbody>
-						{this.state.data.map(supply => 
+			<div>
+				<h2>Voorzieningen</h2>
+				<div className="table-wrapper">
+					<table>
+						<thead>
 							<tr>
-								<td>{supply.SuppliesID}</td>
-								<td>{supply.Name}</td>
-								<td>{supply.Total}</td>
-								<td>0</td>
+								<th>#&emsp;ID</th>
+								<th>Naam</th>
+								<th>Totaal aantal</th>
+								<th>Vandaag gebruikt</th>
 							</tr>
-						)}
-					</tbody>
-				</table>
+						</thead>
+						<tbody>
+							{this.state.data.map(supply => 
+								<tr>
+									<td>
+										<a href={`supply-toevoegen?id=${supply.SuppliesID}`}>
+											{supply.SuppliesID}
+										</a>
+									</td>
+									<td>{supply.Name}</td>
+									<td>{supply.Total}</td>
+									<td>0</td>
+								</tr>
+							)}
+						</tbody>
+					</table>
+				</div>
 			</div>
         );
     }

@@ -29,6 +29,15 @@ class Supply extends Database {
 		$stmt->execute();
 		return $this->db->lastInsertId();
 	}
+
+	public function updateSupply(int $id, array $data): bool {
+		$query = "UPDATE `Supplies` SET `Name` = :name, `Total` = :total WHERE `SuppliesID` = :sid";
+		$stmt = $this->db->prepare($query);
+		$stmt->bindParam(":name", $data['name']);
+		$stmt->bindParam(":total", $data['total']);
+		$stmt->bindParam(":sid", $id);
+		return $stmt->execute();
+	}
 }
 
 ?>

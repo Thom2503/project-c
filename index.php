@@ -31,8 +31,8 @@ $router->get('/accounts/{string}', 'AccountsController@showEmail');
 $router->get('/supplies', 'SupplyController@index');
 $router->get('/supplies/{integer}', 'SupplyController@show');
 $router->post('/supplies', 'SupplyController@store');
-/* $router->put('/accounts/{id}', 'UserController@update'); */
-/* $router->delete('/accounts/{id}', 'UserController@destroy'); */
+$router->put('/supplies/{integer}', 'SupplyController@update');
+/* $router->delete('/supplies/{integer}', 'SupplyController@destroy'); */
 
 $router->dispatch(); // Handle the request
 

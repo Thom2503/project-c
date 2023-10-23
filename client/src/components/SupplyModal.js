@@ -5,10 +5,18 @@ export class SupplyModal extends Component {
 
 	constructor(props) {
 		super(props);
-		this.state = {name: "", total: 0};
+		this.state = {name: "", total: 0, supply: 0};
 
 		this.handleChange = this.handleChange.bind(this);
 		this.handleSubmit = this.handleSubmit.bind(this);
+	}
+
+	componentDidMount() {
+		const params = new URLSearchParams(window.location.search);
+		if (params.size >= 1) {
+			const paramID = params.get("id");
+			this.fetchSupplyData(paramID);
+		}
 	}
 
 	handleChange(event) {
@@ -21,16 +29,15 @@ export class SupplyModal extends Component {
 		const name = this.state.name;
 		const total = this.state.total;
 
+		const fetchURL = this.state.supply > 0 ? `supplies/${this.state.supply}` : "supplies";
+
 		// name en total mogen niet leeg zijn
 		// TODO: form validatie toevoegen voor als het fout gaat
 		if (name.trim() === "") return;
 		if (total <= 0) return;
 
-		console.log(name);
-		console.log(total);
-		
 		try {
-			const response = await fetch("supplies", {
+			const response = await fetch(fetchURL, {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",
@@ -39,7 +46,7 @@ export class SupplyModal extends Component {
 			});
 			const data = await response.json();
 			// als er een id terug is -- dus successvol opgeslagen -- kan je naar het overzicht terug.
-			if (data['id'] > 0) {
+			if (data.id > 0 || data.success === true) {
 				window.location.replace("voorzieningen");
 			} else {
 				// TODO: form validatie toevoegen voor als het fout gaat.
@@ -48,6 +55,19 @@ export class SupplyModal extends Component {
 		} catch(e) {
 			console.error("Error: ", e.message);
 		}
+	}
+
+	async fetchSupplyData(supplyID) {
+		try {
+			const response = await fetch(`supplies/${supplyID}`);
+			const data = await response.json();
+			console.log(data);
+
+			if (data) this.setState({name: data.Name, total: data.Total, supply: data.SuppliesID});
+		} catch(e) {
+			console.error("Error: ", e.message);
+		}
+
 	}
 
     render() {
