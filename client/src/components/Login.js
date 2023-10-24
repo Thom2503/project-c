@@ -57,6 +57,7 @@ export class Login extends Component {
                 <div className="bg-[#792F82] h-[112px] w-100">
                     <span className="text-transparent">Login</span>
                 </div>
+
                 <form onSubmit={this.handleSubmit}>
                     <div className="w-[400px] flex m-auto justify-center flex-col h-[45vh] pt-[15vh]">
                         <h1 className="text-[#792F82] text-[40px] font-bold mb-[30px]">Login</h1>
@@ -79,8 +80,8 @@ export class Login extends Component {
                         </div>
 
                     </div>
-                </form>
 
+                </form>
 
             </div>
         );
