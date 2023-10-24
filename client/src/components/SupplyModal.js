@@ -54,7 +54,7 @@ export class SupplyModal extends Component {
 			const data = await response.json();
 			// als er een id terug is -- dus successvol opgeslagen -- kan je naar het overzicht terug.
 			if (data.id > 0 || data.success === true) {
-				// window.location.replace("voorzieningen");
+				window.location.replace("voorzieningen");
 			} else {
 				// TODO: form validatie toevoegen voor als het fout gaat.
 				console.log(data);
@@ -113,7 +113,6 @@ export class SupplyModal extends Component {
 			                       name="deleteSupply"
 			                       value={this.state.deleteSupply}
 			                       onChange={this.handleChange}
-			                       required
 			                />
 						</div>
 						<input type="submit" value="Opslaan" />
