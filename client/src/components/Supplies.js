@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
+import '../css/voorzieningen.css';
 
 export class Supplies extends Component {
     static displayName = Supplies.name;
 
 	constructor(props) {
 		super(props);
-
 		this.state = {data: []};
+		document.title = "Voorzieningen";
 	}
 
 	componentDidMount() {

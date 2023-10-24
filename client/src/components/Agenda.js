@@ -13,6 +13,7 @@ export class Agenda extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {weekDays: this.convertDates()};
+		document.title = Agenda.displayName;
 	}
 
 	/**
