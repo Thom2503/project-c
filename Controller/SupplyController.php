@@ -79,8 +79,25 @@ class SupplyController {
 		}
     }
 
-    public function destroy($id) {
-        // Implement logic to delete user by ID
+    public function destroy(int $id): void {
+		$errors = [];
+		$data = json_decode(file_get_contents("php://input"), true);
+		if (count($data) <= 0) {
+			$errors['data'] = "Data is empty";	
+		}
+
+		header('Content-Type: application/json');
+		if (count($errors) > 0) {
+			echo json_encode($errors);
+		} else {
+			$success = $this->supplyModel->deleteSupply($id);
+			if ($success == true) {
+				echo json_encode(['success' => true]);
+			} else {
+				http_response_code(404);
+				echo json_encode(['error' => 'Supply not deleted']);
+			}
+		}
     }
 }
 

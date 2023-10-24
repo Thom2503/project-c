@@ -32,7 +32,7 @@ $router->get('/supplies', 'SupplyController@index');
 $router->get('/supplies/{integer}', 'SupplyController@show');
 $router->post('/supplies', 'SupplyController@store');
 $router->put('/supplies/{integer}', 'SupplyController@update');
-/* $router->delete('/supplies/{integer}', 'SupplyController@destroy'); */
+$router->delete('/supplies/{integer}', 'SupplyController@destroy');
 
 $router->dispatch(); // Handle the request
 

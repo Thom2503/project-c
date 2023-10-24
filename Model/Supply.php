@@ -33,9 +33,16 @@ class Supply extends Database {
 	public function updateSupply(int $id, array $data): bool {
 		$query = "UPDATE `Supplies` SET `Name` = :name, `Total` = :total WHERE `SuppliesID` = :sid";
 		$stmt = $this->db->prepare($query);
-		$stmt->bindParam(":name", $data['name']);
-		$stmt->bindParam(":total", $data['total']);
-		$stmt->bindParam(":sid", $id);
+		$stmt->bindParam(":name", $data['name'], PDO::PARAM_STR);
+		$stmt->bindParam(":total", $data['total'], PDO::PARAM_INT);
+		$stmt->bindParam(":sid", $id, PDO::PARAM_INT);
+		return $stmt->execute();
+	}
+
+	public function deleteSupply(int $id): bool {
+		$query = "DELETE FROM `Supplies` WHERE `SuppliesID` = :sid";
+		$stmt = $this->db->prepare($query);
+		$stmt->bindParam(":sid", $id, PDO::PARAM_INT);
 		return $stmt->execute();
 	}
 }

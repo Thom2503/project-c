@@ -6,7 +6,7 @@ export class SupplyModal extends Component {
 
 	constructor(props) {
 		super(props);
-		this.state = {name: "", total: 0, supply: 0};
+		this.state = {name: "", total: 0, deleteSupply: false, supply: 0};
 
 		this.handleChange = this.handleChange.bind(this);
 		this.handleSubmit = this.handleSubmit.bind(this);
@@ -21,7 +21,11 @@ export class SupplyModal extends Component {
 	}
 
 	handleChange(event) {
-		this.setState({[event.target.name]: event.target.value});
+		if (event.target.name === "deleteSupply") {
+			this.setState({[event.target.name]: event.target.checked});
+		} else {
+			this.setState({[event.target.name]: event.target.value});
+		}
 	}
 
 	async handleSubmit(event) {
@@ -30,7 +34,9 @@ export class SupplyModal extends Component {
 		const name = this.state.name;
 		const total = this.state.total;
 
-		const fetchURL = this.state.supply > 0 ? `supplies/${this.state.supply}` : "supplies";
+		const fetchURL = this.state.supply > 0 || this.state.deleteSupply === true
+		               ? `supplies/${this.state.supply}`
+		               : "supplies";
 
 		// name en total mogen niet leeg zijn
 		// TODO: form validatie toevoegen voor als het fout gaat
@@ -39,7 +45,7 @@ export class SupplyModal extends Component {
 
 		try {
 			const response = await fetch(fetchURL, {
-				method: "POST",
+				method: this.state.deleteSupply === true ? "DELETE" : "POST",
 				headers: {
 					"Content-Type": "application/json",
 				},
@@ -48,7 +54,7 @@ export class SupplyModal extends Component {
 			const data = await response.json();
 			// als er een id terug is -- dus successvol opgeslagen -- kan je naar het overzicht terug.
 			if (data.id > 0 || data.success === true) {
-				window.location.replace("voorzieningen");
+				// window.location.replace("voorzieningen");
 			} else {
 				// TODO: form validatie toevoegen voor als het fout gaat.
 				console.log(data);
@@ -96,6 +102,16 @@ export class SupplyModal extends Component {
 			                       id="supplyTotal"
 			                       name="total"
 			                       value={this.state.total}
+			                       onChange={this.handleChange}
+			                       required
+			                />
+						</div>
+						<div>
+							<label htmlFor="supplyDelete">Delete:</label>
+							<input type="checkbox"
+			                       id="supplyDelete"
+			                       name="deleteSupply"
+			                       value={this.state.deleteSupply}
 			                       onChange={this.handleChange}
 			                       required
 			                />
