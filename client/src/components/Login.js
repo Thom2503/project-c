@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+// import { CookiesProvider, useCookies } from "react-cookie";
+import Cookies from 'js-cookie';
 
 export class Login extends Component {
     static displayName = Login.name;
@@ -23,17 +25,18 @@ export class Login extends Component {
 
         const email = this.state.email; // Get the name from the form input
         const password = this.state.password;
-
         // Make an HTTP POST request to the API endpoint to verify the account
         try {
             const response = await fetch(`accounts/${email}`);
+            // const [cookies, setCookie] = useCookies(['user']);
             console.log(response);
             if (response.ok) {
                 const data = await response.json();
-                // const isVerified = data.isVerified;
-                if(data && data.password == password)
+                if(data.Password == password)
                 {
-                    alert('Account is verified');
+                    Cookies.set('user', JSON.stringify(data), { expires: 7 });
+                    window.location.replace('agenda');
+
                 } else {
                     alert('Account not verified');
                 }
