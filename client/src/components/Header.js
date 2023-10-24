@@ -15,7 +15,7 @@ export class Header extends Component {
                         <span className="text-white font-medium text-[32px]">Login</span>
                     </div>
                     <div className="flex flex-col ml-auto pr-6">
-                        <span className="text-white font-medium text-[32px]">Welkom, naam</span>
+                        <span className="text-white font-medium text-[32px]">Welkom, username</span>
                         <span className="text-white font-medium text-[18px] ml-auto">Momenteel<a className="bg-[#DB3131] ml-[5px] drop-shadow-lg rounded-sm font-normal pr-2 pl-2 pt-1 pb-1">Afwezig</a></span>
                     </div>
                 </div>
