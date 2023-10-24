@@ -28,7 +28,6 @@ export class Login extends Component {
         // Make an HTTP POST request to the API endpoint to verify the account
         try {
             const response = await fetch(`accounts/${email}`);
-            // const [cookies, setCookie] = useCookies(['user']);
             console.log(response);
             if (response.ok) {
                 const data = await response.json();
