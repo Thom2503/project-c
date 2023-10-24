@@ -14,7 +14,7 @@ export class Login extends Component {
                 <div className="bg-[#792F82] h-[112px] w-100">
                     <span className="text-transparent">Login</span>
                 </div>
-                <div className="w-[400px] flex m-auto justify-content-center flex-column h-[45vh] pt-[15vh]">
+                <div className="w-[400px] flex m-auto justify-center flex-col h-[45vh] pt-[15vh]">
                     <h1 className="text-[#792F82] text-[40px] font-bold mb-[30px]">Login</h1>
                     <div className="mb-[30px]">
                         <label htmlFor="first_name" className="block mb-2 text-sm font-small text-[#9E9E9E]">Email Address</label>
@@ -29,8 +29,8 @@ export class Login extends Component {
                     <div className="w-[362px] text-right">
                         <a className="text-[#792F82] text-[13px]">Wachtwoord vergeten?</a>
                     </div>
-                    <div className="flex justify-content-center pt-[35px] flex-column items-center">
-                        <a className="w-[150px] bg-[#792F82] font-bold text-[20px] text-white h-[46px] rounded-[15px] flex justify-content-center items-center">Login</a>
+                    <div className="flex justify-center pt-[35px] flex-col items-center">
+                        <a className="w-[150px] bg-[#792F82] font-bold text-[20px] text-white h-[46px] rounded-[15px] flex justify-center items-center">Login</a>
                         <span className="text-sm font-small text-[#9E9E9E] mt-[3vh]">Geen account? <a className="text-[#792F82]">Registreer hier</a></span>
                     </div>
 
