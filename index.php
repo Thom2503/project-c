@@ -27,6 +27,10 @@ $router->get('/accounts/{string}', 'AccountsController@showEmail');
 /* router->post('/accounts', 'UserController@store'); */
 /* $router->put('/accounts/{id}', 'UserController@update'); */
 /* $router->delete('/accounts/{id}', 'UserController@destroy'); */
+/*{ Agenda Routing }*/
+$router->get('/agendaitems', 'AgendaController@index');
+$router->get('/agendaitems/{integer}', 'AgendaController@show');
+$router->post('/agendaitems', 'AgendaController@store');
 /*{ Supplies Routing }*/
 $router->get('/supplies', 'SupplyController@index');
 $router->get('/supplies/{integer}', 'SupplyController@show');
