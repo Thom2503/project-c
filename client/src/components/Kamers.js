@@ -23,12 +23,13 @@ export class Kamers extends Component {
     render() {
         return (
             <>
-                <div>
+                <h1 className="text-[#792F82] font-bold text-[25px]">Kamers</h1>
+                <div className="gap-5 flex flex-col">
                     {this.state.data.map(room =>
-                        <>
-                            <h1>{room.Name}</h1>
-                            <h2>{room.Capacity}</h2>
-                        </>
+                        <div className="kamerbg w-[1200px] h-[150px] p-6 flex flex-col justify-center rounded-xl mt-[20px] ml-[20px] border-[2px]">
+                            <h1 className="text-[#792F82] font-bold text-[23px]">{room.Name}</h1>
+                            <span className="text-[#848484]">Klik voor meer informatie</span>
+                        </div>
                     )}
                 </div>
             </>

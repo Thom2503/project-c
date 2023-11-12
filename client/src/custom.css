@@ -11,6 +11,18 @@ a {
   color: #0366d6;
 }
 
+.kamerbg {
+  background: red;
+  background: linear-gradient(90deg, #F9F9F9 50.01%, rgba(255, 217, 253, 0.45) 87.01%), url(https://centaur-wp.s3.eu-central-1.amazonaws.com/designweek/prod/content/uploads/2016/08/05091510/160816-AHMM-Google-541-749x500.jpg), lightgray 50% / cover no-repeat;
+  transition: all 0.3s;
+}
+
+.kamerbg:hover {
+  background: linear-gradient(90deg, rgb(254, 243, 255) 50.01%, rgba(255, 217, 253, 0.45) 87.01%), url(https://centaur-wp.s3.eu-central-1.amazonaws.com/designweek/prod/content/uploads/2016/08/05091510/160816-AHMM-Google-541-749x500.jpg), lightgray 50% / cover no-repeat;
+  transition: all 0.3s;
+  cursor: pointer;
+}
+
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
   box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
 }

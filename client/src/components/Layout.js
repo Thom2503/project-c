@@ -9,7 +9,7 @@ export class Layout extends Component {
     return (
       <div>
         <Header />
-        <Container tag="main">
+        <Container tag="main" className="w-[95%] m-auto mt-5">
           {this.props.children}
         </Container>
       </div>

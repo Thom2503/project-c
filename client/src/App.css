@@ -2,6 +2,11 @@
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
 
+
+.kamerbg {
+  background: red;
+}
+
 .App {
   text-align: center;
 }
