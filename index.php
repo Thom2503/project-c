@@ -23,6 +23,8 @@ $router = new Router();
 $router->get('/accounts', 'AccountsController@index');
 $router->get('/accounts/{integer}', 'AccountsController@show');
 $router->get('/accounts/{string}', 'AccountsController@showEmail');
+
+$router->get('/rooms', 'RoomsController@index');
 // TODO: implementeer deze, dit moet dan ook in Router.php gebeuren
 /* router->post('/accounts', 'UserController@store'); */
 /* $router->put('/accounts/{id}', 'UserController@update'); */
