@@ -26,7 +26,7 @@ export class Kamers extends Component {
                 <h1 className="text-[#792F82] font-bold text-[25px]">Kamers</h1>
                 <div className="gap-5 flex flex-col">
                     {this.state.data.map(room =>
-                        <div className="kamerbg w-[1200px] h-[150px] p-6 flex flex-col justify-center rounded-xl mt-[20px] ml-[20px] border-[2px]">
+                        <div className="kamerbg max-w-[1200px] w-[95%] h-[150px] p-6 flex flex-col justify-center rounded-xl mt-[20px] mx-[20px] border-[2px]">
                             <h1 className="text-[#792F82] font-bold text-[23px]">{room.Name}</h1>
                             <span className="text-[#848484]">Klik voor meer informatie</span>
                         </div>

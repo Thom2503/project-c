@@ -6,10 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="daa6931f-0d7a-434d-b643-b5161b971136" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/App.css" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/App.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client/src/components/Kamers.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/Kamers.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/components/Layout.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/Layout.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/custom.css" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/custom.css" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -73,7 +70,7 @@
       <option name="presentableId" value="Default" />
       <updated>1699826545631</updated>
       <workItem from="1699826548276" duration="59000" />
-      <workItem from="1699826608742" duration="4012000" />
+      <workItem from="1699826608742" duration="4193000" />
     </task>
     <task id="LOCAL-00001" summary="Rooms api works now.">
       <option name="closed" value="true" />
@@ -91,7 +88,15 @@
       <option name="project" value="LOCAL" />
       <updated>1699829566358</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="Kamers now show on the page">
+      <option name="closed" value="true" />
+      <created>1699830706637</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1699830706637</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -100,6 +105,7 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Rooms api works now." />
     <MESSAGE value="added header component" />
-    <option name="LAST_COMMIT_MESSAGE" value="added header component" />
+    <MESSAGE value="Kamers now show on the page" />
+    <option name="LAST_COMMIT_MESSAGE" value="Kamers now show on the page" />
   </component>
 </project>
