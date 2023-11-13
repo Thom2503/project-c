@@ -60,7 +60,12 @@ class Agenda extends Database {
 		$stmt->bindParam(":sid", $id, PDO::PARAM_INT);
 		return $stmt->execute();
 	}
-	
+	public function getAllRooms(): array {
+        $query = "SELECT * FROM `Rooms`";
+        return $this->db->query($query)->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+
 }
 
 ?>

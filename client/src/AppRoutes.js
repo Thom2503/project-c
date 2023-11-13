@@ -5,7 +5,6 @@ import { Login } from "./components/Login";
 import { Agenda } from "./components/Agenda";
 import {SupplyModal} from "./components/SupplyModal";
 import {Supplies} from "./components/Supplies";
-
 const AppRoutes = [
   {
     index: true,

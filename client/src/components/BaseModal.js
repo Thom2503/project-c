@@ -20,12 +20,20 @@ export class BaseModal extends Component {
     };
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     const params = new URLSearchParams(window.location.search);
     const userParam = params.get("user");
     const tsParam = params.get("ts");
 
     this.setState({ userParam, tsParam });
+    try {
+      const response = await fetch("rooms");
+      const rooms = await response.json();
+      console.log("Fetched rooms:", rooms);
+      this.setState({ rooms: rooms });
+    } catch (error) {
+      console.error("Error fetching rooms:", error);
+    }
   }
 
   handleSubmit = async (event) => {
@@ -87,6 +95,7 @@ export class BaseModal extends Component {
             <ModalContent
               userName={this.state.userParam}
               timestamp={this.state.tsParam}
+              rooms={this.state.rooms}
             />
             <input
               className="save-button"

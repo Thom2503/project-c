@@ -50,6 +50,12 @@ class AgendaController {
     public function destroy($id) {
         
     }
+
+	public function roomsIndex(): void {
+        header('Content-Type: application/json');
+        $agendaRooms= $this->agendaModel->getAllRooms();
+        echo json_encode($agendaRooms);
+    }
 }
 
 ?>
