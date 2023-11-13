@@ -75,8 +75,8 @@ export class Agenda extends Component {
 
 	render() {
 		return (
-			<div className="table-wrapper" id='agenda'>
-				<table>
+			<div className="agenda table-wrapper">
+				<table className='agenda'>
 					<thead>
 						<tr>
 							<th className="fixed">&nbsp;</th>
