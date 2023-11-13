@@ -12,8 +12,12 @@ export class Agenda extends Component {
 
 	constructor(props) {
 		super(props);
-		this.state = {weekDays: this.convertDates()};
+		this.state = {weekDays: this.convertDates(), users: []};
 		document.title = Agenda.displayName;
+	}
+
+	componentDidMount() {
+		this.getUserData();
 	}
 
 	/**
@@ -60,14 +64,19 @@ export class Agenda extends Component {
 		});
 	}
 
-	getUserData() {
-
+	/**
+	 * Om alle gebruikers te krijgen zodat het een dynamische agenda is.
+	 */
+	async getUserData() {
+		const response = await fetch("accounts");
+		const data = await response.json();
+		this.setState({users: data});
 	}
 
 	render() {
 		return (
-			<div className="table-wrapper" id='agenda'>
-				<table>
+			<div className="agenda table-wrapper">
+				<table className='agenda'>
 					<thead>
 						<tr>
 							<th className="fixed">&nbsp;</th>
@@ -83,7 +92,10 @@ export class Agenda extends Component {
 						</tr>
 					</thead>
 					<tbody>
-						<AgendaRow user="Thom" />
+						{this.state.users.map(user =>
+							<AgendaRow user={user.AccountsID} 
+							           name={`${user.FirstName} ${user.LastName}`} />
+						)}
 					</tbody>
 				</table>
 			</div>

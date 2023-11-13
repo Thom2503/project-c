@@ -17,7 +17,7 @@ class AccountsController {
     public function show(int $id): void {
 		header('Content-Type: application/json');
 		$user = $this->userModel->getAccountByID($id);
-		if (count($user) > 0) {
+		if ($user != false && count($user) > 0) {
 			echo json_encode($user);
 		} else {
 			http_response_code(404);
