@@ -8,7 +8,7 @@ export class Layout extends Component {
   render() {
     return (
       <div>
-        <Header />
+        <Header title="Kamers"/>
         <Container tag="main" className="w-[95%] m-auto mt-5">
           {this.props.children}
         </Container>
