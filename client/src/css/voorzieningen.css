@@ -1,0 +1,47 @@
+#voorzieningen {
+	width: 100%;
+
+	.under-header {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+	}
+
+	.under-header h2 {
+		order: 0;
+	}
+
+	.under-header .add {
+		order: 1;
+	}
+
+	.under-header .date-picker {
+		order: 2;
+	}
+
+	thead {
+		border: 1px solid rgba(0, 0, 0, 0.05);
+		background: #F5F5F5; 
+	}
+
+	td, th {
+		width: 10%;
+	}
+
+	td:nth-child(2), th:nth-child(2) {
+		width: 60%;
+		text-align: left;
+	} 
+
+	span.add a, span.date-picker a {
+		color: #8A8A8A;
+		text-decoration: none;
+	}
+
+	@media only screen and (max-width: 600px) {
+		td a {
+			width: auto !important;
+		}
+	}
+}
+

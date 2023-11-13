@@ -1,0 +1,97 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700;800&display=swap');
+
+* {
+  font-family: 'Open Sans';
+}
+
+/* elk kopje van pagina */
+h2 {
+  color: #792F82;
+  font-family: Open Sans;
+  font-size: 1.5625rem;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+}
+/* Provide sufficient contrast against white background */
+
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+code {
+  color: #E01A76;
+}
+
+.btn-primary {
+  color: #fff;
+  background-color: #1b6ec2;
+  border-color: #1861ac;
+}
+
+.container {
+  max-width: 100% !important;
+  padding: 0 !important;
+}
+
+/**( agenda )**/
+#agenda {
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+  }
+  
+  td {
+    border: 2px solid #D7D7D7;
+    text-align: center;
+    padding: 0.5em;
+  }
+  
+  td a {
+    display: block;
+    width: 100%;
+    height: 100%;
+    color: white;
+    text-decoration: none;
+  }
+  
+  td a:empty::after {
+    content: "new";
+  }
+  
+  th {
+    text-align: center;
+    padding: 0.5em;
+  }
+  
+  @media only screen and (max-width: 600px) {
+    .table-wrapper {
+      overflow-x: auto;
+    }
+  
+    table {
+      width: 100%;
+    }
+  
+    tr {
+      display: flex;
+      flex-wrap: nowrap;
+    }
+  
+    td a, th a {
+      display: block;
+      text-align: center;
+      width: 60vw;
+    }
+  
+    .fixed {
+      position: sticky;
+      left: 0;
+      z-index: 1;
+      background-color: white;
+      flex: 0 0 auto;
+      width: 40%;
+    }
+  }
+}
