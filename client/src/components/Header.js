@@ -1,10 +1,34 @@
 import React, { Component } from 'react';
 import {NavItem, NavLink} from "reactstrap";
 import {Link} from "react-router-dom";
+import { getCookie } from '../include/util_functions';
 
 export class Header extends Component {
+    static displayName = Header.name;
+
+	constructor(props) {
+		super(props);
+		this.state = {user: []}
+	}
+
+	componentDidMount() {
+		this.getUser();
+	}
+
+	/**
+	 * Haal de data van een gebruiker op.
+	 *
+	 * @returns {void}
+	 */
+	async getUser() {
+		let userid = getCookie("user");
+		const response = await fetch(`accounts/${userid}`);
+		const data = await response.json();
+		this.setState({user: data});
+	}
 
     render() {
+		let isAdmin = getCookie("isadmin");
         return (
 
             <div>
@@ -15,9 +39,11 @@ export class Header extends Component {
                         <NavItem>
                             <NavLink tag={Link} className="text-black text-[20px]" to="/agenda">Agenda</NavLink>
                         </NavItem>
-                        <NavItem>
-                            <NavLink tag={Link} className="text-black text-[20px]" to="/Voorzieningen">Voorzieningen</NavLink>
-                        </NavItem>
+						{isAdmin === "true" &&
+                        	<NavItem>
+                            	<NavLink tag={Link} className="text-black text-[20px]" to="/Voorzieningen">Voorzieningen</NavLink>
+                        	</NavItem>
+						}
                         <NavItem>
                             <NavLink tag={Link} className="text-black text-[20px]" to="/Nieuws">Nieuws</NavLink>
                         </NavItem>
@@ -31,7 +57,7 @@ export class Header extends Component {
                         <span className="text-white font-medium text-[32px]">Login</span>
                     </div>
                     <div className="flex flex-col ml-auto pr-6">
-                        <span className="text-white font-medium text-[32px]">Welkom, username</span>
+                        <span className="text-white font-medium text-[32px]">Welkom, {this.state.user.FirstName ?? ""}</span>
                         <span className="text-white font-medium text-[18px] ml-auto">Momenteel<a className="bg-[#DB3131] ml-[5px] drop-shadow-lg rounded-sm font-normal pr-2 pl-2 pt-1 pb-1">Afwezig</a></span>
                     </div>
                 </div>

@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-// import { CookiesProvider, useCookies } from "react-cookie";
-import Cookies from 'js-cookie';
+import { setCookie } from "../include/util_functions.js";
 
 export class Login extends Component {
     static displayName = Login.name;
@@ -28,12 +27,12 @@ export class Login extends Component {
         // Make an HTTP POST request to the API endpoint to verify the account
         try {
             const response = await fetch(`accounts/${email}`);
-            console.log(response);
             if (response.ok) {
                 const data = await response.json();
-                if(data.Password == password)
+                if(data.Password === password)
                 {
-                    Cookies.set('user', JSON.stringify(data), { expires: 7 });
+					setCookie("user", data.AccountsID, 7);
+					setCookie("isadmin", data.IsAdmin === "1" ? "true" : "false", 7);
                     window.location.replace('agenda');
 
                 } else {
