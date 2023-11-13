@@ -40,6 +40,6 @@
     ]
   },
   "devDependencies": {
-    "tailwindcss": "^3.3.3"
+    "tailwindcss": "^3.3.5"
   }
 }

@@ -4,8 +4,8 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 // headers voor CORS zodat we het ook kunnen benaderen via react
-header('Access-Control-Allow-Origin: *');
-header("Access-Control-Allow-Headers: *");
+header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept");
 header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE');
 header('Content-Type: application/json');
 
@@ -23,6 +23,8 @@ $router = new Router();
 $router->get('/accounts', 'AccountsController@index');
 $router->get('/accounts/{integer}', 'AccountsController@show');
 $router->get('/accounts/{string}', 'AccountsController@showEmail');
+
+$router->get('/rooms', 'RoomsController@index');
 // TODO: implementeer deze, dit moet dan ook in Router.php gebeuren
 /* router->post('/accounts', 'UserController@store'); */
 /* $router->put('/accounts/{id}', 'UserController@update'); */

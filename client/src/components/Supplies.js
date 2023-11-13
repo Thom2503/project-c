@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { getCookie } from '../include/util_functions';
 import '../css/voorzieningen.css';
 
 export class Supplies extends Component {
@@ -22,13 +23,16 @@ export class Supplies extends Component {
 	async getSupplies() {
 		const response = await fetch("supplies");
 		const data = await response.json();
-		this.setState({data: data});
+		if (data) this.setState({data: data});
+		this.setState({data: ["No data found"]});
 	}
 
     render() {
 		// om vandaag de dag aan te geven
 		const currentDate = new Date();
 		const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun','Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+		// als je geen admin bent mag je niet naar deze pagina
+		if (getCookie("isadmin") !== "true") window.location.replace("agenda");
         return (
 			<div id='voorzieningen'>
 				<div className='under-header'>
