@@ -11,6 +11,14 @@ class Router {
         $this->routes['POST'][$path] = $handler;
     }
 
+    public function put(string $path, string $handler): void {
+        $this->routes['POST'][$path] = $handler;
+    }
+
+    public function delete(string $path, string $handler): void {
+        $this->routes['DELETE'][$path] = $handler;
+    }
+
     // Implement put, delete, etc., as needed
 
     public function dispatch(): void {
@@ -28,7 +36,6 @@ class Router {
 		} else {
         	$handler = $this->routes[$method][$uri] ?? null;
 		}
-
 
         if ($handler != null) {
 			if (isset($parameter) == true && $parameter >= 0) {
