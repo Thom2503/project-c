@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { AgendaRow } from './AgendaRow';
-
+import '../css/custom.css';
 //class AgendaCell extends Component {
 //    render() {
 //        <div>this.props.status</div>
@@ -13,6 +13,7 @@ export class Agenda extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {weekDays: this.convertDates(), users: []};
+		document.title = Agenda.displayName;
 	}
 
 	componentDidMount() {
@@ -74,7 +75,7 @@ export class Agenda extends Component {
 
 	render() {
 		return (
-			<div className="table-wrapper">
+			<div className="table-wrapper" id='agenda'>
 				<table>
 					<thead>
 						<tr>

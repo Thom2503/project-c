@@ -12,7 +12,7 @@ class Account extends Database {
 		return $this->db->query($query)->fetchAll(PDO::FETCH_ASSOC);
 	}
 
-	public function getAccountByID(int $id): array {
+	public function getAccountByID(int $id): array|bool {
 		$query = "SELECT * FROM `Accounts` WHERE `AccountsID` = :id";
 		$stmt = $this->db->prepare($query);
 		$stmt->bindParam(":id", $id, PDO::PARAM_INT);

@@ -19,14 +19,22 @@ require_once 'api/Router.php';
 // router class om de routing te regelen
 $router = new Router();
 
-// de routers
+/*{ Accoutns Routing }*/
 $router->get('/accounts', 'AccountsController@index');
 $router->get('/accounts/{integer}', 'AccountsController@show');
 $router->get('/accounts/{string}', 'AccountsController@showEmail');
+
+$router->get('/rooms', 'RoomsController@index');
 // TODO: implementeer deze, dit moet dan ook in Router.php gebeuren
 /* router->post('/accounts', 'UserController@store'); */
 /* $router->put('/accounts/{id}', 'UserController@update'); */
 /* $router->delete('/accounts/{id}', 'UserController@destroy'); */
+/*{ Supplies Routing }*/
+$router->get('/supplies', 'SupplyController@index');
+$router->get('/supplies/{integer}', 'SupplyController@show');
+$router->post('/supplies', 'SupplyController@store');
+$router->put('/supplies/{integer}', 'SupplyController@update');
+$router->delete('/supplies/{integer}', 'SupplyController@destroy');
 
 $router->dispatch(); // Handle the request
 
