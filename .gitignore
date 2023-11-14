@@ -280,3 +280,5 @@ client/yarn-debug.log*
 
 client/package.json
 client/package-lock.json
+
+.idea
