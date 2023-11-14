@@ -23,8 +23,11 @@ export class Supplies extends Component {
 	async getSupplies() {
 		const response = await fetch("supplies");
 		const data = await response.json();
-		if (data) this.setState({data: data});
-		this.setState({data: ["No data found"]});
+		if (data.error) {
+			this.setState({data: ["No data found"]});
+		} else {
+			this.setState({data: data});
+		}
 	}
 
     render() {

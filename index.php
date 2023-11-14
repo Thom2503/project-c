@@ -29,6 +29,11 @@ $router->get('/rooms', 'RoomsController@index');
 /* router->post('/accounts', 'UserController@store'); */
 /* $router->put('/accounts/{id}', 'UserController@update'); */
 /* $router->delete('/accounts/{id}', 'UserController@destroy'); */
+/*{ Agenda Routing }*/
+$router->get('/agendaitems', 'AgendaController@index');
+$router->get('/agendaitems/{integer}', 'AgendaController@show');
+$router->post('/agendaitems', 'AgendaController@store');
+$router->get('/rooms', 'AgendaController@roomsIndex');
 /*{ Supplies Routing }*/
 $router->get('/supplies', 'SupplyController@index');
 $router->get('/supplies/{integer}', 'SupplyController@show');

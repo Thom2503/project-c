@@ -1,23 +1,18 @@
-const { createProxyMiddleware } = require('http-proxy-middleware');
-const dotenv = require('dotenv');
+const { createProxyMiddleware } = require("http-proxy-middleware");
+const dotenv = require("dotenv");
 dotenv.config();
-
 
 const target = process.env.PHP_API_HOST
   ? `http://${process.env.PHP_API_HOST}:${process.env.PHP_API_PORT}`
-  : 'http://localhost:80';
+  : "http://localhost:80";
 
-console.log('Target URL:', target);
+console.log("Target URL:", target);
 
-const context = [
-  "/accounts",
-  "/rooms",
-  "/supplies"
-];
+const context = ["/accounts", "/supplies", "/agendaitems", "/rooms"];
 
 const onError = (err, req, resp, target) => {
   console.error(`${err.message}`);
-}
+};
 
 module.exports = function (app) {
   const appProxy = createProxyMiddleware(context, {
@@ -25,8 +20,8 @@ module.exports = function (app) {
     onError: onError,
     secure: false,
     headers: {
-      Connection: 'Keep-Alive'
-    }
+      Connection: "Keep-Alive",
+    },
   });
 
   app.use(appProxy);

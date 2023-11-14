@@ -21,9 +21,12 @@ export class Header extends Component {
 	 * @returns {void}
 	 */
 	async getUser() {
-		let userid = getCookie("user");
+		let userid = getCookie("user") ?? "";
 		const response = await fetch(`accounts/${userid}`);
 		const data = await response.json();
+		// als de gebruiker niet gevonden wordt en het pad is niet login moet je naar login gestuurd worden
+		if (data.error === "user not found" &&
+			window.location.pathname.indexOf("login") != 1) window.location.replace("login");
 		this.setState({user: data});
 	}
 
