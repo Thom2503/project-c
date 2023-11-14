@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Route, Routes, useLocation } from "react-router-dom";
 import AppRoutes from "./AppRoutes";
-import { Layout } from "./components/Layout";
+import Layout  from "./components/Layout";
 import "./css/custom.css";
 import { BaseModal } from "./components/BaseModal";
 
@@ -21,11 +21,10 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    // Check if the current page should be ignored
-    if (!ignoredLocations.includes(location.pathname)) {
-      import("./css/tailwind.css");
+    if ((ignoredLocations.indexOf(location.pathname) >= 0) !== true) {
+        import('./css/tailwind.css');
     }
-  }, [location.pathname]);
+}, [location.pathname]);
 
   const closeModal = () => {
     setIsModalOpen(false);

@@ -1,18 +1,22 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { Container } from 'reactstrap';
 import { Header } from './Header';
+import { useLocation } from 'react-router-dom';
 
-export class Layout extends Component {
-  static displayName = Layout.name;
+const Layout = ({ children }) => {
+    const location = useLocation();
 
-  render() {
+    // Check if the current route is "/Login"
+    const isLoginPage = location.pathname.toLowerCase() === '/login';
+
     return (
-      <div>
-        <Header />
-        <Container tag="main" className="w-[95%] m-auto mt-5">
-          {this.props.children}
-        </Container>
-      </div>
+        <div>
+            {!isLoginPage && <Header title="Kamers" />}
+            <Container tag="main" className="w-[100%] m-auto mt-5">
+                {children}
+            </Container>
+        </div>
     );
-  }
-}
+};
+
+export default Layout;
