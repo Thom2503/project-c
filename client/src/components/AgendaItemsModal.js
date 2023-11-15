@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import "../css/modal.css";
 
-class AgendaItemsModal extends Component {
+export class AgendaItemsModal extends Component {
   static displayName = "AgendaItemsModal";
 
   constructor(props) {
@@ -40,8 +40,7 @@ class AgendaItemsModal extends Component {
   handleSubmit = async (event) => {
     event.preventDefault();
 
-    const { title, note, date, roomID, accountsid, status } =
-      this.state;
+    const { title, note, date, roomID, accountsid, status } = this.state;
 
     const fetchURL = `agendaitems`;
 
@@ -173,5 +172,3 @@ class AgendaItemsModal extends Component {
     );
   }
 }
-
-export default AgendaItemsModal;
