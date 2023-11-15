@@ -37,6 +37,11 @@ export class Agenda extends Component {
 		return week;
 	}
 
+	/**
+	 * Zoek de timestamp van de eerste dag van deze week
+	 *
+	 * @returns {int} today - de timestamp van de eerste dag
+	 */
 	getFirstDayTimeStamp() {
 		let today = new Date();
 		let day = today.getDay() || 7;

@@ -37,9 +37,9 @@ class AgendaController {
 	}
 
     public function store(): void {
-        header('Content-Type: application/json');
 		$data = json_decode(file_get_contents("php://input"), true);
         $agendaItemID = $this->agendaModel->createAgendaItem($data);
+        header('Content-Type: application/json');
         echo json_encode(['id' => $agendaItemID]);
     }
 
@@ -49,12 +49,6 @@ class AgendaController {
 
     public function destroy($id) {
         
-    }
-
-	public function roomsIndex(): void {
-        header('Content-Type: application/json');
-        $agendaRooms= $this->agendaModel->getAllRooms();
-        echo json_encode($agendaRooms);
     }
 }
 

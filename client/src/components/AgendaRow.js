@@ -20,9 +20,11 @@ export class AgendaRow extends Component {
 	async getUserData() {
 		let returnArr = []
 		const response = await fetch(`agendaitems/${this.state.user}`);
-		console.log(response.body);
-		const data = await response.json()
-		                           .catch(_ => {
+		await response.json()
+		              .then(data => {
+			console.log(data);
+		})
+		              .catch(_ => {
 			for (let i = 0; i < 7; i++) {
 				let newDate = new Date(this.state.begin).setHours(24 * i).valueOf();
 				let obj = {status: "", isOut: false, ts: newDate};

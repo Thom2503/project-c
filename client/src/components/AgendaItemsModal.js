@@ -8,7 +8,7 @@ class AgendaItemsModal extends Component {
     super(props);
 
     this.state = {
-      title: "",
+      title: "In de loods",
       note: "",
       startdate: "",
       enddate: "",
@@ -45,7 +45,7 @@ class AgendaItemsModal extends Component {
     const { title, note, startdate, enddate, location, accountsid, status } =
       this.state;
 
-    const fetchURL = `agendaitems`;
+    const fetchURL = "agendaitems";
 
     try {
       const response = await fetch(fetchURL, {
@@ -54,16 +54,17 @@ class AgendaItemsModal extends Component {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          title,
-          note,
-          startdate,
-          enddate,
-          location,
-          accountsid,
-          status,
+			title: title,
+			note: note,
+			startdate: startdate,
+			enddate: enddate,
+			location: location,
+			accountsid: accountsid,
+			status: status,
         }),
       });
 
+	  console.log(response);
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
@@ -74,6 +75,7 @@ class AgendaItemsModal extends Component {
       if (data.id > 0 || data.success === true) {
         console.log("Done");
         this.props.onClose();
+		window.location.replace("agenda");
       } else {
         // Handle form validation errors or other issues
         console.log(data);
@@ -101,7 +103,6 @@ class AgendaItemsModal extends Component {
             className="border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5"
             value={this.state.title}
             onChange={this.handleInputChange}
-            required
           />
         </div>
 
@@ -120,7 +121,6 @@ class AgendaItemsModal extends Component {
             className="border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5"
             value={this.state.note}
             onChange={this.handleInputChange}
-            required
           />
         </div>
 
@@ -176,7 +176,6 @@ class AgendaItemsModal extends Component {
             className="border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5"
             value={this.state.location}
             onChange={this.handleInputChange}
-            required
           >
             <option value="" disabled>
               Selecteer een kamer

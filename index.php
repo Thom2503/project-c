@@ -24,7 +24,6 @@ $router->get('/accounts', 'AccountsController@index');
 $router->get('/accounts/{integer}', 'AccountsController@show');
 $router->get('/accounts/{string}', 'AccountsController@showEmail');
 
-$router->get('/rooms', 'RoomsController@index');
 // TODO: implementeer deze, dit moet dan ook in Router.php gebeuren
 /* router->post('/accounts', 'UserController@store'); */
 /* $router->put('/accounts/{id}', 'UserController@update'); */
@@ -39,6 +38,8 @@ $router->get('/supplies/{integer}', 'SupplyController@show');
 $router->post('/supplies', 'SupplyController@store');
 $router->put('/supplies/{integer}', 'SupplyController@update');
 $router->delete('/supplies/{integer}', 'SupplyController@destroy');
+
+$router->get('/rooms', 'RoomsController@index');
 
 $router->dispatch(); // Handle the request
 
