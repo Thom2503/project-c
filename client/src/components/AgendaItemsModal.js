@@ -18,7 +18,7 @@ class AgendaItemsModal extends Component {
   }
 
   async componentDidMount() {
-    const params = new URLSearchParams(window.roomID.search);
+    const params = new URLSearchParams(window.location.search);
     const userParam = params.get("user");
     const tsParam = params.get("ts");
     this.setState({ userParam, tsParam });
