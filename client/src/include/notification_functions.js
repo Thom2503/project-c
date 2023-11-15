@@ -27,7 +27,7 @@ export const getSubscriber = async (all = true, userid = 0) => {
  * @returns {bool} - of de gebruiker een mailtje wilt
  */
 export const userWantsMail = async (userID) => {
-	let data = getSubscriber(true, userID);
+	let data = await getSubscriber(true, userID);
 	if (data.WantsMail === "1") return true;
 	return false;
 };
@@ -53,7 +53,7 @@ export const userWantsPushNotification = async (userID) => {
  * @returns
  */
 export const sendMailNotification = async (userID) => {
-	if (userWantsMail(userID) !== true) return;
+	if (await userWantsMail(userID) !== true) return;
 	try {
 		const response = await fetch("mailnotification", {
 			method: 'POST',
