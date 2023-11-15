@@ -14,7 +14,7 @@ class AgendaItemsModal extends Component {
       enddate: "",
       location: "",
       accountsid: "",
-      status: "teststatus",
+      status: "in",
     };
   }
 
@@ -22,7 +22,8 @@ class AgendaItemsModal extends Component {
     const params = new URLSearchParams(window.location.search);
     const userParam = params.get("user");
     const tsParam = params.get("ts");
-    this.setState({accountsid: userParam, startdate: tsParam });
+	const tsEnd = new Date(Number.parseInt(tsParam)).setHours(23,59,59,999).valueOf().toString();
+    this.setState({accountsid: userParam, startdate: tsParam, enddate: tsEnd});
     try {
       const response = await fetch("rooms");
       const rooms = await response.json();

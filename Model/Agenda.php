@@ -12,7 +12,7 @@ class Agenda extends Database {
 		return $this->db->query($query)->fetchAll(PDO::FETCH_ASSOC);
 	}
 
-	public function getAgendaItemByID(int $id): array {
+	public function getAgendaItemByID(int $id): array|bool {
 		$query = "SELECT * FROM `AgendaItems` WHERE `AgendaItemsID` = :id";
 		$stmt = $this->db->prepare($query);
 		$stmt->bindParam(":id", $id, PDO::PARAM_INT);
@@ -20,7 +20,7 @@ class Agenda extends Database {
 		return $stmt->fetch(PDO::FETCH_ASSOC);
 	}
 
-	public function getAgendaItemByUserID(int $accountsid): array {
+	public function getAgendaItemByUserID(int $accountsid): array|bool {
 		$query = "SELECT * FROM `AgendaItems` WHERE `AccountsId` = :accountsid";
 		$stmt = $this->db->prepare($query);
 		$stmt->bindParam(":accountsid", $accountsid, PDO::PARAM_STR);

@@ -17,7 +17,7 @@ class AgendaController {
     public function show(int $id): void {
 		header('Content-Type: application/json');
 		$agendaItem = $this->agendaModel->getAgendaItemByID($id);
-		if (count($agendaItem) > 0) {
+		if ($agendaItem != false && count($agendaItem) > 0) {
 			echo json_encode($agendaItem);
 		} else {
 			http_response_code(404);
@@ -28,7 +28,7 @@ class AgendaController {
 	public function showAgendaItemsByUserID(int $userid): void {
 		header('Content-Type: application/json');
 		$userAgendaItems = $this->agendaModel->getAgendaItemByUserID($userid);
-		if (count($userAgendaItems) > 0) {
+		if ($userAgendaItems != false && count($userAgendaItems) > 0) {
 			echo json_encode($userAgendaItems);
 		} else {
 			http_response_code(404);
