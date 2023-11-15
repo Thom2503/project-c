@@ -32,7 +32,7 @@ export class Login extends Component {
                 if(data.Password === password)
                 {
 					setCookie("user", data.AccountsID, 7);
-					setCookie("isadmin", data.IsAdmin === "1" ? "true" : "false", 7);
+					setCookie("isadmin", data.IsAdmin === 1 ? "true" : "false", 7);
                     window.location.replace('agenda');
 
                 } else {
