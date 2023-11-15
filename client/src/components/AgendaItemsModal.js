@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import "../css/modal.css";
-import { getCookie } from "../include/util_functions";
 
 class AgendaItemsModal extends Component {
   static displayName = "AgendaItemsModal";
@@ -14,7 +13,7 @@ class AgendaItemsModal extends Component {
       startdate: "",
       enddate: "",
       location: "",
-      accountsid: getCookie("user"),
+      accountsid: "",
       status: "teststatus",
     };
   }
@@ -23,7 +22,7 @@ class AgendaItemsModal extends Component {
     const params = new URLSearchParams(window.location.search);
     const userParam = params.get("user");
     const tsParam = params.get("ts");
-    this.setState({ userParam, tsParam });
+    this.setState({accountsid: userParam, startdate: tsParam });
     try {
       const response = await fetch("rooms");
       const rooms = await response.json();
