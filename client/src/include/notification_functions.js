@@ -62,7 +62,6 @@ export const sendMailNotification = async (userID) => {
 			},
 			body: JSON.stringify({user: userID, template: 1}),
 		});
-		console.log(response);
 		const data = response.json();
 		if (data.success === true) {
 			console.log("Success de mail is verstuurd naar gebruiker met id: " + userID);
