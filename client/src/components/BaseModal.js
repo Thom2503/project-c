@@ -15,9 +15,9 @@ export class BaseModal extends Component {
     if (!this.props.isOpen) return null;
 
     return (
-      <div className="modal-container">
-        <div className="modal-content">
-          <div className="outer-close-icon">
+      <div className="base-modal-container">
+        <div className="base-modal-content">
+          <div className="base-outer-close-icon">
             <img
               className="close-icon"
               src={CloseIcon}

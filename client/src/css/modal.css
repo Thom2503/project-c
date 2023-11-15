@@ -1,5 +1,5 @@
 /* BaseModalContainer */
-.modal-container {
+.base-modal-container {
   position: fixed;
   top: 0;
   left: 0;
@@ -13,7 +13,7 @@
 }
 
 /* Modal Content */
-.modal-content {
+.base-modal-content {
   background-color: #fff;
   display: flex;
   flex-flow: column;
@@ -42,7 +42,7 @@
 
 /* Save Button */
 .save-button {
-  background-color: #792f82;
+  background-color: #792f82 !important;
   border: none;
   color: #fff;
   padding: 10px 15px;

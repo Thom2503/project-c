@@ -90,7 +90,6 @@ class AgendaItemsModal extends Component {
           >
             Titel:
           </label>
-          <br />
           <input
             type="text"
             id="title"
@@ -109,7 +108,6 @@ class AgendaItemsModal extends Component {
           >
             Beschrijving:
           </label>
-          <br />
           <input
             type="text"
             id="note"
@@ -128,7 +126,6 @@ class AgendaItemsModal extends Component {
           >
             Start Date:
           </label>
-          <br />
           <input
             type="text"
             id="sate"
@@ -147,7 +144,6 @@ class AgendaItemsModal extends Component {
           >
             Kamer:
           </label>
-          <br />
           <select
             id="roomID"
             name="roomID"
