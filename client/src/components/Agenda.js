@@ -37,6 +37,13 @@ export class Agenda extends Component {
 		return week;
 	}
 
+	getFirstDayTimeStamp() {
+		let today = new Date();
+		let day = today.getDay() || 7;
+		if (day !== 1) today.setHours(-24 * day);
+		return today.valueOf();
+	}
+
 	/**
 	 * Functie om een maand nummer te converten naar een naam, dus 10 -> okt enz.
 	 * 
@@ -94,7 +101,9 @@ export class Agenda extends Component {
 					<tbody>
 						{this.state.users.map(user =>
 							<AgendaRow user={user.AccountsID} 
-							           name={`${user.FirstName} ${user.LastName}`} />
+							           name={`${user.FirstName} ${user.LastName}`}
+							           beginTS={this.getFirstDayTimeStamp()}
+							/>
 						)}
 					</tbody>
 				</table>

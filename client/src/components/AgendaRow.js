@@ -5,7 +5,11 @@ export class AgendaRow extends Component {
 
 	constructor(props) {
 		super(props);
-		this.state = {cells: this.getUserData(), user: props.user, name: props.name};
+		this.state = {cells: [], user: props.user, name: props.name, begin: props.beginTS};
+	}
+
+	componentDidMount() {
+		this.getUserData();
 	}
 	
 	/**
@@ -13,17 +17,19 @@ export class AgendaRow extends Component {
 	 *
 	 * @returns {Array} - agenda items van deze gebruiker
 	 */
-	getUserData() {
-		// bij de lijst moet nog datum komen
-		return [
-			{status: "In de loods", isOut: false, ts: 1696356620},
-			{status: "Uit de loods", isOut: true, ts: 1696356620},
-			{status: "In de loods", isOut: false, ts: 1696356620},
-			{status: "In de loods", isOut: false, ts: 1696356620},
-			{status: "Uit de loods", isOut: true, ts: 1696356620},
-			{status: "", isOut: false, ts: 1696356620},
-			{status: "In de loods", isOut: false, ts: 1696356620},
-		];
+	async getUserData() {
+		let returnArr = []
+		const response = await fetch(`agendaitems/${this.state.user}`);
+		console.log(response.body);
+		const data = await response.json()
+		                           .catch(_ => {
+			for (let i = 0; i < 7; i++) {
+				let newDate = new Date(this.state.begin).setHours(24 * i).valueOf();
+				let obj = {status: "", isOut: false, ts: newDate};
+				returnArr.push(obj);
+			}
+		});
+		this.setState({cells: returnArr});
 	}
 
 	/**

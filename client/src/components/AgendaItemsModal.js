@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import "../css/modal.css";
+import { getCookie } from "../include/util_functions";
 
 class AgendaItemsModal extends Component {
   static displayName = "AgendaItemsModal";
@@ -13,7 +14,7 @@ class AgendaItemsModal extends Component {
       startdate: "",
       enddate: "",
       location: "",
-      accountsid: "1",
+      accountsid: getCookie("user"),
       status: "teststatus",
     };
   }
