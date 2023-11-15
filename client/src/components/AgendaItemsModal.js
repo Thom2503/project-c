@@ -10,16 +10,15 @@ class AgendaItemsModal extends Component {
     this.state = {
       title: "",
       note: "",
-      startdate: "",
-      enddate: "",
-      location: "",
+      date: "",
+      roomID: "",
       accountsid: "1",
       status: "teststatus",
     };
   }
 
   async componentDidMount() {
-    const params = new URLSearchParams(window.location.search);
+    const params = new URLSearchParams(window.roomID.search);
     const userParam = params.get("user");
     const tsParam = params.get("ts");
     this.setState({ userParam, tsParam });
@@ -41,7 +40,7 @@ class AgendaItemsModal extends Component {
   handleSubmit = async (event) => {
     event.preventDefault();
 
-    const { title, note, startdate, enddate, location, accountsid, status } =
+    const { title, note, date, roomID, accountsid, status } =
       this.state;
 
     const fetchURL = `agendaitems`;
@@ -55,9 +54,8 @@ class AgendaItemsModal extends Component {
         body: JSON.stringify({
           title,
           note,
-          startdate,
-          enddate,
-          location,
+          date,
+          roomID,
           accountsid,
           status,
         }),
@@ -125,7 +123,7 @@ class AgendaItemsModal extends Component {
 
         <div className="inputfield">
           <label
-            htmlFor="startdate"
+            htmlFor="date"
             className="block mb-2 text-sm font-small text-[#9E9E9E]"
           >
             Start Date:
@@ -133,10 +131,10 @@ class AgendaItemsModal extends Component {
           <br />
           <input
             type="text"
-            id="startdate"
-            name="startdate"
+            id="sate"
+            name="date"
             className="border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5"
-            value={this.state.startdate}
+            value={this.state.date}
             onChange={this.handleInputChange}
             required
           />
@@ -144,36 +142,17 @@ class AgendaItemsModal extends Component {
 
         <div className="inputfield">
           <label
-            htmlFor="enddate"
-            className="block mb-2 text-sm font-small text-[#9E9E9E]"
-          >
-            End Date:
-          </label>
-          <br />
-          <input
-            type="text"
-            id="enddate"
-            name="enddate"
-            className="border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5"
-            value={this.state.enddate}
-            onChange={this.handleInputChange}
-            required
-          />
-        </div>
-
-        <div className="inputfield">
-          <label
-            htmlFor="location"
+            htmlFor="roomID"
             className="block mb-2 text-sm font-small text-[#9E9E9E]"
           >
             Kamer:
           </label>
           <br />
           <select
-            id="location"
-            name="location"
+            id="roomID"
+            name="roomID"
             className="border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5"
-            value={this.state.location}
+            value={this.state.roomID}
             onChange={this.handleInputChange}
             required
           >
