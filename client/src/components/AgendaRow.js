@@ -52,7 +52,7 @@ export class AgendaRow extends Component {
 			<tr>
 				<td className="fixed">{this.state.name}</td>
 				{this.state.cells.map(cell =>
-					<td style={{backgroundColor: this.getCellColour(cell)}}>
+					<td key={cell.ts} style={{backgroundColor: this.getCellColour(cell)}}>
 						<a href={`agenda?modal=1&user=${this.state.user}&ts=${cell.ts}`}>
 							{cell.status ?? "&nbsp;"}
 						</a>
