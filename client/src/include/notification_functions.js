@@ -40,7 +40,7 @@ export const userWantsMail = async (userID) => {
  * @returns {bool} - of de gebruiker een push notification wilt
  */
 export const userWantsPushNotification = async (userID) => {
-	let data = getSubscriber(true, userID);
+	let data = await getSubscriber(true, userID);
 	if (data.WantsPush === "1") return true;
 	return false;
 };
@@ -68,12 +68,15 @@ export const sendMailNotification = async (userID) => {
 			return;
 		} else if (data.mailerror.length > 0) {
 			console.log(data.mailerror);
+			// XXX: handle de errors
 			return;
 		} else {
 			console.log(data);
+			// XXX: handle de errors
 			return;
 		}
 	} catch {
+		// XXX: handle de errors
 		return;
 	}
 };

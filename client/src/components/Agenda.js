@@ -80,12 +80,12 @@ export class Agenda extends Component {
 					<thead>
 						<tr>
 							<th className="fixed">&nbsp;</th>
-							{this.state.weekDays.map(day => 
+							{this.state.weekDays.map((day, index) => 
 								// de <a> tag om {day} is heel hacky maar het zorgt er voor
 								// dat het op mobile er goed uit ziet dus moet het er helaas
 								// staan, het feit dat er geen href in staat is niet erg geeft wel een
 								// warning maar die moet voor nu genegeerd worden
-								<th>
+								<th key={index}>
 									<a style={{color: "#8A8A8A"}}>{day}</a>
 								</th>
 							)}
@@ -93,7 +93,8 @@ export class Agenda extends Component {
 					</thead>
 					<tbody>
 						{this.state.users.map(user =>
-							<AgendaRow user={user.AccountsID} 
+							<AgendaRow key={user.AccountsID}
+							           user={user.AccountsID} 
 							           name={`${user.FirstName} ${user.LastName}`} />
 						)}
 					</tbody>
