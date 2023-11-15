@@ -59,7 +59,7 @@ class AgendaItemsModal extends Component {
 			startdate: startdate,
 			enddate: enddate,
 			location: location,
-			accountsid: accountsid,
+			accountsid: Number.parseInt(accountsid),
 			status: status,
         }),
       });
