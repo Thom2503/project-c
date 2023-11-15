@@ -1,5 +1,9 @@
 <?php
 define("TEMPLATE_ASSOC", [1 => Templates::Event, 2 => Templates::News]);
+// wachtwoord en mail account voor het sturen van de mails
+// TODO: vul deze aan als er een account is
+define("SEND_MAIL", "");
+define("SEND_PASSWORD", "");
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
@@ -52,8 +56,10 @@ class NotificationController {
 		}
 
 		$mailContent = $this->getTemplateBody(TEMPLATE_ASSOC[$templateID]);
+		$mailSubject = $this->getTemplateSubject(TEMPLATE_ASSOC[$templateID]);
 		$userData = $this->userModel->getAccountByID($userID);
 
+		// de content van de mail
 		$htMailOut = "<html>";
 		$htMailOut .= "<head>";
 		$htMailOut .= "<title>Automatische mail Cavero planner</title>";
@@ -64,12 +70,24 @@ class NotificationController {
 		$htMailOut .= "</body>";
 		$htMailOut .= "</html>";
 
+		// probeer een mail te sturen na het maken zo niet geef errors door
+		try {
+			$mail = $this->configureMailSettings($userData['Email'], $mailSubject, $htMailOut);
+
+			if (!$mail->send()) {
+				$errors['PHPMailer'] = "Mail error: ".$mail->ErrorInfo;
+			}
+		} catch(phpmailerException $e) {
+			header('Content-Type: application/json');
+			echo json_encode(['mailerror' => "Mail kon niet goed verzonden worden, probeer het later opnieuw"]);
+		}
+
 		header('Content-Type: application/json');
 		// zijn er errors? stuur die dan terug
 		if (count($errors) > 0) {
 			echo json_encode($errors);
 		} else {
-			echo json_encode(['success' => 'mail was sent!']);
+			echo json_encode(['success' => true]);
 		}
 	}
 
@@ -85,7 +103,14 @@ class NotificationController {
         // Implement logic to delete user by ID
     }
 
-	private function getTemplateBody(Templates $template): string|bool {
+	/**
+	 * Private method om de content van de mail te maken, om naar de gebruiker te sturen.
+	 *
+	 * @param int $template - welke template er gebruikt moet worden
+	 *
+	 * @param string $htOut - de body van de mail
+	 */
+	private function getTemplateBody(int $template): string|bool {
 		$htOut = match ($template) {
 			Templates::Event => "<h2>Leuk er is een nieuw evenement toegevoegd!<h2>\n".
 			                    "<p>Kijk bij <a href='localhost/evenementen'>de evenementen</a> voor meer informatie</p>",
@@ -94,6 +119,50 @@ class NotificationController {
 			default => false,
 		};
 		return $htOut;	
+	}
+
+	/**
+	 * Private method om de subject van de mail te maken, om naar de gebruiker te sturen.
+	 *
+	 * @param int $template - welke template er gebruikt moet worden
+	 *
+	 * @param string $htOut - de subject van de mail
+	 */
+	private function getTemplateSubject(int $template): string|bool {
+		$htOut = match ($template) {
+			Templates::Event => "Updates over een evenement!",
+			Templates::News  => "Updates over een nieuws artikel",
+			default => false,
+		};
+		return $htOut;
+	}
+
+	/**
+	 * Method om de mail to configureren om naar de gebruiker te sturen. Hier worden de mail adressen toe
+	 * gevoegd, de subject gezet, de body etc.
+	 *
+	 * @param string $recipient - wie de mail ontvangt
+	 * @param string $subject   - wat er in de mail titel moet staan
+	 * @param string $body      - wat er in de mail daadwerkelijk staat
+	 *
+	 * @return PHPMailer $mail - mail object waar je de mail mee verstuurd
+	 */
+	private function configureMailSettings(string $recipient, string $subject, string $body): PHPMailer {
+		$mail = new PHPMailer;
+		$mail->isSMTP();
+		$mail->Host = "smtp.gmail.com";
+		$mail->SMTPAuth = true;
+		$mail->Username = SEND_MAIL;
+		$mail->Password = SEND_PASSWORD;
+		$mail->Port = 587;
+
+		$mail->setFrom(SEND_MAIL, "Cavero - Project Clubhuis");
+		$mail->addReplyTo(SEND_MAIL, "Cavero - Project Clubhuis");
+		$mail->addAddress($recipient);
+		$mail->isHTML(true);
+		$mail->Subject = $subject;
+		$mail->Body = $body;
+		return $mail;
 	}
 }
 

@@ -42,6 +42,7 @@ $router->delete('/supplies/{integer}', 'SupplyController@destroy');
 /*{ Notifications }*/
 $router->get('/notifications', 'NotificationController@index');
 $router->get('/notifications/{integer}', 'NotificationController@show');
+$router->post('/mailnotification', "NotificationController@sendMailToUser");
 
 $router->dispatch(); // Handle the request
 
