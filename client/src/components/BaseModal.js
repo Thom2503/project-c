@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import AgendaItemsModal from "./AgendaItemsModal";
+import { AgendaItemsModal } from "./AgendaItemsModal";
 import "../css/modal.css";
 import CloseIcon from "../static/close-icon.svg";
 
