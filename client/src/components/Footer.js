@@ -16,9 +16,11 @@ export class Footer extends Component {
         return (
 			<footer>
 				<Settings />
-				<a onClick={() => this.loguitEvent()} className='loguit-button'>
-					<span className='loguit-text'>Loguit</span>
-				</a>
+				<div>
+					<a onClick={() => this.loguitEvent()} className='loguit-button'>
+						<span className='loguit-text'>Loguit</span>
+					</a>
+				</div>
 			</footer>
         );
     }

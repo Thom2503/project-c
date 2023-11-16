@@ -20,6 +20,21 @@ class Notification extends Database {
 		return $stmt->fetch(PDO::FETCH_ASSOC);
 	}
 	
+	public function setUserSubscription(array $data): int {
+		// maak de column naam op basis wat het type is wat geupdatet moet worden
+		$sqSubscriptionType = $data['type'] == "mail" ? "`WantsMail`" : "`WantsPush`";
+		// een upsert query, waar je of insert of als er al een gebruiker is gevonden word die
+		// geupdatet.
+		$query = "INSERT INTO `Subscriptions` (`GebruikerID`, ".$sqSubscriptionType.")".
+		         "VALUES (:uid, :wants)".
+		         "ON CONFLICT(`GebruikerID`)".
+		         "DO UPDATE SET ".$sqSubscriptionType."=excluded.".$sqSubscriptionType;
+		$stmt = $this->db->prepare($query);
+		$stmt->bindParam(":uid", $data['userid']);
+		$stmt->bindParam(":wants", $data['wants']);
+		$stmt->execute();
+		return $this->db->lastInsertId();
+	}
 }
 
 ?>

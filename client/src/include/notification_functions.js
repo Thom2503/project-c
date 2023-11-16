@@ -80,3 +80,35 @@ export const sendMailNotification = async (userID) => {
 		return;
 	}
 };
+
+/**
+ * Update de gebruikers instellingen voor notifications, deze checked welk type het moet zijn,
+ * of hij/zij het wilt. Dit word dynamisch aangemaakt voor als het niet bestaat of het word
+ * geupdatet.
+ *
+ * @param {int}    userID            - de gebruiker die geupdatet moet worden
+ * @param {bool}   wantsNotification - of de gebruiker de notificatie wilt ontvangen
+ * @param {string} type              - wat er geupdatet moet worden, dus mail of push notifications
+ *
+ * @returns
+ */
+export const changeUserSubscription = async (userID, wantsNotification, type = "mail") => {
+	if (["mail", "push"].includes(type) === false) return;
+	try {
+		const response = await fetch("notifications", {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({userid: userID, wants: wantsNotification, type: type}),
+		});
+		const data = response.json();
+		if (data.id > 0 || data.id == null) {
+			console.log("Success!");
+		} else {
+			console.log("Not updated!");
+		}
+	} catch(e) {
+		console.error("Error: " + e);
+	}
+};
