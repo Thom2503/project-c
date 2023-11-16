@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { AgendaItemsModal } from "./AgendaItemsModal";
+import { SupplyModal } from "./SupplyModal";
 import "../css/modal.css";
 import CloseIcon from "../static/close-icon.svg";
 
@@ -11,8 +12,29 @@ export class BaseModal extends Component {
     this.state = {};
   }
 
+  async componentDidMount() {
+    /* Based on the param given via url the right modal gets loaded */
+    const params = new URLSearchParams(window.location.search);
+    const modalType = params.get("modal");
+    this.setState({ modalType });
+  }
+
   render() {
     if (!this.props.isOpen) return null;
+
+    let modalSwitch
+    switch (this.state.modalType) {
+      case "1":
+        modalSwitch = < AgendaItemsModal onClose={this.props.onClose} />
+        break;
+      case "2":
+        modalSwitch = < SupplyModal onClose={this.props.onClose} />
+      break
+      /* Error message if there is no corresponding Modal */
+      default:
+        modalSwitch = "The following modal type could not be loaded"
+        break;
+    }
 
     return (
       <div className="base-modal-container">
@@ -25,7 +47,7 @@ export class BaseModal extends Component {
               onClick={this.props.onClose}
             />
           </div>
-          <AgendaItemsModal onClose={this.props.onClose} />
+          { modalSwitch }
         </div>
       </div>
     );
