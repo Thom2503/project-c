@@ -41,6 +41,8 @@ $router->post('/supplies', 'SupplyController@store');
 $router->put('/supplies/{integer}', 'SupplyController@update');
 $router->delete('/supplies/{integer}', 'SupplyController@destroy');
 
+$router->get('/news', 'NewsController@index');
+
 $router->dispatch(); // Handle the request
 
 ?>

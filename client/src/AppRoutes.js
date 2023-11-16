@@ -6,6 +6,7 @@ import { Agenda } from "./components/Agenda";
 import { Kamers } from "./components/Kamers";
 import {SupplyModal} from "./components/SupplyModal";
 import {Supplies} from "./components/Supplies";
+import { Nieuws } from './components/Nieuws';
 
 const AppRoutes = [
   {
@@ -39,6 +40,10 @@ const AppRoutes = [
   {
     path: '/voorzieningen',
     element: <Supplies />
+  },
+  {
+    path: '/Nieuws',
+    element: <Nieuws />
   }
 ];
 

@@ -1,0 +1,23 @@
+/* nieuws.css */
+
+.flex-wrap {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    width: 100%;
+    box-sizing: border-box; /* Ensure padding and border are included in the width */
+  }
+  
+  .flex-wrap > div {
+    width: 100%;
+    box-sizing: border-box; /* Ensure padding and border are included in the width */
+    margin-bottom: 2rem; /* Increase the margin at the bottom of each news item */
+  }
+  
+  @media (min-width: 768px) {
+    .flex-wrap > div {
+      width: calc(50% - 1rem);
+      max-width: calc(50% - 1rem);
+    }
+  }
+  
