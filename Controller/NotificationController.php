@@ -1,9 +1,7 @@
 <?php
 define("TEMPLATE_ASSOC", [1 => Templates::Event, 2 => Templates::News]);
-// wachtwoord en mail account voor het sturen van de mails
-// TODO: vul deze aan als er een account is
-define("SEND_MAIL", "");
-define("SEND_PASSWORD", "");
+define("SEND_MAIL", "socialekalenderteam4@gmail.com");
+define("SEND_PASSWORD", "hgev lxeu iqzg mibp");
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
