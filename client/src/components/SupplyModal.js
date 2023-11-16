@@ -88,34 +88,33 @@ export class SupplyModal extends Component {
       <div className="modal">
         <h2>Voorziening Toevoegen</h2>
         <div className="modal-content">
-          <div className="outer-close-icon">
-            <div className="close-icon">x</div>
-          </div>
           <form onSubmit={this.handleSubmit}>
-            <div>
-              <label htmlFor="supplyName">Naam:</label>
+            <div className="input-field-div">
+              <label htmlFor="supplyName" className="input-field-label">Naam:</label>
               <input
                 type="text"
                 id="supplyName"
                 name="name"
+                className="input-field"
                 value={this.state.name}
                 onChange={this.handleChange}
                 required
               />
             </div>
-            <div>
-              <label htmlFor="supplyTotal">Totaal:</label>
+            <div className="input-field-div">
+              <label htmlFor="supplyTotal" className="input-field-label">Totaal:</label>
               <input
                 type="number"
                 id="supplyTotal"
                 name="total"
+                className="input-field"
                 value={this.state.total}
                 onChange={this.handleChange}
                 required
               />
             </div>
-            <div>
-              <label htmlFor="supplyDelete">Delete:</label>
+            <div className="input-field-div">
+              <label htmlFor="supplyDelete" >Delete:</label>
               <input
                 type="checkbox"
                 id="supplyDelete"
@@ -124,7 +123,7 @@ export class SupplyModal extends Component {
                 onChange={this.handleChange}
               />
             </div>
-            <input type="submit" value="Opslaan" />
+            <input type="submit" value="Opslaan" className="save-button"/>
           </form>
         </div>
       </div>
