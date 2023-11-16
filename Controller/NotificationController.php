@@ -1,9 +1,7 @@
 <?php
 define("TEMPLATE_ASSOC", [1 => Templates::Event, 2 => Templates::News]);
-// wachtwoord en mail account voor het sturen van de mails
-// TODO: vul deze aan als er een account is
-define("SEND_MAIL", "");
-define("SEND_PASSWORD", "");
+define("SEND_MAIL", "socialekalenderteam4@gmail.com");
+define("SEND_PASSWORD", "hgev lxeu iqzg mibp");
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
@@ -92,7 +90,21 @@ class NotificationController {
 	}
 
     public function store() {
-        // Implement logic to store a new user
+		$errors = [];
+		$data = json_decode(file_get_contents("php://input"), true);
+		// check of de type voor komt in de types die mogelijk zijn
+		if (!in_array($data['type'], ['mail', 'push'])) {
+			$errors['type'] = "type not found in ['mail', 'push']";
+		}
+
+		header('Content-Type: application/json');
+		// zijn er errors? stuur die dan terug
+		if (count($errors) > 0) {
+			echo json_encode($errors);
+		} else {
+			$subscriptionID = $this->notification->setUserSubscription($data);
+			echo json_encode(['id' => $subscriptionID]);
+		}
     }
 
     public function update($id) {

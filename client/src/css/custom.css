@@ -66,6 +66,30 @@ table.agenda th {
   padding: 0.5em;
 }
 
+footer {
+	width: 100%;
+	position: absolute;
+	bottom: 0;
+	height: 60px;
+	background-color: #3D3D3D;
+}
+
+.loguit-button {
+	border-radius: 3px;
+	border-bottom: 2px solid #8A8A8A;
+	background: #8A8A8A;
+	box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+	width: 110px;
+	height: 30px;
+	flex-shrink: 0;
+	color: white;
+	float: right;
+	margin-right: 50px;
+	margin-top: 15px;
+	margin-bottom: 15px;
+	text-align: center;
+}
+
 @media only screen and (max-width: 600px) {
   table.agenda .table-wrapper {
     overflow-x: auto;
