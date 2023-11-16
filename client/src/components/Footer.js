@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { deleteCookie } from '../include/util_functions';
+import { Settings } from './Settings';
 
 export class Footer extends Component {
 	
@@ -14,6 +15,7 @@ export class Footer extends Component {
     render() {
         return (
 			<footer>
+				<Settings />
 				<a onClick={() => this.loguitEvent()} className='loguit-button'>
 					<span className='loguit-text'>Loguit</span>
 				</a>
