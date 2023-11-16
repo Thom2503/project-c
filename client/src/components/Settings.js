@@ -15,7 +15,7 @@ export class Settings extends Component {
 
     render() {
         return (
-			<div style={{display: 'flex', color: 'white'}}>
+			<div style={{display: 'flex', color: 'white', float: 'left'}}>
 				<span style={{margin: '0.8em'}}>Settings</span>&nbsp;
 				<ul style={{color: 'white'}}>
 					<li><input type='checkbox' checked={this.state.mail} />&emsp;Mail</li>
