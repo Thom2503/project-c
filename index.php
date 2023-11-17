@@ -33,6 +33,7 @@ $router->get('/agendaitems', 'AgendaController@index');
 $router->get('/agendaitems/{integer}', 'AgendaController@show');
 $router->get('/useritems/{integer}', 'AgendaController@showUser');
 $router->post('/agendaitems', 'AgendaController@store');
+$router->put('/agendaitems/{integer}', 'AgendaController@update');
 /*{ Supplies Routing }*/
 $router->get('/supplies', 'SupplyController@index');
 $router->get('/supplies/{integer}', 'SupplyController@show');

@@ -55,7 +55,17 @@ class AgendaController {
     }
 
     public function update($id) {
-        
+		$data = json_decode(file_get_contents("php://input"), true);
+		$id = $data['accountsid'];
+		$ts = $data['date'];
+        $success = $this->agendaModel->updateAgendaItem($id, $ts, $data);
+        header('Content-Type: application/json');
+		if ($success == true) {
+        	echo json_encode(['success' => true]);
+		} else {
+			http_response_code(404);
+			echo json_encode(['success' => 'false']);
+		}
     }
 
     public function destroy($id) {
