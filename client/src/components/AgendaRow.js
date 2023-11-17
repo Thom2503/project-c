@@ -115,7 +115,6 @@ export class AgendaRow extends Component {
 							{cell.status ?? "&nbsp;"}
 						</a>
 					</td>
-					//<AgendaCell />
 				)}
 			</tr>
 		);
