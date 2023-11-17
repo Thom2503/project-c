@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { AgendaRow } from './AgendaRow';
 import '../css/custom.css';
+import {getFirstDayTimeStamp} from '../include/util_functions';
 
 export class Agenda extends Component {
 	static displayName = Agenda.name;
@@ -30,21 +31,6 @@ export class Agenda extends Component {
 			week.push(day);
 		}
 		return week;
-	}
-
-	/**
-	 * Zoek de timestamp van de eerste dag van deze week
-	 *
-	 * @returns {int} today - de timestamp van de eerste dag
-	 */
-	getFirstDayTimeStamp() {
-		let today = new Date();
-		let dayOfWeek = today.getDay();
-		let daysUntilSun = dayOfWeek === 0 ? 0 : 7 - dayOfWeek;
-		let firstDay = new Date(today);
-		firstDay.setDate(today.getDate() + daysUntilSun);
-		firstDay.setHours(0, 0, 0, 0);
-		return firstDay.getTime();
 	}
 
 	/**
@@ -105,7 +91,7 @@ export class Agenda extends Component {
 						{this.state.users.map(user =>
 							<AgendaRow key={user.AccountsID}
 							           name={`${user.FirstName} ${user.LastName}`}
-							           beginTS={this.getFirstDayTimeStamp()}
+							           beginTS={getFirstDayTimeStamp()}
 							           user={user.AccountsID} 
 							/>
 						)}

@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import {getNextDay} from '../include/util_functions';
 
 export class AgendaRow extends Component {
 	static displayName = AgendaRow.name;
@@ -13,21 +14,6 @@ export class AgendaRow extends Component {
 	}
 
 	/**
-	 * Bereken het absolute nieuwe dag, en return de timestamp
-	 *
-	 * @param {int} i - welk dag nummer van de week er bij moet
-	 *
-	 * @returns {int} newDateTS - de timestamp van de "volgende" dag
-	 */
-	getNextDay(i) {
-		let beginDate = new Date(this.state.begin);
-		let newDate = beginDate.setDate(beginDate.getDate() + i);
-		newDate = beginDate.setHours(0, 0, 0, 0);
-		let newDateTS = newDate.valueOf();
-		return newDateTS;
-	}
-	
-	/**
 	 * Method om de specifieke data van de gebruiker te krijgen van deze week.
 	 *
 	 * @returns {Array} - agenda items van deze gebruiker
@@ -39,7 +25,7 @@ export class AgendaRow extends Component {
 		// als er geen data is gevonden van de gebruiker moet er een standaard lege agenda zijn
 		if (data === false) {
 			for (let i = 0; i < 7; i++) {
-				let newDateTS = this.getNextDay(i);
+				let newDateTS = getNextDay(this.state.begin, i);
 				let obj = {status: "", isOut: false, ts: newDateTS};
 				returnArr.push(obj);
 			}
@@ -61,7 +47,7 @@ export class AgendaRow extends Component {
 			// maak de items van de week door 7 keer te loopen
 			for (let i = 0; i < 7; i++) {
 				// zoek de volgende dag om te vergelijken met de datum die staat in de database
-				let newDateTS = this.getNextDay(i);
+				let newDateTS = getNextDay(this.state.begin, i);
 				// standaard waardes
 				let status = "";
 				let isOut = false;
