@@ -125,10 +125,9 @@ export class AgendaItemsModal extends Component {
             htmlFor="date"
             className="input-field-label"
           >
-            Start Date:
           </label>
           <input
-            type="text"
+            type="hidden"
             id="sate"
             name="date"
             className="input-field"
