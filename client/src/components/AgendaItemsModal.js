@@ -1,7 +1,8 @@
 import React, { Component } from "react";
+import { getCookie } from '../include/util_functions';
 import "../css/modal.css";
 
-class AgendaItemsModal extends Component {
+export class AgendaItemsModal extends Component {
   static displayName = "AgendaItemsModal";
 
   constructor(props) {
@@ -10,10 +11,9 @@ class AgendaItemsModal extends Component {
     this.state = {
       title: "In de loods",
       note: "",
-      startdate: "",
-      enddate: "",
-      location: "",
-      accountsid: "",
+      date: "",
+      roomID: "",
+      accountsid: Number.parseInt(getCookie("user")),
       status: "in",
     };
   }
@@ -22,8 +22,8 @@ class AgendaItemsModal extends Component {
     const params = new URLSearchParams(window.location.search);
     const userParam = params.get("user");
     const tsParam = params.get("ts");
-	const tsEnd = new Date(Number.parseInt(tsParam)).setHours(23,59,59,999).valueOf().toString();
-    this.setState({accountsid: userParam, startdate: tsParam, enddate: tsEnd});
+	// const tsEnd = new Date(Number.parseInt(tsParam)).setHours(23,59,59,999).valueOf().toString();
+    this.setState({accountsid: userParam, date: tsParam});
     try {
       const response = await fetch("rooms");
       const rooms = await response.json();
@@ -42,8 +42,7 @@ class AgendaItemsModal extends Component {
   handleSubmit = async (event) => {
     event.preventDefault();
 
-    const { title, note, startdate, enddate, location, accountsid, status } =
-      this.state;
+    const { title, note, date, roomID, accountsid, status } = this.state;
 
     const fetchURL = "agendaitems";
 
@@ -54,13 +53,12 @@ class AgendaItemsModal extends Component {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-			title: title,
-			note: note,
-			startdate: startdate,
-			enddate: enddate,
-			location: location,
-			accountsid: Number.parseInt(accountsid),
-			status: status,
+          title,
+          note,
+          date,
+          roomID,
+          accountsid,
+          status,
         }),
       });
 
@@ -88,10 +86,10 @@ class AgendaItemsModal extends Component {
   render() {
     return (
       <form onSubmit={this.handleSubmit}>
-        <div className="inputfield">
+        <div className="input-field-div">
           <label
             htmlFor="title"
-            className="block mb-2 text-sm font-small text-[#9E9E9E]"
+            className="input-field-label"
           >
             Titel:
           </label>
@@ -99,16 +97,16 @@ class AgendaItemsModal extends Component {
             type="text"
             id="title"
             name="title"
-            className="border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5"
+            className="input-field"
             value={this.state.title}
             onChange={this.handleInputChange}
           />
         </div>
 
-        <div className="inputfield">
+        <div className="input-field-div">
           <label
             htmlFor="note"
-            className="block mb-2 text-sm font-small text-[#9E9E9E]"
+            className="input-field-label"
           >
             Beschrijving:
           </label>
@@ -116,62 +114,45 @@ class AgendaItemsModal extends Component {
             type="text"
             id="note"
             name="note"
-            className="border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5"
+            className="input-field"
             value={this.state.note}
             onChange={this.handleInputChange}
           />
         </div>
 
-        <div className="inputfield">
+        <div className="input-field-div">
           <label
-            htmlFor="startdate"
-            className="block mb-2 text-sm font-small text-[#9E9E9E]"
+            htmlFor="date"
+            className="input-field-label"
           >
             Start Date:
           </label>
           <input
             type="text"
-            id="startdate"
-            name="startdate"
-            className="border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5"
-            value={this.state.startdate}
+            id="sate"
+            name="date"
+            className="input-field"
+            value={this.state.date}
             onChange={this.handleInputChange}
             required
           />
         </div>
 
-        <div className="inputfield">
+        <div className="input-field-div">
           <label
-            htmlFor="enddate"
-            className="block mb-2 text-sm font-small text-[#9E9E9E]"
-          >
-            End Date:
-          </label>
-          <input
-            type="text"
-            id="enddate"
-            name="enddate"
-            className="border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5"
-            value={this.state.enddate}
-            onChange={this.handleInputChange}
-            required
-          />
-        </div>
-
-        <div className="inputfield">
-          <label
-            htmlFor="location"
-            className="block mb-2 text-sm font-small text-[#9E9E9E]"
+            htmlFor="roomID"
+            className="input-field-label"
           >
             Kamer:
           </label>
           <select
-            id="location"
-            name="location"
-            className="border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5"
-            value={this.state.location}
+            id="roomID"
+            name="roomID"
+            className="input-field"
+            value={this.state.roomID}
             onChange={this.handleInputChange}
           >
+            <br/>
             <option value="" disabled>
               Selecteer een kamer
             </option>
@@ -193,5 +174,3 @@ class AgendaItemsModal extends Component {
     );
   }
 }
-
-export default AgendaItemsModal;

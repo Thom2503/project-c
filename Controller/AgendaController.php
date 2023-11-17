@@ -25,6 +25,17 @@ class AgendaController {
 		}
     }
 
+    public function showUser(int $id): void {
+		header('Content-Type: application/json');
+		$agendaItem = $this->agendaModel->getAgendaItemByUserID($id);
+		if ($agendaItem != false && count($agendaItem) > 0) {
+			echo json_encode($agendaItem);
+		} else {
+			http_response_code(404);
+			echo json_encode(['error' => 'agenda item not found']);
+		}
+    }
+
 	public function showAgendaItemsByUserID(int $userid): void {
 		header('Content-Type: application/json');
 		$userAgendaItems = $this->agendaModel->getAgendaItemByUserID($userid);

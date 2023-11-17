@@ -31,6 +31,7 @@ $router->get('/accounts/{string}', 'AccountsController@showEmail');
 /*{ Agenda Routing }*/
 $router->get('/agendaitems', 'AgendaController@index');
 $router->get('/agendaitems/{integer}', 'AgendaController@show');
+$router->get('/useritems/{integer}', 'AgendaController@showUser');
 $router->post('/agendaitems', 'AgendaController@store');
 /*{ Supplies Routing }*/
 $router->get('/supplies', 'SupplyController@index');
@@ -38,6 +39,11 @@ $router->get('/supplies/{integer}', 'SupplyController@show');
 $router->post('/supplies', 'SupplyController@store');
 $router->put('/supplies/{integer}', 'SupplyController@update');
 $router->delete('/supplies/{integer}', 'SupplyController@destroy');
+/*{ Notifications }*/
+$router->get('/notifications', 'NotificationController@index');
+$router->get('/notifications/{integer}', 'NotificationController@show');
+$router->post('/mailnotification', "NotificationController@sendMailToUser");
+$router->post('/notifications', "NotificationController@store");
 
 $router->get('/rooms', 'RoomsController@index');
 

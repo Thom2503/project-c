@@ -44,9 +44,12 @@ export class Agenda extends Component {
 	 */
 	getFirstDayTimeStamp() {
 		let today = new Date();
-		let day = today.getDay() || 7;
-		if (day !== 1) today.setHours(-24 * day);
-		return today.valueOf();
+		let dayOfWeek = today.getDay();
+		let daysUntilSun = dayOfWeek === 0 ? 0 : 7 - dayOfWeek;
+		let firstDay = new Date(today);
+		firstDay.setDate(today.getDate() + daysUntilSun);
+		firstDay.setHours(0, 0, 0, 0);
+		return firstDay.getTime();
 	}
 
 	/**
@@ -92,12 +95,12 @@ export class Agenda extends Component {
 					<thead>
 						<tr>
 							<th className="fixed">&nbsp;</th>
-							{this.state.weekDays.map(day => 
+							{this.state.weekDays.map((day, index) => 
 								// de <a> tag om {day} is heel hacky maar het zorgt er voor
 								// dat het op mobile er goed uit ziet dus moet het er helaas
 								// staan, het feit dat er geen href in staat is niet erg geeft wel een
 								// warning maar die moet voor nu genegeerd worden
-								<th>
+								<th key={index}>
 									<a style={{color: "#8A8A8A"}}>{day}</a>
 								</th>
 							)}
@@ -105,9 +108,10 @@ export class Agenda extends Component {
 					</thead>
 					<tbody>
 						{this.state.users.map(user =>
-							<AgendaRow user={user.AccountsID} 
+							<AgendaRow key={user.AccountsID}
 							           name={`${user.FirstName} ${user.LastName}`}
 							           beginTS={this.getFirstDayTimeStamp()}
+							           user={user.AccountsID} 
 							/>
 						)}
 					</tbody>

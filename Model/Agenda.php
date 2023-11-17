@@ -13,7 +13,7 @@ class Agenda extends Database {
 	}
 
 	public function getAgendaItemByID(int $id): array|bool {
-		$query = "SELECT * FROM `AgendaItems` WHERE `AgendaItemsID` = :id";
+		$query = "SELECT * FROM `AgendaItems` WHERE `ID` = :id";
 		$stmt = $this->db->prepare($query);
 		$stmt->bindParam(":id", $id, PDO::PARAM_INT);
 		$stmt->execute();
@@ -25,18 +25,17 @@ class Agenda extends Database {
 		$stmt = $this->db->prepare($query);
 		$stmt->bindParam(":accountsid", $accountsid, PDO::PARAM_STR);
 		$stmt->execute();
-		return $stmt->fetch(PDO::FETCH_ASSOC);
+		return $stmt->fetchAll(PDO::FETCH_ASSOC);
 	}
 
     public function createAgendaItem(array $data): int {
-		$query = "INSERT INTO `AgendaItems` (`Title`, `Note`, `StartDate`, `EndDate`, `Location`, `AccountsId`, `Status`)".
-		         "VALUES (:title, :note, :startdate, :enddate, :location, :accountsid, :status)";	
+		$query = "INSERT INTO `AgendaItems` (`Title`, `Note`, `Date`, `RoomID`, `AccountsId`, `Status`)".
+		         "VALUES (:title, :note, :date, :roomID, :accountsid, :status)";
 		$stmt = $this->db->prepare($query);
 		$stmt->bindParam(":title", $data['title']);
 		$stmt->bindParam(":note", $data['note']);
-		$stmt->bindParam(":startdate", $data['startdate']);
-		$stmt->bindParam(":enddate", $data['enddate']);
-		$stmt->bindParam(":location", $data['location']);
+		$stmt->bindParam(":date", $data['date']);
+		$stmt->bindParam(":roomID", $data['roomID']);
 		$stmt->bindParam(":accountsid", $data['accountsid']);
 		$stmt->bindParam(":status", $data['status']);
 		$stmt->execute();
@@ -44,11 +43,11 @@ class Agenda extends Database {
 	}
 
 	public function updateAgendaItem(int $id, array $data): bool {
-		$query = "UPDATE `AgendaItems` SET `Title` = :title, `Note` = :note, `Location` = :location, `Status` = `status` WHERE `AgendaItemsID` = :sid";
+		$query = "UPDATE `AgendaItems` SET `Title` = :title, `Note` = :note, `RoomID` = :roomID, `Status` = `status` WHERE `AgendaItemsID` = :sid";
 		$stmt = $this->db->prepare($query);
         $stmt->bindParam(":title", $data['title'], PDO::PARAM_STR);
 		$stmt->bindParam(":note", $data['note'], PDO::PARAM_STR);
-        $stmt->bindParam(":location", $data['location'], PDO::PARAM_STR);
+        $stmt->bindParam(":roomID", $data['roomID'], PDO::PARAM_STR);
         $stmt->bindParam(":status", $data['status']);
 		$stmt->bindParam(":sid", $id, PDO::PARAM_INT);
 		return $stmt->execute();
