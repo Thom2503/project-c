@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { getCookie } from '../include/util_functions';
 import "../css/modal.css";
 
 export class AgendaItemsModal extends Component {
@@ -8,12 +9,12 @@ export class AgendaItemsModal extends Component {
     super(props);
 
     this.state = {
-      title: "",
+      title: "In de loods",
       note: "",
       date: "",
       roomID: "",
-      accountsid: "1",
-      status: "teststatus",
+      accountsid: Number.parseInt(getCookie("user")),
+      status: "in",
     };
   }
 
@@ -21,7 +22,8 @@ export class AgendaItemsModal extends Component {
     const params = new URLSearchParams(window.location.search);
     const userParam = params.get("user");
     const tsParam = params.get("ts");
-    this.setState({ userParam, tsParam });
+	// const tsEnd = new Date(Number.parseInt(tsParam)).setHours(23,59,59,999).valueOf().toString();
+    this.setState({accountsid: userParam, date: tsParam});
     try {
       const response = await fetch("rooms");
       const rooms = await response.json();
@@ -42,7 +44,7 @@ export class AgendaItemsModal extends Component {
 
     const { title, note, date, roomID, accountsid, status } = this.state;
 
-    const fetchURL = `agendaitems`;
+    const fetchURL = "agendaitems";
 
     try {
       const response = await fetch(fetchURL, {
@@ -70,6 +72,7 @@ export class AgendaItemsModal extends Component {
       if (data.id > 0 || data.success === true) {
         console.log("Done");
         this.props.onClose();
+		window.location.replace("agenda");
       } else {
         // Handle form validation errors or other issues
         console.log(data);
@@ -96,7 +99,6 @@ export class AgendaItemsModal extends Component {
             className="input-field"
             value={this.state.title}
             onChange={this.handleInputChange}
-            required
           />
         </div>
 
@@ -114,7 +116,6 @@ export class AgendaItemsModal extends Component {
             className="input-field"
             value={this.state.note}
             onChange={this.handleInputChange}
-            required
           />
         </div>
 
@@ -123,10 +124,9 @@ export class AgendaItemsModal extends Component {
             htmlFor="date"
             className="input-field-label"
           >
-            Start Date:
           </label>
           <input
-            type="text"
+            type="hidden"
             id="sate"
             name="date"
             className="input-field"
@@ -149,7 +149,6 @@ export class AgendaItemsModal extends Component {
             className="input-field"
             value={this.state.roomID}
             onChange={this.handleInputChange}
-            required
           >
             <br/>
             <option value="" disabled>
