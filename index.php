@@ -24,7 +24,6 @@ $router->get('/accounts', 'AccountsController@index');
 $router->get('/accounts/{integer}', 'AccountsController@show');
 $router->get('/accounts/{string}', 'AccountsController@showEmail');
 
-$router->get('/rooms', 'RoomsController@index');
 // TODO: implementeer deze, dit moet dan ook in Router.php gebeuren
 /* router->post('/accounts', 'UserController@store'); */
 /* $router->put('/accounts/{id}', 'UserController@update'); */
@@ -32,7 +31,9 @@ $router->get('/rooms', 'RoomsController@index');
 /*{ Agenda Routing }*/
 $router->get('/agendaitems', 'AgendaController@index');
 $router->get('/agendaitems/{integer}', 'AgendaController@show');
+$router->get('/useritems/{integer}', 'AgendaController@showUser');
 $router->post('/agendaitems', 'AgendaController@store');
+$router->put('/agendaitems/{integer}', 'AgendaController@update');
 /*{ Supplies Routing }*/
 $router->get('/supplies', 'SupplyController@index');
 $router->get('/supplies/{integer}', 'SupplyController@show');
@@ -46,6 +47,7 @@ $router->post('/mailnotification', "NotificationController@sendMailToUser");
 $router->post('/notifications', "NotificationController@store");
 
 $router->get('/news', 'NewsController@index');
+$router->get('/rooms', 'RoomsController@index');
 
 $router->dispatch(); // Handle the request
 
