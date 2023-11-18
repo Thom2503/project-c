@@ -1,6 +1,7 @@
 import React from 'react';
 import { Container } from 'reactstrap';
 import { Header } from './Header';
+import { Footer } from './Footer';
 import { useLocation } from 'react-router-dom';
 
 const Layout = ({ children }) => {
@@ -15,6 +16,7 @@ const Layout = ({ children }) => {
             <Container tag="main" className="w-[100%] m-auto mt-5">
                 {children}
             </Container>
+            {!isLoginPage && <Footer />}
         </div>
     );
 };

@@ -33,13 +33,17 @@ $router->get('/rooms', 'RoomsController@index');
 $router->get('/agendaitems', 'AgendaController@index');
 $router->get('/agendaitems/{integer}', 'AgendaController@show');
 $router->post('/agendaitems', 'AgendaController@store');
-// $router->get('/rooms', 'AgendaController@roomsIndex');
 /*{ Supplies Routing }*/
 $router->get('/supplies', 'SupplyController@index');
 $router->get('/supplies/{integer}', 'SupplyController@show');
 $router->post('/supplies', 'SupplyController@store');
 $router->put('/supplies/{integer}', 'SupplyController@update');
 $router->delete('/supplies/{integer}', 'SupplyController@destroy');
+/*{ Notifications }*/
+$router->get('/notifications', 'NotificationController@index');
+$router->get('/notifications/{integer}', 'NotificationController@show');
+$router->post('/mailnotification', "NotificationController@sendMailToUser");
+$router->post('/notifications', "NotificationController@store");
 
 $router->get('/news', 'NewsController@index');
 
