@@ -3,6 +3,7 @@ import { Login } from "./components/Login";
 import { Agenda } from "./components/Agenda";
 import { Kamers } from "./components/Kamers";
 import {Supplies} from "./components/Supplies";
+import { Nieuws } from './components/Nieuws';
 
 const AppRoutes = [
   {
@@ -24,6 +25,10 @@ const AppRoutes = [
   {
     path: '/voorzieningen',
     element: <Supplies />
+  },
+  {
+    path: '/Nieuws',
+    element: <Nieuws />
   }
 ];
 
