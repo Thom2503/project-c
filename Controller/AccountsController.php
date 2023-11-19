@@ -36,8 +36,13 @@ class AccountsController {
 		}
 	}
 
-    public function store() {
-        // Implement logic to store a new user
+    public function store(): void {
+		$data = json_decode(file_get_contents("php://input"), true);
+        $userID = $this->userModel->createUserAccount($data);
+		$password = password_hash($data['Password'], PASSWORD_BCRYPT);
+		$data['secure_pass'] = $password;
+        header('Content-Type: application/json');
+        echo json_encode(['id' => $userID]);
     }
 
     public function update($id) {

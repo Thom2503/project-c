@@ -12,41 +12,69 @@ const functies = [
 ];
 
 export class CreateAccount extends Component {
-    static displayName = CreateAccount.name;
+	static displayName = CreateAccount.name;
 
-
-    constructor(props){
-        super(props);
-        this.state = {
-            email: "",
-            password:  "",
+	constructor(props){
+		super(props);
+		this.state = {
+			email: "",
+			password:  "",
 			firstName: "",
 			lastName: "",
 			compentancy: "",
 			suggestions: []
-        }
+		}
 
-        this.handleChange = this.handleChange.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
+		this.handleChange = this.handleChange.bind(this);
+		this.handleSubmit = this.handleSubmit.bind(this);
 		document.title = "Maak een account";
-    }
+	}
 
-    handleChange(event){
-        this.setState({[event.target.name]: event.target.value})
+	handleChange(event){
+		this.setState({[event.target.name]: event.target.value})
 		if (event.target.name === "compentancy") {
 			this.getSuggestion(event.target.value);
 			this.onSuggestionFetchRequest(event);
 		}
-    }
+	}
 
-    async handleSubmit(event) {
-        event.preventDefault();
+	async handleSubmit(event) {
+		event.preventDefault();
+		
+		const { email, password, firstName, lastName, compentancy } = this.state;
 
-        try {
-        } catch (error) {
-            console.error('Error:', error);
-        }
-    }
+		// TODO: validatie toevoegen
+
+		try {
+			const response = await fetch("accounts", {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify({
+					FirstName: firstName,
+					LastName: lastName,
+					Function: compentancy,
+					IsAdmin: false,
+					Email: email,
+					Password: password // weet niet of dit goed gaat, want dit kan niet veilig zijn
+				})
+			});
+			
+			if (!response.ok) throw new Error(`HTTP Error: ${response.status}`);
+
+			const data = response.json();
+			if (data.id > 0) {
+				setCookie("user", data.id, 7);
+				setCookie("isadmin", false, 7);
+				window.location.replace("agenda");
+			} else {
+				console.log("user not created!");
+			}
+		} catch (error) {
+			console.error('Error:', error);
+		}
+	}
 
 	escapeRegexChars = (str) => {
 		return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
@@ -66,12 +94,6 @@ export class CreateAccount extends Component {
 		return suggestion.name;
 	};
 
-	renderSuggestion = (suggestion) => {
-		return (
-			<span>{this.getSuggestionValue(suggestion)}</span>
-		);
-	};
-
 	onSuggestionFetchRequest = ({ target: { value } }) => {
 		this.setState({suggestions: this.getSuggestion(value)});
 	};
@@ -83,7 +105,6 @@ export class CreateAccount extends Component {
 	};
 
 	handleSuggestionSelect = (suggestion) => {
-		console.log(suggestion);
 		this.setState({compentancy: suggestion.name, suggestions: []});
 	}
 

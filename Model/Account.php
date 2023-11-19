@@ -28,6 +28,20 @@ class Account extends Database {
 		return $stmt->fetch(PDO::FETCH_ASSOC);
 	}
 	
+	public createUserAccount(array $data): int {
+		$query = "INSERT INTO `Accounts`".
+		         "(`FirstName`, `LastName`, `Function`, `IsAdmin`, `Email`, `Password`)".
+		         "VALUES (:first, :last, :function, :admin, :email, :password)";
+		$stmt = $this->db->prepare($query);
+		$stmt->bindParam(":first", $data['FirstName'], PDO::PARAM_STR);
+		$stmt->bindParam(":last", $data['LastName'], PDO::PARAM_STR);
+		$stmt->bindParam(":function", $data['Function'], PDO::PARAM_STR);
+		$stmt->bindParam(":admin", $data['IsAdmin'], PDO::PARAM_BOOL);
+		$stmt->bindParam(":email", $data['Email'], PDO::PARAM_STR);
+		$stmt->bindParam(":password", $data['secure_pass'], PDO::PARAM_STR);
+		$stmt->execute();
+		return $this->db->lastInsertId();
+	}
 }
 
 ?>
