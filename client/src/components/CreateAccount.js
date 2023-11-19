@@ -87,7 +87,7 @@ export class CreateAccount extends Component {
 	getSuggestion = (value) => {
 		const escapedVal = this.escapeRegexChars(value);
 		if (escapedVal === "") return [];
-		const regex = new RegExp("^" + escapedVal, "i");
+		const regex = new RegExp(escapedVal, "i");
 		return functies.filter(functie => {
 			return regex.test(functie.name);
 		});
