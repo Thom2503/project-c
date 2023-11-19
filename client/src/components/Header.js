@@ -43,6 +43,8 @@ export class Header extends Component {
 		let userid = getCookie("user");
 		const response = await fetch(`useritems/${userid}`);
 		const data = await response.json();
+		// als er niks is kan je ook niet filteren dus return dan
+		if (data.error) return;
 		let item = data.filter(item => item.Date == this.state.today)[0];
 		if (item) {
 			let isHere = item.Status === "in";

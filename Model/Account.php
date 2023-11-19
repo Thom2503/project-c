@@ -28,7 +28,7 @@ class Account extends Database {
 		return $stmt->fetch(PDO::FETCH_ASSOC);
 	}
 	
-	public createUserAccount(array $data): int {
+	public function createUserAccount(array $data): int {
 		$query = "INSERT INTO `Accounts`".
 		         "(`FirstName`, `LastName`, `Function`, `IsAdmin`, `Email`, `Password`)".
 		         "VALUES (:first, :last, :function, :admin, :email, :password)";

@@ -42,7 +42,11 @@ export class CreateAccount extends Component {
 		event.preventDefault();
 		
 		const { email, password, firstName, lastName, compentancy } = this.state;
-
+		// email regex om te checken of het een cavero email is.
+		// en voor ons gemak nog gmail en hr.nl erbij voor testen
+		const emailRegex = /^(?:[a-zA-Z0-9._-]+@(?:cavero\.nl|gmail\.com|hr\.nl))$/;
+		if (!emailRegex.test(email)) return;
+        
 		// TODO: validatie toevoegen
 
 		try {
@@ -63,7 +67,7 @@ export class CreateAccount extends Component {
 			
 			if (!response.ok) throw new Error(`HTTP Error: ${response.status}`);
 
-			const data = response.json();
+			const data = await response.json();
 			if (data.id > 0) {
 				setCookie("user", data.id, 7);
 				setCookie("isadmin", false, 7);
