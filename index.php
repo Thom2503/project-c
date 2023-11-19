@@ -24,6 +24,7 @@ $router->get('/accounts', 'AccountsController@index');
 $router->get('/accounts/{integer}', 'AccountsController@show');
 $router->get('/accounts/{string}', 'AccountsController@showEmail');
 $router->post('/accounts', 'AccountsController@store');
+$router->post('/accounts/{string}', 'AccountsController@verify');
 
 /*{ Agenda Routing }*/
 $router->get('/agendaitems', 'AgendaController@index');

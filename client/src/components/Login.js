@@ -24,12 +24,17 @@ export class Login extends Component {
 
         const email = this.state.email; // Get the name from the form input
         const password = this.state.password;
-        // Make an HTTP POST request to the API endpoint to verify the account
         try {
-            const response = await fetch(`accounts/${email}`);
+            const response = await fetch(`accounts/${email}`, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({password: password})
+			});
             if (response.ok) {
                 const data = await response.json();
-                if(data.Password === password)
+				if (data.verified === true)
                 {
 					setCookie("user", data.AccountsID, 7);
 					setCookie("isadmin", data.IsAdmin === "1" ? "true" : "false", 7);

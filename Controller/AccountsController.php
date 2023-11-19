@@ -45,6 +45,26 @@ class AccountsController {
         echo json_encode(['id' => $userID]);
     }
 
+	public function verify(string $email): void {
+		$data = json_decode(file_get_contents("php://input"), true);
+		$password = null;
+		if ($data != null && count($data) > 0) {
+			$password = $data['password'];
+		}
+		header('Content-Type: application/json');
+		$user = $this->userModel->getAccountByEmail($email);
+		if (count($user) > 0) {
+			$verified = false;
+			if ($password != null) $verified = password_verify($password, $user['Password']);
+			$user['verified'] = $verified;	
+			echo json_encode($user);
+		} else {
+			http_response_code(404);
+			echo json_encode(['error' => 'user not found']);
+		}
+	
+	}
+
     public function update($id) {
         // Implement logic to update user by ID
     }
