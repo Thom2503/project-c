@@ -7,16 +7,17 @@ import { useLocation } from 'react-router-dom';
 const Layout = ({ children }) => {
     const location = useLocation();
 
-    // Check if the current route is "/Login"
-    const isLoginPage = location.pathname.toLowerCase() === '/login';
+    // check of de path login is of het maken van een account zodat er bepaald kan worden
+	// welke header getoond moet worden
+	const isLoginOrCreatePage = ['/login', '/create'].includes(location.pathname.toLowerCase());
 
     return (
         <div>
-            {!isLoginPage && <Header title="Kamers" />}
+            {!isLoginOrCreatePage && <Header title="Kamers" />}
             <Container tag="main" className="w-[100%] m-auto mt-5">
                 {children}
             </Container>
-            {!isLoginPage && <Footer />}
+            {!isLoginOrCreatePage && <Footer />}
         </div>
     );
 };
