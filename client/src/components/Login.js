@@ -80,7 +80,9 @@ export class Login extends Component {
                         </div>
                         <div className="flex justify-center pt-[35px] flex-col items-center">
                             <input type="submit" className="w-[150px] bg-[#792F82] font-bold text-[20px] text-white h-[46px] rounded-[15px] flex justify-center items-center" value="Login" />
-                            <span className="text-sm font-small text-[#9E9E9E] mt-[3vh]">Geen account? <a className="text-[#792F82]">Registreer hier</a></span>
+							<a href='/create'>
+                            	<span className="text-sm font-small text-[#9E9E9E] mt-[3vh]">Geen account? <a className="text-[#792F82]">Registreer hier</a></span>
+							</a>
                         </div>
 
                     </div>
