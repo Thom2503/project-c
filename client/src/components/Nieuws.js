@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import "../css/nieuws.css";
+import { getCookie, getFirstDayTimeStamp, getNextDay } from '../include/util_functions';
 
 export class Nieuws extends Component {
   static displayName = Nieuws.name;
@@ -26,8 +27,15 @@ export class Nieuws extends Component {
     }
   }
 
-  customFunctionForNews = () => {
-    console.log('Custom function for news called');
+  customFunctionForNews = (newsId) => {
+    const isAdmin = getCookie('isadmin');
+    if (isAdmin) {
+      // Redirect to the modify page for admins
+      this.props.history.push(`/nieuws/modify/${newsId}`);
+    } else {
+      // Redirect to the read page for regular users
+      this.props.history.push(`/nieuws/read/${newsId}`);
+    }
   };
 
   formatDate = (date) => {
@@ -55,7 +63,7 @@ export class Nieuws extends Component {
                   minHeight: '200px',
                   height: '350px',
                 }}
-                onClick={this.customFunctionForNews}
+                onClick={() => this.customFunctionForNews(newsItem.id)}
               >
                 <p className="text-[#848484] mt-2 text-right">Gemaakt door:</p>
                 <span className="text-[#848484] mt-2 text-right">{newsItem.PostTime}</span>
