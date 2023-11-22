@@ -45,6 +45,7 @@ $router->post('/mailnotification', "NotificationController@sendMailToUser");
 $router->post('/notifications', "NotificationController@store");
 
 $router->get('/news', 'NewsController@index');
+$router->get('/news/{integer}', 'NewsController@show');
 $router->get('/rooms', 'RoomsController@index');
 
 $router->dispatch(); // Handle the request
