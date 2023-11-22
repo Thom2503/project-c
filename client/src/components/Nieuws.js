@@ -14,12 +14,13 @@ export class Nieuws extends Component {
   }
 
   componentDidMount() {
+    console.log("Component did mount");
     this.fetchNewsData();
   }
 
   async fetchNewsData() {
     try {
-      const response = await fetch("news");
+      const response = await fetch("/news");
       const data = await response.json();
       console.log("Fetched news:", data);
       this.setState({ data: data });

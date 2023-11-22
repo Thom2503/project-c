@@ -37,7 +37,7 @@ const AppRoutes = [
 	element: <CreateAccount />
   },
   {
-    path: '/nieuws/details',
+    path: 'nieuws/details',
     element: <NieuwsDetails />
   }
 ];
