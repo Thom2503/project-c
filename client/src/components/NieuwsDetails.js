@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
+import "../css/nieuws.css";
 
 export class NieuwsDetails extends Component {
     static displayName = NieuwsDetails.name;
@@ -31,18 +33,23 @@ export class NieuwsDetails extends Component {
     render() {
         return (
             <>
+                <Link to="/Nieuws" className="text-[#848484] mb-4" style={{ marginLeft: '30px' }}>&lt; Terug</Link>
                 {this.state.filteredData ? (
-                    <div className="w-[100%] sm:w-[95%] m-auto">
-                        <h1 className="text-[#848484] mb-4">{this.state.filteredData.Title}</h1>
-                        <div className="m-2 bg-gray-100 p-6">
-                            <p className="text-[#848484] mt-2 text-right">Gemaakt door:</p>
-                            <span className="text-[#848484] mt-2 text-right">{this.state.filteredData.PostTime}</span>
-                            <div style={{ position: 'relative', left: '10px', bottom: '-150px' }}>
-                                <h1 className="text-[#848484] font-bold text-[18px] mt-2 text-left inline-block align-text-bottom">{this.state.filteredData.Title}</h1>
-                                <p className="text-[#848484]">{this.state.filteredData.Description}</p>
-                            </div>
+                <div className="custom-centered-container text-center p-4">
+                    <div className="max-w-[400px] sm:max-w-[600px] mx-auto">
+                        <h1 className="text-[#848484] font-bold text-[18px] mb-2">{this.state.filteredData.Title}</h1>
+                        <div className="text-[#848484] text-sm mb-4">
+                            <p className="text-left">Gemaakt door:</p>
+                            <p className="text-left">{this.state.filteredData.PostTime}</p>
                         </div>
+                        <p
+                            className="text-[#848484] text-left" // Left-align the description
+                            style={{ whiteSpace: 'pre-line' }} // Preserve line breaks in the text
+                        >
+                            {this.state.filteredData.Description}
+                        </p>
                     </div>
+                </div>
                 ) : (
                     <p>Geen nieuws gevonden.</p>
                 )}
