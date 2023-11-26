@@ -112,3 +112,52 @@ export const changeUserSubscription = async (userID, wantsNotification, type = "
 		console.error("Error: " + e);
 	}
 };
+
+/**
+ * Vraag permission aan de gebruiker om notificaties te sturen
+ *
+ * @param {int} userID - de id van de gebruiker
+ *
+ * @returns
+ */
+export const askPermission = (userID) => {
+	// vraag de gebruiker om notificaties te sturen
+	Notification.requestPermission().then((result) => {
+		// mogen wij notificaties sturen? mooi verander de subscription
+		if (result === "granted") changeUserSubscription(userID, true, "push");
+	});
+}
+
+/**
+ * Stuur de notificatie naar de gebruiker
+ *
+ * @param {int}    userID      - de id van de gebruiker
+ * @param {int}    contentType - over wat voor content het gaat om de titel te maken
+ * @param {string} content     - de content van de notificatie
+ *
+ */
+export const sendNotification = async (userID, contentType, content = "") => {
+	// check of de gebruiker uberhaupt notificaties wilt
+	if (await userWantsPushNotification(userID) !== true) return;
+	// inititializeer de title
+	let title;
+	// bepaal op basis van de type welke title het moet zijn
+	switch (contentType) {
+	case 1:
+			title = "Evenement";
+			break;
+	case 2:
+			title = "Nieuws";
+			break;
+	default:
+			console.error("ContentType is not a valid type");
+			return;
+	}
+	// maak de opties voor de notificatie zoals het icoontje maar ook de content
+	const options = {
+		body: content,
+		icon: '/static/site_icon-256x256.png'
+	};
+	// maak en stuur de notificatie naar de gebruiker
+	new Notification(title, options);
+};
