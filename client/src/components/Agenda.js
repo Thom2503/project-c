@@ -1,11 +1,7 @@
 import React, { Component } from 'react';
 import { AgendaRow } from './AgendaRow';
 import '../css/custom.css';
-//class AgendaCell extends Component {
-//    render() {
-//        <div>this.props.status</div>
-//    }
-//}
+import {getFirstDayTimeStamp} from '../include/util_functions';
 
 export class Agenda extends Component {
 	static displayName = Agenda.name;
@@ -94,8 +90,10 @@ export class Agenda extends Component {
 					<tbody>
 						{this.state.users.map(user =>
 							<AgendaRow key={user.AccountsID}
+							           name={`${user.FirstName} ${user.LastName}`}
+							           beginTS={getFirstDayTimeStamp()}
 							           user={user.AccountsID} 
-							           name={`${user.FirstName} ${user.LastName}`} />
+							/>
 						)}
 					</tbody>
 				</table>

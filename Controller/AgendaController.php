@@ -17,7 +17,18 @@ class AgendaController {
     public function show(int $id): void {
 		header('Content-Type: application/json');
 		$agendaItem = $this->agendaModel->getAgendaItemByID($id);
-		if (count($agendaItem) > 0) {
+		if ($agendaItem != false && count($agendaItem) > 0) {
+			echo json_encode($agendaItem);
+		} else {
+			http_response_code(404);
+			echo json_encode(['error' => 'agenda item not found']);
+		}
+    }
+
+    public function showUser(int $id): void {
+		header('Content-Type: application/json');
+		$agendaItem = $this->agendaModel->getAgendaItemByUserID($id);
+		if ($agendaItem != false && count($agendaItem) > 0) {
 			echo json_encode($agendaItem);
 		} else {
 			http_response_code(404);
@@ -28,7 +39,7 @@ class AgendaController {
 	public function showAgendaItemsByUserID(int $userid): void {
 		header('Content-Type: application/json');
 		$userAgendaItems = $this->agendaModel->getAgendaItemByUserID($userid);
-		if (count($userAgendaItems) > 0) {
+		if ($userAgendaItems != false && count($userAgendaItems) > 0) {
 			echo json_encode($userAgendaItems);
 		} else {
 			http_response_code(404);
@@ -37,24 +48,28 @@ class AgendaController {
 	}
 
     public function store(): void {
-        header('Content-Type: application/json');
 		$data = json_decode(file_get_contents("php://input"), true);
         $agendaItemID = $this->agendaModel->createAgendaItem($data);
+        header('Content-Type: application/json');
         echo json_encode(['id' => $agendaItemID]);
     }
 
     public function update($id) {
-        
+		$data = json_decode(file_get_contents("php://input"), true);
+		$id = $data['accountsid'];
+		$ts = $data['date'];
+        $success = $this->agendaModel->updateAgendaItem($id, $ts, $data);
+        header('Content-Type: application/json');
+		if ($success == true) {
+        	echo json_encode(['success' => true]);
+		} else {
+			http_response_code(404);
+			echo json_encode(['success' => 'false']);
+		}
     }
 
     public function destroy($id) {
         
-    }
-
-	public function roomsIndex(): void {
-        header('Content-Type: application/json');
-        $agendaRooms= $this->agendaModel->getAllRooms();
-        echo json_encode($agendaRooms);
     }
 }
 
