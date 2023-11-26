@@ -36,17 +36,6 @@ class AgendaController {
 		}
     }
 
-	public function showAgendaItemsByUserID(int $userid): void {
-		header('Content-Type: application/json');
-		$userAgendaItems = $this->agendaModel->getAgendaItemByUserID($userid);
-		if ($userAgendaItems != false && count($userAgendaItems) > 0) {
-			echo json_encode($userAgendaItems);
-		} else {
-			http_response_code(404);
-			echo json_encode(['error' => 'agenda item not found']);
-		}
-	}
-
     public function store(): void {
 		$data = json_decode(file_get_contents("php://input"), true);
         $agendaItemID = $this->agendaModel->createAgendaItem($data);
@@ -69,7 +58,24 @@ class AgendaController {
     }
 
     public function destroy($id) {
-        
+		$errors = [];
+		$data = json_decode(file_get_contents("php://input"), true);
+		if (count($data) <= 0) {
+			$errors['data'] = "Data is empty";	
+		}
+
+		header('Content-Type: application/json');
+		if (count($errors) > 0) {
+			echo json_encode($errors);
+		} else {
+			$success = $this->agendaModel->deleteAgendaItem($id);
+			if ($success == true) {
+				echo json_encode(['success' => true]);
+			} else {
+				http_response_code(404);
+				echo json_encode(['error' => 'Supply not deleted']);
+			}
+		}
     }
 }
 
