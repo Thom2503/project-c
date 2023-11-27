@@ -63,7 +63,7 @@ export class AgendaItemsModal extends Component {
 
     // checkbox logic
     if (name === "deleteAgenda") {
-      this.setState({ name: true });
+      this.setState({ [name]: event.target.checked });
     } else {
       this.setState({ [name]: updatedValue });
     }
@@ -212,6 +212,7 @@ export class AgendaItemsModal extends Component {
                 ))}
             </select>
           </div>
+
           <div className="input-field-div">
             <label htmlFor="agendaDelete">Delete:</label>
             <input
@@ -219,9 +220,10 @@ export class AgendaItemsModal extends Component {
               id="agendaDelete"
               name="deleteAgenda"
               value={this.state.deleteAgenda}
-              onChange={this.handleChange}
+              onChange={this.handleInputChange}
             />
           </div>
+
           <input
             className="save-button"
             type="submit"

@@ -57,7 +57,7 @@ class AgendaController {
 		}
     }
 
-    public function destroy($id) {
+    public function destroy(int $id): void {
 		$errors = [];
 		$data = json_decode(file_get_contents("php://input"), true);
 		if (count($data) <= 0) {

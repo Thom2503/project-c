@@ -20,8 +20,8 @@
   padding: 2vw;
   border-radius: 15px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
-  width: 53vw;
-  max-width: 600px;
+  width: 100%;
+  max-width: 550px;
   overflow: auto;
 }
 
@@ -102,4 +102,10 @@
   width: 8vw;
   position: relative;
   float: right;
+}
+
+@media only screen and (max-width: 600px) {
+  div.base-modal-content {
+    width: 90%;
+  }
 }
