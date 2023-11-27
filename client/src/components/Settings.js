@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { askPermission, changeUserSubscription, sendNotification, userWantsMail, userWantsPushNotification } from '../include/notification_functions';
+import { askPermission, changeUserSubscription, userWantsMail, userWantsPushNotification } from '../include/notification_functions';
 import {getCookie} from '../include/util_functions';
 
 export class Settings extends Component {
@@ -20,6 +20,10 @@ export class Settings extends Component {
         this.setState({[event.target.name]: event.target.checked});
 		if (event.target.name === "push") {
 			askPermission(this.state.userid);
+			navigator.serviceWorker.controller.postMessage({
+				type: 'PUSH_NOTIFICATION',
+				payload: { title: 'Test!', content: 'TEsstsat!'}
+			});
 		} else {
 			changeUserSubscription(this.state.userid, event.target.checked, event.target.name);
 		}
@@ -43,7 +47,6 @@ export class Settings extends Component {
 						       checked={this.state.push} />&emsp;Push notifications
 					</li>
 				</ul>
-				<span onClick={() => sendNotification(this.state.userid, 1, "Test!")}> Test! </span>
 			</div>
         );
     }

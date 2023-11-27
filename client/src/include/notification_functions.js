@@ -124,7 +124,13 @@ export const askPermission = (userID) => {
 	// vraag de gebruiker om notificaties te sturen
 	Notification.requestPermission().then((result) => {
 		// mogen wij notificaties sturen? mooi verander de subscription
-		if (result === "granted") changeUserSubscription(userID, true, "push");
+		if (result === "granted") {
+			changeUserSubscription(userID, true, "push");
+		} else {
+			changeUserSubscription(userID, false, "push");
+		}
+	}).catch((err) => {
+		console.error('Error requesting notification permission:', err);
 	});
 }
 
@@ -137,27 +143,31 @@ export const askPermission = (userID) => {
  *
  */
 export const sendNotification = async (userID, contentType, content = "") => {
-	// check of de gebruiker uberhaupt notificaties wilt
-	if (await userWantsPushNotification(userID) !== true) return;
-	// inititializeer de title
-	let title;
-	// bepaal op basis van de type welke title het moet zijn
-	switch (contentType) {
-	case 1:
-			title = "Evenement";
-			break;
-	case 2:
-			title = "Nieuws";
-			break;
-	default:
-			console.error("ContentType is not a valid type");
-			return;
+	try {
+		// check of de gebruiker uberhaupt notificaties wilt
+		if (await userWantsPushNotification(userID) !== true || Notification.permission !== "granted") return;
+		// inititializeer de title
+		let title;
+		// bepaal op basis van de type welke title het moet zijn
+		switch (contentType) {
+		case 1:
+				title = "Evenement";
+				break;
+		case 2:
+				title = "Nieuws";
+				break;
+		default:
+				console.error("ContentType is not a valid type");
+				return;
+		}
+		// maak de opties voor de notificatie zoals het icoontje maar ook de content
+		const options = {
+			body: content,
+			icon: '/static/site_icon-256x256.png'
+		};
+		// maak en stuur de notificatie naar de gebruiker
+		new Notification(title, options);
+	} catch (error) {
+		console.error("error occured! " , error);
 	}
-	// maak de opties voor de notificatie zoals het icoontje maar ook de content
-	const options = {
-		body: content,
-		icon: '/static/site_icon-256x256.png'
-	};
-	// maak en stuur de notificatie naar de gebruiker
-	new Notification(title, options);
 };
