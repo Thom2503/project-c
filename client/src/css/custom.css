@@ -90,6 +90,18 @@ footer {
 	text-align: center;
 }
 
+.kamerbg {
+    background: red;
+    background: linear-gradient(90deg, #F9F9F9 50.01%, rgba(255, 217, 253, 0.45) 87.01%), url("../../public/static/kantoor.jpg"), lightgray 50% / cover no-repeat;
+    transition: all 0.3s;
+}
+
+.kamerbg:hover {
+    background: linear-gradient(90deg, rgb(254, 243, 255) 50.01%, rgba(255, 217, 253, 0.45) 87.01%), url("../../public/static/kantoor.jpg"), lightgray 50% / cover no-repeat;
+    transition: all 0.3s;
+    cursor: pointer;
+}
+
 @media only screen and (max-width: 600px) {
   table.agenda .table-wrapper {
     overflow-x: auto;
@@ -118,4 +130,4 @@ footer {
     flex: 0 0 auto;
     width: 40%;
   }
-}
+}
