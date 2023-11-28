@@ -7,14 +7,14 @@ export class Events extends Component {
     constructor(props){
         super(props);
         this.state = {data: []};
-        document.title = "Rooms"
+        document.title = "Events"
     }
 
     componentDidMount() {
-        this.getRooms();
+        this.getEvents();
     }
 
-    async getRooms() {
+    async getEvents() {
         const response = await fetch('events');
         const data = await response.json();
         this.setState({ data: data });

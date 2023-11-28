@@ -12,7 +12,7 @@ console.log('Target URL:', target);
 const context = [
   "/accounts",
   "/rooms",
-    "/events",
+  "/events"
 ];
 
 const onError = (err, req, resp, target) => {
