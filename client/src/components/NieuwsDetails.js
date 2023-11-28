@@ -1,12 +1,20 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import { getCookie } from '../include/util_functions';
 import "../css/nieuws.css";
 
 export class NieuwsDetails extends Component {
     static displayName = NieuwsDetails.name;
     constructor(props) {
         super(props);
-        this.state = { data: [], filteredData: null };
+        this.state = {   };
+        this.state = {
+            data: [],
+            filteredData: null,
+            Title: ' ',
+            Description: ' ',
+            PostTime: ' ',
+          };
     }
 
     componentDidMount() {
@@ -30,7 +38,112 @@ export class NieuwsDetails extends Component {
         }
     }
 
+    handleInputChange = (event) => {
+        const { name, value } = event.target;
+        this.setState({ [name]: value });
+    };
+
+    handleSubmit = async (event) => {
+    event.preventDefault();
+
+    const { title, description, posttime} = this.state;
+
+    const fetchURL = "news";
+
+    try {
+        const response = await fetch(fetchURL, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            title,
+            description,
+            posttime
+        }),
+        });
+
+        if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        const data = await response.json();
+
+        // Continue with your success handling
+        if (data.id > 0 || data.success === true) {
+        console.log("Done");
+        window.location.replace("news");
+        } else {
+        // Handle form validation errors or other issues
+        console.log(data);
+        }
+    } catch (e) {
+        console.error("Error: ", e.message);
+    }
+    };
     render() {
+        if (getCookie("isadmin") === "true"){
+            return(
+                <form onSubmit={this.handleSubmit}>
+                <div className="input-field-div">
+                <label
+                    htmlFor="title"
+                    className="input-field-label"
+                >
+                    Titel:
+                </label>
+                <input
+                    type="text"
+                    id="title"
+                    name="title"
+                    className="input-field"
+                    value={this.state.title}
+                    onChange={this.handleInputChange}
+                />
+                </div>
+
+                <div className="input-field-div">
+                <label
+                    htmlFor="note"
+                    className="input-field-label"
+                >
+                    Description:
+                </label>
+                <input
+                    type="text"
+                    id="description"
+                    name="description"
+                    className="input-field"
+                    value={this.state.description}
+                    onChange={this.handleInputChange}
+                />
+                </div>
+
+                <div className="input-field-div">
+                <label
+                    htmlFor="note"
+                    className="input-field-label"
+                >
+                    PostTime:
+                </label>
+                <input
+                    type="text"
+                    id="posttime"
+                    name="posttime"
+                    className="input-field"
+                    value={this.state.posttime}
+                    onChange={this.handleInputChange}
+                />
+                </div>
+                <input
+                className="save-button"
+                type="submit"
+                value="Opslaan & Sluiten"
+                />
+            </form>
+            )
+        }
+        else{
         return (
             <>
                 <Link to="/Nieuws" className="text-[#848484] mb-4" style={{ marginLeft: '30px' }}>&lt; Terug</Link>
@@ -55,5 +168,6 @@ export class NieuwsDetails extends Component {
                 )}
             </>
         );
+        }
     }
 }

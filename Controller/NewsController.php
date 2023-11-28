@@ -24,4 +24,11 @@ class NewsController {
 			echo json_encode(['error' => 'Supply with '.$id.' not found']);
 		}
     }
+
+	public function store(): void {
+		$data = json_decode(file_get_contents("php://input"), true);
+        $NewsID = $this->newsModel->createNewsItem($data);
+        header('Content-Type: application/json');
+        echo json_encode(['id' => $NewsID]);
+    }
 }
