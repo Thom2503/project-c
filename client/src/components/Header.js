@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { NavItem, NavLink } from 'reactstrap';
 import { Link, useLocation } from 'react-router-dom';
 import { getCookie, getFirstDayTimeStamp, getNextDay } from '../include/util_functions';
-import ('../css/tailwind.css');
+import '../css/tailwind.css';
 
 export class Header extends Component {
     static displayName = Header.name;
