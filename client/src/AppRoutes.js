@@ -4,6 +4,7 @@ import { Home } from "./components/Home";
 import { Login } from "./components/Login";
 import { Agenda } from "./components/Agenda";
 import { Kamers } from "./components/Kamers";
+import {Events} from "./components/Events";
 
 const AppRoutes = [
   {
@@ -29,6 +30,10 @@ const AppRoutes = [
   {
     path: '/kamers',
     element: <Kamers />
+  },
+  {
+    path: '/evenementen',
+    element: <Events />
   }
 ];
 

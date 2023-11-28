@@ -1,34 +1,33 @@
 <?php
-require_once 'model/Rooms.php';
+require_once 'model/Events.php';
 
-class RoomsController {
-    private Rooms $roomsModel;
+class EventsController {
+    private Events $eventsModel;
 
     public function __construct() {
-        $this->roomsModel = new Rooms();
+        $this->eventsModel = new Events();
     }
 
     public function index(): void {
         header('Content-Type: application/json');
-        $rooms = $this->roomsModel->getAllRooms();
-        if (count($rooms) > 0) {
-            echo json_encode($rooms);
+        $events = $this->eventsModel->getAllEvents();
+        if (count($events) > 0) {
+            echo json_encode($events);
         } else {
             http_response_code(404);
-            echo json_encode(['error' => 'There were no rooms found']);
+            echo json_encode(['error' => 'There were no events found']);
         }
     }
 
     public function show(int $id): void {
         header('Content-Type: application/json');
-        $room = $this->roomsModel->getRoomByID($id);
-        if (count($room) > 0) {
-            echo json_encode($room);
+        $event = $this->eventsModel->getEventByID($id);
+        if (count($event) > 0) {
+            echo json_encode($event);
         } else {
             http_response_code(404);
-            echo json_encode(['error' => 'user not found']);
+            echo json_encode(['error' => 'Event not found']);
         }
     }
 }
-
 ?>

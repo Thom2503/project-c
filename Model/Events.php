@@ -1,19 +1,19 @@
 <?php
 
-class Rooms extends Database {
+class Events extends Database {
     protected PDO $db;
 
     public function __construct() {
         $this->db = parent::getDBConnection();
     }
 
-    public function getAllRooms(): array {
-        $query = "SELECT * FROM `Rooms`";
+    public function getAllEvents(): array {
+        $query = "SELECT * FROM `Events`";
         return $this->db->query($query)->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function getRoomByID(int $id): array {
-        $query = "SELECT * FROM `Rooms` WHERE `RoomsID` = :id";
+    public function getEventByID(int $id): array {
+        $query = "SELECT * FROM `Events` WHERE `EventsID` = :id";
         $stmt = $this->db->prepare($query);
         $stmt->bindParam(":id", $id, PDO::PARAM_INT);
         $stmt->execute();
