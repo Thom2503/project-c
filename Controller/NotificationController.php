@@ -4,17 +4,10 @@ define("SEND_MAIL", "socialekalenderteam4@gmail.com");
 define("SEND_PASSWORD", "hgev lxeu iqzg mibp");
 
 use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\Exception;
-use Minishlink\WebPush\WebPush;
-use Minishlink\WebPush\Subscription;
-use Minishlink\WebPush\VAPID;
 
 require 'include/PHPMailer/src/Exception.php';
 require 'include/PHPMailer/src/PHPMailer.php';
 require 'include/PHPMailer/src/SMTP.php';
-require 'include/web-push-php/src/WebPush.php';
-require 'include/web-push-php/src/Subscription.php';
-require 'include/web-push-php/src/VAPID.php';
 
 require_once 'model/Notification.php';
 require_once 'model/Account.php';
