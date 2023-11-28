@@ -9,17 +9,12 @@ const baseUrl = "/";
 const rootElement = document.getElementById('root');
 const root = createRoot(rootElement);
 
-root.render(
-  <BrowserRouter basename={baseUrl}>
-    <App />
-  </BrowserRouter>);
-
-
-serviceWorkerRegistration.register();
+// serviceWorkerRegistration.register();
 
 
 reportWebVitals();
 
+navigator.serviceWorker.register('service-worker.js');
 navigator.serviceWorker.ready.then((registration) => {
 	return registration.pushManager.getSubscription().then(async (subscription) => {
 		if (subscription) return subscription;
@@ -27,3 +22,10 @@ navigator.serviceWorker.ready.then((registration) => {
 		// krijg de subscription
 	});
 });
+
+root.render(
+  <BrowserRouter basename={baseUrl}>
+    <App />
+  </BrowserRouter>);
+
+
