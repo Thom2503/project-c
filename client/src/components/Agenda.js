@@ -1,19 +1,19 @@
 import React, { Component } from 'react';
 import { AgendaRow } from './AgendaRow';
 import '../css/custom.css';
-//class AgendaCell extends Component {
-//    render() {
-//        <div>this.props.status</div>
-//    }
-//}
+import {getFirstDayTimeStamp} from '../include/util_functions';
 
 export class Agenda extends Component {
 	static displayName = Agenda.name;
 
 	constructor(props) {
 		super(props);
-		this.state = {weekDays: this.convertDates()};
+		this.state = {weekDays: this.convertDates(), users: []};
 		document.title = Agenda.displayName;
+	}
+
+	componentDidMount() {
+		this.getUserData();
 	}
 
 	/**
@@ -60,30 +60,41 @@ export class Agenda extends Component {
 		});
 	}
 
-	getUserData() {
-
+	/**
+	 * Om alle gebruikers te krijgen zodat het een dynamische agenda is.
+	 */
+	async getUserData() {
+		const response = await fetch("accounts");
+		const data = await response.json();
+		this.setState({users: data});
 	}
 
 	render() {
 		return (
-			<div className="table-wrapper" id='agenda'>
-				<table>
+			<div className="agenda table-wrapper">
+				<table className='agenda'>
 					<thead>
 						<tr>
 							<th className="fixed">&nbsp;</th>
-							{this.state.weekDays.map(day => 
+							{this.state.weekDays.map((day, index) => 
 								// de <a> tag om {day} is heel hacky maar het zorgt er voor
 								// dat het op mobile er goed uit ziet dus moet het er helaas
 								// staan, het feit dat er geen href in staat is niet erg geeft wel een
 								// warning maar die moet voor nu genegeerd worden
-								<th>
+								<th key={index}>
 									<a style={{color: "#8A8A8A"}}>{day}</a>
 								</th>
 							)}
 						</tr>
 					</thead>
 					<tbody>
-						<AgendaRow user="Thom" />
+						{this.state.users.map(user =>
+							<AgendaRow key={user.AccountsID}
+							           name={`${user.FirstName} ${user.LastName}`}
+							           beginTS={getFirstDayTimeStamp()}
+							           user={user.AccountsID} 
+							/>
+						)}
 					</tbody>
 				</table>
 			</div>

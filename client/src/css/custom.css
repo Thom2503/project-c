@@ -36,63 +36,98 @@ code {
 }
 
 /**( agenda )**/
-#agenda {
-  table {
+table.agenda {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+table.agenda td {
+  border: 2px solid #D7D7D7;
+  text-align: center;
+  padding: 0.5em;
+  position: inherit;
+}
+
+table.agenda td a {
+  display: block;
+  width: 100%;
+  height: 100%;
+  color: white;
+  text-decoration: none;
+}
+
+table.agenda td a:empty::after {
+  content: "new";
+}
+
+table.agenda th {
+  text-align: center;
+  padding: 0.5em;
+}
+
+footer {
+	width: 100%;
+	position: absolute;
+	bottom: 0;
+	height: 60px;
+	background-color: #3D3D3D;
+}
+
+.loguit-button {
+	border-radius: 3px;
+	border-bottom: 2px solid #8A8A8A;
+	background: #8A8A8A;
+	box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+	width: 110px;
+	height: 30px;
+	flex-shrink: 0;
+	color: white;
+	float: right;
+	margin-right: 50px;
+	margin-top: 15px;
+	margin-bottom: 15px;
+	text-align: center;
+}
+
+.kamerbg {
+    background: red;
+    background: linear-gradient(90deg, #F9F9F9 50.01%, rgba(255, 217, 253, 0.45) 87.01%), url("../../public/static/kantoor.jpg"), lightgray 50% / cover no-repeat;
+    transition: all 0.3s;
+}
+
+.kamerbg:hover {
+    background: linear-gradient(90deg, rgb(254, 243, 255) 50.01%, rgba(255, 217, 253, 0.45) 87.01%), url("../../public/static/kantoor.jpg"), lightgray 50% / cover no-repeat;
+    transition: all 0.3s;
+    cursor: pointer;
+}
+
+@media only screen and (max-width: 600px) {
+  table.agenda .table-wrapper {
+    overflow-x: auto;
+  }
+
+  table.agenda {
     width: 100%;
-    border-collapse: collapse;
-    table-layout: fixed;
   }
-  
-  td {
-    border: 2px solid #D7D7D7;
-    text-align: center;
-    padding: 0.5em;
+
+  table.agenda tr {
+    display: flex;
+    flex-wrap: nowrap;
   }
-  
-  td a {
+
+  table.agenda td a, table.agenda th a {
     display: block;
-    width: 100%;
-    height: 100%;
-    color: white;
-    text-decoration: none;
-  }
-  
-  td a:empty::after {
-    content: "new";
-  }
-  
-  th {
     text-align: center;
-    padding: 0.5em;
+    width: 60vw;
   }
-  
-  @media only screen and (max-width: 600px) {
-    .table-wrapper {
-      overflow-x: auto;
-    }
-  
-    table {
-      width: 100%;
-    }
-  
-    tr {
-      display: flex;
-      flex-wrap: nowrap;
-    }
-  
-    td a, th a {
-      display: block;
-      text-align: center;
-      width: 60vw;
-    }
-  
-    .fixed {
-      position: sticky;
-      left: 0;
-      z-index: 1;
-      background-color: white;
-      flex: 0 0 auto;
-      width: 40%;
-    }
+
+  table.agenda .fixed {
+    position: sticky;
+    left: 0;
+    z-index: 1;
+    background-color: white;
+    flex: 0 0 auto;
+    width: 40%;
   }
 }

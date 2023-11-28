@@ -23,8 +23,11 @@ export class Supplies extends Component {
 	async getSupplies() {
 		const response = await fetch("supplies");
 		const data = await response.json();
-		if (data) this.setState({data: data});
-		this.setState({data: ["No data found"]});
+		if (data.error) {
+			this.setState({data: ["No data found"]});
+		} else {
+			this.setState({data: data});
+		}
 	}
 
     render() {
@@ -37,7 +40,7 @@ export class Supplies extends Component {
 			<div id='voorzieningen'>
 				<div className='under-header'>
 					<h2>Voorzieningen</h2>
-					<span className='add'><a href='supply-toevoegen'>Voorziening Toevoegen</a></span>
+					<span className='add'><a href='voorzieningen?modal=2'>Voorziening Toevoegen</a></span>
 					&nbsp;
 					<span className='date-picker'>
 						<a href='voorzieningen?pick-date'>
@@ -59,7 +62,7 @@ export class Supplies extends Component {
 							{this.state.data.map(supply => 
 								<tr>
 									<td>
-										<a href={`supply-toevoegen?id=${supply.SuppliesID}`}>
+										<a href={`voorzieningen?modal=2&id=${supply.SuppliesID}`}>
 											{supply.SuppliesID}
 										</a>
 									</td>

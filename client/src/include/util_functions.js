@@ -38,4 +38,36 @@ export const getCookie = (name) => {
 export const deleteCookie = (name) => {
 	let cookie = getCookie(name);
 	document.cookie = `${name}=${cookie}; path=/; max-age=0;`;
-}
+};
+
+/**
+ * pakt welke dag de volgende dag is gebaseerd op de eerste dag van de week
+ * en returned de timestamp van die dag
+ *
+ * @param {int} firstDay - de eerste dag van de week
+ * @param {int} day      - de dag die je wilt hebben
+ *
+ * @returns {int} newDateTS - de timestamp van de dag die je wilt hebben
+ */
+export const getNextDay = (firstDay, day) => {
+	let beginDate = new Date(firstDay);
+	let newDate = beginDate.setDate(beginDate.getDate() + day);
+	newDate = beginDate.setHours(0, 0, 0, 0);
+	let newDateTS = newDate.valueOf();
+	return newDateTS;
+};
+
+/**
+ * Zoek de timestamp van de eerste dag van deze week
+ *
+ * @returns {int} today - de timestamp van de eerste dag
+ */
+export const getFirstDayTimeStamp = () => {
+	let today = new Date();
+	let dayOfWeek = today.getDay();
+	let daysUntilSun = dayOfWeek === 0 ? 0 : 7 - dayOfWeek;
+	let firstDay = new Date(today);
+	firstDay.setDate(today.getDate() + daysUntilSun);
+	firstDay.setHours(0, 0, 0, 0);
+	return firstDay.getTime();
+};

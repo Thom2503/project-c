@@ -15,7 +15,7 @@ class SupplyController {
 			echo json_encode($supplies);
 		} else {
 			http_response_code(404);
-			echo json_encode(['error' => 'user not found']);
+			echo json_encode(['error' => 'supplies not found']);
 		}
     }
 
@@ -26,7 +26,7 @@ class SupplyController {
 			echo json_encode($supply);
 		} else {
 			http_response_code(404);
-			echo json_encode(['error' => 'user not found']);
+			echo json_encode(['error' => 'Supply with '.$id.' not found']);
 		}
     }
 
