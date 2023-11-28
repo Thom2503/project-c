@@ -3,16 +3,34 @@
 class Router {
     private array $routes = [];
 
+
     public function get(string $path, string $handler): void {
         $this->routes['GET'][$path] = $handler;
     }
+
 
     public function post(string $path, string $handler): void {
         $this->routes['POST'][$path] = $handler;
     }
 
-    // Implement put, delete, etc., as needed
 
+    public function put(string $path, string $handler): void {
+        $this->routes['POST'][$path] = $handler;
+    }
+
+
+    public function delete(string $path, string $handler): void {
+        $this->routes['DELETE'][$path] = $handler;
+    }
+
+
+	/**
+	 * de functie kijkt naar de api call, bepaalt daarna wat daar mee te doen.
+	 * Bijv. als je /supplies/1 roept gaat het naar de controller die supplies
+	 * gebruikt
+	 *
+	 * @return void
+	 */
     public function dispatch(): void {
         $method = $_SERVER['REQUEST_METHOD'];
         $uri = $_SERVER['REQUEST_URI'];
@@ -29,7 +47,6 @@ class Router {
         	$handler = $this->routes[$method][$uri] ?? null;
 		}
 
-
         if ($handler != null) {
 			if (isset($parameter) == true && $parameter >= 0) {
 				$this->callHandler($handler, $parameter);
@@ -43,6 +60,15 @@ class Router {
         }
     }
 
+
+	/**
+	 * Method om de goede method van de controller aan te roepen die de router vind.
+	 *
+	 * @param string $handler - de method die aangeroepen moet worden
+	 * @param mixed  $param   - de extra parameter die meegegeven kan worden zoals een string of integer
+	 *
+	 * @return void
+	 */
     private function callHandler(string $handler, mixed $param = null): void {
         list($controller, $method) = explode('@', $handler);
 
