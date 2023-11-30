@@ -4,7 +4,7 @@ import { Home } from "./components/Home";
 import { Login } from "./components/Login";
 import { Agenda } from "./components/Agenda";
 import { Kamers } from "./components/Kamers";
-import {Events} from "./components/Events";
+import {Evenementen} from "./components/Evenementen";
 
 const AppRoutes = [
   {
@@ -33,7 +33,7 @@ const AppRoutes = [
   },
   {
     path: '/evenementen',
-    element: <Events />
+    element: <Evenementen />
   }
 ];
 
