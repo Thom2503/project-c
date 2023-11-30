@@ -5,6 +5,7 @@ import { Kamers } from "./components/Kamers";
 import {Supplies} from "./components/Supplies";
 import { Nieuws } from './components/Nieuws';
 import {CreateAccount} from "./components/CreateAccount";
+import {Evenementen} from "./components/Evenementen";
 
 const AppRoutes = [
   {
@@ -34,6 +35,10 @@ const AppRoutes = [
   {
 	path: '/create',
 	element: <CreateAccount />
+  },
+  {
+    path: '/evenementen',
+    element: <Evenementen />
   }
 ];
 
