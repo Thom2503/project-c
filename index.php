@@ -23,29 +23,19 @@ $router = new Router();
 $router->get('/accounts', 'AccountsController@index');
 $router->get('/accounts/{integer}', 'AccountsController@show');
 $router->get('/accounts/{string}', 'AccountsController@showEmail');
-$router->post('/accounts', 'AccountsController@store');
-$router->post('/accounts/{string}', 'AccountsController@verify');
 
-/*{ Agenda Routing }*/
-$router->get('/agendaitems', 'AgendaController@index');
-$router->get('/agendaitems/{integer}', 'AgendaController@show');
-$router->get('/useritems/{integer}', 'AgendaController@showUser');
-$router->post('/agendaitems', 'AgendaController@store');
-$router->put('/agendaitems/{integer}', 'AgendaController@update');
+$router->get('/rooms', 'RoomsController@index');
+$router->get('/events', 'EventsController@index');
+// TODO: implementeer deze, dit moet dan ook in Router.php gebeuren
+/* router->post('/accounts', 'UserController@store'); */
+/* $router->put('/accounts/{id}', 'UserController@update'); */
+/* $router->delete('/accounts/{id}', 'UserController@destroy'); */
 /*{ Supplies Routing }*/
 $router->get('/supplies', 'SupplyController@index');
 $router->get('/supplies/{integer}', 'SupplyController@show');
 $router->post('/supplies', 'SupplyController@store');
 $router->put('/supplies/{integer}', 'SupplyController@update');
 $router->delete('/supplies/{integer}', 'SupplyController@destroy');
-/*{ Notifications }*/
-$router->get('/notifications', 'NotificationController@index');
-$router->get('/notifications/{integer}', 'NotificationController@show');
-$router->post('/mailnotification', "NotificationController@sendMailToUser");
-$router->post('/notifications', "NotificationController@store");
-
-$router->get('/news', 'NewsController@index');
-$router->get('/rooms', 'RoomsController@index');
 
 $router->dispatch(); // Handle the request
 

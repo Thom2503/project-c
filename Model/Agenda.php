@@ -57,7 +57,7 @@ class Agenda extends Database {
 	}
 
 	public function deleteAgendaItem(int $id): bool {
-		$query = "DELETE FROM `AgendaItems` WHERE `AgendaItemsID` = :sid";
+		$query = "DELETE FROM `AgendaItems` WHERE `ID` = :sid";
 		$stmt = $this->db->prepare($query);
 		$stmt->bindParam(":sid", $id, PDO::PARAM_INT);
 		return $stmt->execute();
