@@ -1,7 +1,11 @@
 import React, { Component } from 'react';
 import { Header } from './Header';
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faCalendar, faClock, faUser} from "@fortawesome/free-solid-svg-icons";
+import {faCalendar, faClock, faSquarePlus, faUser} from "@fortawesome/free-solid-svg-icons";
+import {DatePicker, LocalizationProvider} from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
+import { getCookie } from '../include/util_functions';
+import {Link} from "react-router-dom";
 
 export class Evenementen extends Component {
     static displayName = Evenementen.name;
@@ -23,10 +27,27 @@ export class Evenementen extends Component {
     }
 
     render() {
+
         return (
             <>
                 <div className='w-[95%] m-auto'>
-                    <h1 className="text-[#792F82] font-bold text-[25px]">Evenementen</h1>
+                    <div className="flex flex-row justify-between items-stretch mb-4">
+                        <div className='items-stretch'>
+                            <h1 className="text-[#792F82] font-bold text-[25px]">Evenementen</h1>
+                        </div>
+                        <div className='items-stretch flex gap-4 flex-row'>
+
+
+                            {getCookie("isadmin") !== "true" && (
+                                <Link  to="?modal=3" className='bg-purple-500 h-full rounded-[5px] text-white font-medium p-4'>
+                                    <FontAwesomeIcon icon={faSquarePlus} /> Evenement Toevoegen
+                                </Link >
+                            )}
+                            <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                <DatePicker />
+                            </LocalizationProvider>
+                        </div>
+                    </div>
                     <div className="gap-5 grid grid-cols-2">
                         {this.state.data.length > 0 ? (
                                 this.state.data.map((event, index) => (

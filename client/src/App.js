@@ -33,14 +33,14 @@ export default function App() {
   };
 
   return (
-    <Layout>
-      <BaseModal isOpen={isModalOpen} onClose={closeModal}></BaseModal>
-      <Routes>
-        {AppRoutes.map((route, index) => {
-          const { element, ...rest } = route;
-          return <Route key={index} {...rest} element={element} />;
-        })}
-      </Routes>
-    </Layout>
+        <Layout>
+          <BaseModal isOpen={isModalOpen} onClose={closeModal}></BaseModal>
+          <Routes>
+            {AppRoutes.map((route, index) => {
+              const { element, ...rest } = route;
+              return <Route key={index} {...rest} element={element} />;
+            })}
+          </Routes>
+        </Layout>
   );
 }
