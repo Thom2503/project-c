@@ -22,15 +22,14 @@ class News extends Database {
 
 
 	public function createNewsItem(array $data): int {
-		$query = "INSERT INTO `News` (`Title`, `Description`, `Image`, `PostTime`, `AccountsId`, `Status`)".
-		         "VALUES (:title, :description, :image, :posttime, :accountsid, :status)";
+		$query = "INSERT INTO `News` (`Title`, `Description`, `Image`, `PostTime`, `AccountsId`)".
+		         "VALUES (:title, :description, :image, :posttime, :accountsid)";
 		$stmt = $this->db->prepare($query);
 		$stmt->bindParam(":title", $data['title']);
 		$stmt->bindParam(":description", $data['description']);
 		$stmt->bindParam(":image", $data['image']);
 		$stmt->bindParam(":posttime", $data['posttime']);
 		$stmt->bindParam(":accountsid", $data['accountsid']);
-		$stmt->bindParam(":status", $data['status']);
 		$stmt->execute();
 		return $this->db->lastInsertId();
 	}

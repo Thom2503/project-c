@@ -13,7 +13,8 @@ export class NieuwsDetails extends Component {
             filteredData: null,
             Title: ' ',
             Description: ' ',
-            PostTime: ' ',
+            Image: "nieuwsimage",
+            PostTime: ' '
           };
     }
 
@@ -46,7 +47,7 @@ export class NieuwsDetails extends Component {
     handleSubmit = async (event) => {
     event.preventDefault();
 
-    const { title, description, posttime} = this.state;
+    const { title, description, posttime, image, AccountsId} = this.state;
 
     const fetchURL = "news";
 
@@ -59,7 +60,9 @@ export class NieuwsDetails extends Component {
         body: JSON.stringify({
             title,
             description,
-            posttime
+            image,
+            posttime,
+            AccountsId
         }),
         });
 
@@ -82,67 +85,172 @@ export class NieuwsDetails extends Component {
     }
     };
     render() {
-        if (getCookie("isadmin") === "true"){
+        const isAdmin = getCookie("isadmin") === "true";
+        const fromAddNews = new URLSearchParams(window.location.search).get("fromAddNews");
+        if (isAdmin){
+            if(fromAddNews)
+            {
+                // return (
+                //     <>
+                //     <Link to="/Nieuws" className="text-[#848484] mb-4" style={{ marginLeft: '30px' }}>&lt; Terug</Link>
+                //     <form onSubmit={this.handleSubmit} className="max-w-[400px] sm:max-w-[600px] mx-auto"style={{ marginTop: '50px' }}>
+                //         <div className="input-field-div" style={{ marginBottom: '2rem' }}>
+                //             <label
+                //                 htmlFor="title"
+                //                 className="input-field-label"
+                //             >
+                //                 Titel:
+                //             </label>
+                //             <input
+                //                 type="text"
+                //                 id="title"
+                //                 name="title"
+                //                 className="input-field"
+                //                 value={this.state.title}
+                //                 onChange={this.handleInputChange}
+                //             />
+                //         </div>
+
+                //         <div className="input-field-div" style={{ marginBottom: '2rem' }}>
+                //             <label
+                //                 htmlFor="note"
+                //                 className="input-field-label"
+                //             >
+                //                 Beschrijving:
+                //             </label>
+                //             <input
+                //                 type="text"
+                //                 id="description"
+                //                 name="description"
+                //                 className="input-field"
+                //                 value={this.state.description}
+                //                 onChange={this.handleInputChange}
+                //             />
+                //         </div>
+
+                //         <div className="input-field-div" style={{ marginBottom: '2rem' }}>                            <label
+                //                 htmlFor="note"
+                //                 className="input-field-label"
+                //             >
+                //                 Posttijd:
+                //             </label>
+                //             <input
+                //                 type="text"
+                //                 id="posttime"
+                //                 name="posttime"
+                //                 className="input-field"
+                //                 value={this.state.posttime}
+                //                 onChange={this.handleInputChange}
+                //             />
+                //         </div>
+                //         {/* <div className="input-field-div" style={{ marginBottom: '2rem' }}>
+                //             <p className="static-text">Huidige afbeelding:</p>
+                //             <label
+                //                 htmlFor="note"
+                //                 className="input-field-label"
+                //             >
+                //                 Afbeelding:
+                //             </label>
+                //             <input
+                //                 type="file"
+                //                 id="image"
+                //                 name="image"
+                //                 className="input-field"
+                //                 onChange={this.handleImageChange}
+                //             />
+                //         </div> */}
+                //         <input
+                //             className="save-button"
+                //             type="submit"
+                //             value="Opslaan & Sluiten"
+                //         />
+                //     </form>
+                // </>
+                // );
+            }
+            else {
             return(
-                <form onSubmit={this.handleSubmit}>
-                <div className="input-field-div">
-                <label
-                    htmlFor="title"
-                    className="input-field-label"
-                >
-                    Titel:
-                </label>
-                <input
-                    type="text"
-                    id="title"
-                    name="title"
-                    className="input-field"
-                    value={this.state.title}
-                    onChange={this.handleInputChange}
-                />
-                </div>
+                <>
+                    <Link to="/Nieuws" className="text-[#848484] mb-4" style={{ marginLeft: '30px' }}>&lt; Terug</Link>
+                    <form onSubmit={this.handleSubmit} className="max-w-[400px] sm:max-w-[600px] mx-auto"style={{ marginTop: '50px' }}>
+                        <div className="input-field-div" style={{ marginBottom: '2rem' }}>
+                            <p className="static-text">Huidige titel: {this.state.filteredData?.Title}</p>
+                            <label
+                                htmlFor="title"
+                                className="input-field-label"
+                            >
+                                Titel:
+                            </label>
+                            <input
+                                type="text"
+                                id="title"
+                                name="title"
+                                className="input-field"
+                                value={this.state.title}
+                                onChange={this.handleInputChange}
+                            />
+                        </div>
 
-                <div className="input-field-div">
-                <label
-                    htmlFor="note"
-                    className="input-field-label"
-                >
-                    Description:
-                </label>
-                <input
-                    type="text"
-                    id="description"
-                    name="description"
-                    className="input-field"
-                    value={this.state.description}
-                    onChange={this.handleInputChange}
-                />
-                </div>
+                        <div className="input-field-div" style={{ marginBottom: '2rem' }}>
+                            <p className="static-text">Huidige beschrijving: {this.state.filteredData?.Description}</p>
+                            <label
+                                htmlFor="note"
+                                className="input-field-label"
+                            >
+                                Beschrijving:
+                            </label>
+                            <input
+                                type="text"
+                                id="description"
+                                name="description"
+                                className="input-field"
+                                value={this.state.description}
+                                onChange={this.handleInputChange}
+                            />
+                        </div>
 
-                <div className="input-field-div">
-                <label
-                    htmlFor="note"
-                    className="input-field-label"
-                >
-                    PostTime:
-                </label>
-                <input
-                    type="text"
-                    id="posttime"
-                    name="posttime"
-                    className="input-field"
-                    value={this.state.posttime}
-                    onChange={this.handleInputChange}
-                />
-                </div>
-                <input
-                className="save-button"
-                type="submit"
-                value="Opslaan & Sluiten"
-                />
-            </form>
-            )
-        }
+                        <div className="input-field-div" style={{ marginBottom: '2rem' }}>
+                            <p className="static-text">Huidige posttijd: {this.state.filteredData?.PostTime}</p>
+                            <label
+                                htmlFor="note"
+                                className="input-field-label"
+                            >
+                                Posttijd:
+                            </label>
+                            <input
+                                type="text"
+                                id="posttime"
+                                name="posttime"
+                                className="input-field"
+                                value={this.state.posttime}
+                                onChange={this.handleInputChange}
+                            />
+                        </div>
+                        {/* <div className="input-field-div" style={{ marginBottom: '2rem' }}>
+                            <p className="static-text">Huidige afbeelding:</p>
+                            <label
+                                htmlFor="note"
+                                className="input-field-label"
+                            >
+                                Afbeelding:
+                            </label>
+                            <input
+                                type="file"
+                                id="image"
+                                name="image"
+                                className="input-field"
+                                onChange={this.handleImageChange}
+                            />
+                        </div> */}
+                        <input
+                            className="save-button"
+                            type="submit"
+                            value="Opslaan & Sluiten"
+                        />
+                    </form>
+                </>
+            );
+        }}
         else{
         return (
             <>
