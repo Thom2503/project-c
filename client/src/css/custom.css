@@ -193,4 +193,16 @@ hr {
     flex: 0 0 auto;
     width: 40%;
   }
+
+  div.kamers.sidebar {
+	width: 95%;
+  }
+
+  div.userlist {
+	display: block;
+  }
+
+  div.user {
+	width: 100%;
+  }
 }
