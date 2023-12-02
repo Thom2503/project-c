@@ -21,7 +21,7 @@ class NewsController {
 			echo json_encode($news);
 		} else {
 			http_response_code(404);
-			echo json_encode(['error' => 'Supply with '.$id.' not found']);
+			echo json_encode(['error' => 'News with '.$id.' not found']);
 		}
     }
 

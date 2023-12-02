@@ -11,10 +11,11 @@ export class NieuwsDetails extends Component {
         this.state = {
             data: [],
             filteredData: null,
-            Title: ' ',
-            Description: ' ',
-            Image: "nieuwsimage",
-            PostTime: ' '
+            title: ' ',
+            description: ' ',
+            image: "nieuwsimage",
+            posttime: '2023-12-02 19:44',
+            accountsid: Number.parseInt(getCookie("user"))
           };
     }
 
@@ -47,9 +48,9 @@ export class NieuwsDetails extends Component {
     handleSubmit = async (event) => {
     event.preventDefault();
 
-    const { title, description, posttime, image, AccountsId} = this.state;
+    const { title, description, posttime, image, accountsid} = this.state;
 
-    const fetchURL = "news";
+    const fetchURL = "../news";
 
     try {
         const response = await fetch(fetchURL, {
@@ -62,7 +63,7 @@ export class NieuwsDetails extends Component {
             description,
             image,
             posttime,
-            AccountsId
+            accountsid
         }),
         });
 
