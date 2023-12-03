@@ -10,6 +10,7 @@ import {
 } from "@mui/material";
 import {DatePicker, LocalizationProvider, TimePicker} from "@mui/x-date-pickers";
 import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
+import dayjs from "dayjs";
 
 export class EventModal extends Component {
   static displayName = EventModal.name;
@@ -17,50 +18,60 @@ export class EventModal extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      showRooms: false,
+      selectedRoom: "",
       rooms: [],
       title: "",
       description: "",
-      startTime: null, // Use null or a default start time
-      endTime: null, // Use null or a default end time
-      showRooms: false,
-      selectedRoom: "",
-      address: "",
-      date: null, // Use null or a default date
-    }
+      location: "",
+      istentative: 0,
+      tentativetime: "null",
+      declinetime: "null",
+      isexternal: 0,
+      accountsid: 1,
+      status: 'dd',
+      date: "null",
+      starttime: "null",
+      endtime: "null",
+    };
 
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.getRooms();
   }
+
   async getRooms() {
     const response = await fetch('/rooms');
     const roomsData = await response.json();
     this.setState({ rooms: roomsData });
   }
 
-  componentDidMount() {
-    const params = new URLSearchParams(window.location.search);
-    if (params.size >= 1) {
-      const paramID = params.get("id");
-      this.fetchEventsData(paramID);
+  handleChange(event) {
+    const { name, value, type, checked } = event.target;
+
+    if (type === "checkbox") {
+      this.setState({ [name]: checked });
+    } else {
+      this.setState({ [name]: value });
     }
   }
 
-  handleChange(event) {
-    this.setState({ [event.target.name]: event.target.value });
-  }
+
   async handleSubmit(event) {
     event.preventDefault();
 
     const title = this.state.title;
     const description = this.state.description;
-    const startTime = this.state.startTime;
-    const endTime = this.state.endTime;
-    const isExternal = this.state.showRooms ? 0 : 1;
-    const location = this.state.showRooms ? this.state.selectedRoom : this.state.address;
-    const date = this.state.date;
-
-    // Additional validation checks can be added here
+    const location = this.state.location;
+    const istentative = this.state.istentative;
+    const tentativetime = this.state.tentativetime;
+    const declinetime = this.state.declinetime;
+    const isexternal = this.state.isexternal;
+    const accountsid = this.state.accountsid;
+    const status = this.state.status;
+    const date = dayjs(this.state.date).format('DD/MM/YYYY');
+    const starttime = dayjs(this.state.starttime).format('HH:mm');
+    const endtime = dayjs(this.state.endtime).format('HH:mm');
 
     try {
       const response = await fetch('/events', {
@@ -69,68 +80,97 @@ export class EventModal extends Component {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          Title: title,
-          Description: description,
-          Time: `${startTime} - ${endTime}`,
-          Location: location,
-          IsExternal: isExternal,
-          Date: date,
-          // Add other fields as needed
+            title: title,
+            description: description,
+            location: location,
+            istentative: 0,
+            tentativetime: 'not set',
+            declinetime: 'not set',
+            isexternal: 0,
+            accountsid: 0,
+            status: 'not set',
+            date: date,
+            starttime: starttime,
+            endtime: endtime,
         }),
       });
-
       const data = await response.json();
 
       if (data.id > 0 || data.success === true) {
-        window.location.replace('/your-redirect-path'); // Update with your actual redirect path
+        console.log("Done");
+        window.location.replace("evenementen");
       } else {
+        // Handle form validation errors or other issues
         console.log(data);
-        // Handle error scenarios
       }
     } catch (e) {
-      console.error('Error: ', e.message);
+      console.error("Error: ", e.message);
     }
   }
 
+
   render() {
+    const isFormFilled = this.state.date && this.state.description && this.state.starttime && this.state.endtime && this.state.title && this.state.location;
     return (
-      <div className="modal">
-          <div className={'p-7'}>
+        <div className="modal">
+          <form className={'p-7'} onSubmit={this.handleSubmit}>
             <h3 className='font-medium text-[#792F82] text-[25px] border-b-[1px] border-b-[#E8E8E8]'>Toevoegen</h3>
             <div className='mt-5 flex flex-col gap-4'>
               <div className='grid grid-cols-2 gap-2'>
-                <TextField id="outlined-basic"
-                           placeholder="Typ hier je titel."
-                           onChange={(e) => this.handleChange(e)}
-                           label="Titel" variant="outlined" className={"w-[100%]"}/>
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DatePicker />
+                <TextField
+                    id="outlined-basic"
+                    placeholder="Typ hier je titel."
+                    name="title"
+                    value={this.state.title}
+                    onChange={this.handleChange}
+                    label="Titel"
+                    variant="outlined"
+                    className={"w-[100%]"}
+                    required
+
+                />
+                <LocalizationProvider dateAdapter={AdapterDayjs}
+                >
+                  <DatePicker
+                      value={this.state.date}
+                      onChange={(newDate) => this.setState({ date: newDate })}
+                      format="DD/MM/YYYY"
+                  />
                 </LocalizationProvider>
               </div>
               <TextField
                   id="outlined-textarea"
                   label="Beschrijving"
-                  onChange={(e) => this.handleChange(e)}
+                  onChange={this.handleChange}
                   placeholder="Typ hier je beschrijving."
                   multiline
                   className='w-[100%]'
+                  name="description"
+                  value={this.state.description}
               />
               <div className='grid grid-cols-2 gap-2'>
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <LocalizationProvider
+                    dateAdapter={AdapterDayjs}>
                   <TimePicker
-                      onChange={(e) => this.handleChange(e)}
-                      ampm={false} label="Start Tijd" />
+                      ampm={false} label="Start Tijd"
+                      value={this.state.starttime}
+                      onChange={(startTime) => this.setState({ starttime: startTime })}
+                  />
                 </LocalizationProvider>
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <LocalizationProvider
+                    dateAdapter={AdapterDayjs}>
                   <TimePicker
-                      onChange={(e) => this.handleChange(e)}
-                      ampm={false} label="Eind Tijd" />
+                      ampm={false} label="Eind Tijd"
+                      value={this.state.endtime}
+                      onChange={(endTime) => this.setState({ endtime: endTime })}
+                  />
                 </LocalizationProvider>
               </div>
               <FormControlLabel
                   control={<Checkbox checked={this.state.showRooms} onChange={(e) => this.setState({ showRooms: e.target.checked })} />}
                   label="Locatie De Loods"
-                  onChange={(e) => this.handleChange(e)}
+                  onChange={this.handleChange}
+                  name="showRooms"
               />
               {this.state.showRooms ? (
                   <FormControl fullWidth>
@@ -139,8 +179,9 @@ export class EventModal extends Component {
                         labelId="demo-simple-select-label"
                         id="demo-simple-select"
                         label="Kamer"
-                        value={this.state.selectedRoom}
-                        onChange={(event) => this.setState({ selectedRoom: event.target.value })}
+                        name="location"
+                        value={this.state.location}
+                        onChange={this.handleChange}
                     >
                       {this.state.rooms.map((room) => (
                           <MenuItem key={room.RoomsID} value={room.Name}>
@@ -156,16 +197,23 @@ export class EventModal extends Component {
                       label="Adres"
                       variant="outlined"
                       className={"w-[100%]"}
+                      name="location"
+                      value={this.state.location}
+                      onChange={this.handleChange}
                   />
               )}
-
             </div>
-          <div className={'m-auto w-full flex justify-center'}>
-            <button className='mt-3 bg-[#792F82] p-2 text-[20px] rounded-[15px] w-[175px] text-white font-bold'>Opslaan</button>
-          </div>
-          </div>
-
-      </div>
+            <div className={'m-auto w-full flex justify-center'}>
+              <button
+                  className='mt-3 bg-[#792F82] p-2 text-[20px] rounded-[15px] w-[175px] text-white font-bold'
+                  onClick={this.handleSubmit}
+                  disabled={!isFormFilled}
+              >
+                Opslaan
+              </button>
+            </div>
+          </form>
+        </div>
     );
   }
 }

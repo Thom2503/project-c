@@ -14,7 +14,7 @@ const Layout = ({ children }) => {
     return (
         <div>
             {!isLoginOrCreatePage && <Header title="Kamers" />}
-            <Container tag="main" className="w-[100%] m-auto mt-5">
+            <Container tag="main" className="w-[100%] m-auto my-5">
                 {children}
             </Container>
             {!isLoginOrCreatePage && <Footer />}

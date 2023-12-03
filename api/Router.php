@@ -1,7 +1,9 @@
 <?php
 
+
 class Router {
     private array $routes = [];
+
 
 
     public function get(string $path, string $handler): void {

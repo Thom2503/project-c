@@ -29,5 +29,21 @@ class EventsController {
             echo json_encode(['error' => 'Event not found']);
         }
     }
+
+    public function store(): void {
+        $errors = [];
+        $data = json_decode(file_get_contents("php://input"), true);
+        // Add more validation as needed...
+
+        header('Content-Type: application/json');
+        if (count($errors) > 0) {
+            http_response_code(400); // Bad Request
+            echo json_encode($errors);
+        } else {
+            // Valid data, proceed to store the event.
+            $eventId = $this->eventsModel->createEvent($data);
+            echo json_encode(['id' => $eventId]);
+        }
+    }
 }
 ?>
