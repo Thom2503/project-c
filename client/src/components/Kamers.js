@@ -22,7 +22,7 @@ export class Kamers extends Component {
 
     render() {
         return (
-            <div className="w-[95%] m-auto">
+            <div className="w-[95%] m-auto pb-[80px]">
                 <h1 className="text-[#792F82] font-bold text-[25px]">Kamers</h1>
                 <div className="gap-5 flex flex-col">
                     {this.state.data.length > 0 ? (
