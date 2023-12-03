@@ -135,6 +135,11 @@ export class EventModal extends Component {
                       value={this.state.date}
                       onChange={(newDate) => this.setState({ date: newDate })}
                       format="DD/MM/YYYY"
+                      slotProps={{
+                        textField: {
+                          error: false,
+                        },
+                      }}
                   />
                 </LocalizationProvider>
               </div>
@@ -155,6 +160,11 @@ export class EventModal extends Component {
                       ampm={false} label="Start Tijd"
                       value={this.state.starttime}
                       onChange={(startTime) => this.setState({ starttime: startTime })}
+                      slotProps={{
+                        textField: {
+                          error: false,
+                        },
+                      }}
                   />
                 </LocalizationProvider>
                 <LocalizationProvider
@@ -163,6 +173,11 @@ export class EventModal extends Component {
                       ampm={false} label="Eind Tijd"
                       value={this.state.endtime}
                       onChange={(endTime) => this.setState({ endtime: endTime })}
+                      slotProps={{
+                        textField: {
+                          error: false,
+                        },
+                      }}
                   />
                 </LocalizationProvider>
               </div>
