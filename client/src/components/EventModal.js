@@ -1,17 +1,11 @@
 import React, { Component } from "react";
-import "../css/voorzieningen.css";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faXmark} from "@fortawesome/free-solid-svg-icons";
 import {
-  Box,
   Checkbox,
   FormControl,
   FormControlLabel,
   InputLabel,
   MenuItem,
   Select,
-  Tab,
-  Tabs,
   TextField
 } from "@mui/material";
 import {DatePicker, LocalizationProvider, TimePicker} from "@mui/x-date-pickers";
@@ -22,8 +16,17 @@ export class EventModal extends Component {
 
   constructor(props) {
     super(props);
-    this.state = { rooms: [], name: "", total: 0, deleteSupply: false, supply: 0 };
-
+    this.state = {
+      rooms: [],
+      title: "",
+      description: "",
+      startTime: null, // Use null or a default start time
+      endTime: null, // Use null or a default end time
+      showRooms: false,
+      selectedRoom: "",
+      address: "",
+      date: null, // Use null or a default date
+    }
 
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -39,88 +42,66 @@ export class EventModal extends Component {
     const params = new URLSearchParams(window.location.search);
     if (params.size >= 1) {
       const paramID = params.get("id");
-      this.fetchSupplyData(paramID);
+      this.fetchEventsData(paramID);
     }
   }
 
   handleChange(event) {
-    if (event.target.name === "deleteSupply") {
-      this.setState({ [event.target.name]: event.target.checked });
-    } else {
-      this.setState({ [event.target.name]: event.target.value });
-    }
+    this.setState({ [event.target.name]: event.target.value });
   }
-
-  handleTabs = (event, newValue) => {
-    setValue(newValue);
-  }
-
-
-
   async handleSubmit(event) {
     event.preventDefault();
 
-    const name = this.state.name;
-    const total = this.state.total;
+    const title = this.state.title;
+    const description = this.state.description;
+    const startTime = this.state.startTime;
+    const endTime = this.state.endTime;
+    const isExternal = this.state.showRooms ? 0 : 1;
+    const location = this.state.showRooms ? this.state.selectedRoom : this.state.address;
+    const date = this.state.date;
 
-    const fetchURL =
-      this.state.supply > 0 || this.state.deleteSupply === true
-        ? `supplies/${this.state.supply}`
-        : "supplies";
-
-    // name en total mogen niet leeg zijn
-    // TODO: form validatie toevoegen voor als het fout gaat
-    if (name.trim() === "") return;
-    if (total <= 0) return;
+    // Additional validation checks can be added here
 
     try {
-      const response = await fetch(fetchURL, {
-        method: this.state.deleteSupply === true ? "DELETE" : "POST",
+      const response = await fetch('/events', {
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ name: name, total: total }),
+        body: JSON.stringify({
+          Title: title,
+          Description: description,
+          Time: `${startTime} - ${endTime}`,
+          Location: location,
+          IsExternal: isExternal,
+          Date: date,
+          // Add other fields as needed
+        }),
       });
+
       const data = await response.json();
-      // als er een id terug is -- dus successvol opgeslagen -- kan je naar het overzicht terug.
+
       if (data.id > 0 || data.success === true) {
-        window.location.replace("voorzieningen");
+        window.location.replace('/your-redirect-path'); // Update with your actual redirect path
       } else {
-        // TODO: form validatie toevoegen voor als het fout gaat.
         console.log(data);
+        // Handle error scenarios
       }
     } catch (e) {
-      console.error("Error: ", e.message);
-    }
-  }
-
-  async fetchSupplyData(supplyID) {
-    const [value, setValue] = React.useState('one');
-    try {
-      const response = await fetch(`supplies/${supplyID}`);
-      const data = await response.json();
-      console.log(data);
-
-      if (data)
-        this.setState({
-          name: data.Name,
-          total: data.Total,
-          supply: data.SuppliesID,
-        });
-    } catch (e) {
-      console.error("Error: ", e.message);
+      console.error('Error: ', e.message);
     }
   }
 
   render() {
     return (
       <div className="modal">
-          <div className={'mt-4 p-7'}>
+          <div className={'p-7'}>
             <h3 className='font-medium text-[#792F82] text-[25px] border-b-[1px] border-b-[#E8E8E8]'>Toevoegen</h3>
             <div className='mt-5 flex flex-col gap-4'>
               <div className='grid grid-cols-2 gap-2'>
                 <TextField id="outlined-basic"
                            placeholder="Typ hier je titel."
+                           onChange={(e) => this.handleChange(e)}
                            label="Titel" variant="outlined" className={"w-[100%]"}/>
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <DatePicker />
@@ -129,32 +110,27 @@ export class EventModal extends Component {
               <TextField
                   id="outlined-textarea"
                   label="Beschrijving"
+                  onChange={(e) => this.handleChange(e)}
                   placeholder="Typ hier je beschrijving."
                   multiline
                   className='w-[100%]'
               />
               <div className='grid grid-cols-2 gap-2'>
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <TimePicker ampm={false} label="Start Tijd" />
+                  <TimePicker
+                      onChange={(e) => this.handleChange(e)}
+                      ampm={false} label="Start Tijd" />
                 </LocalizationProvider>
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <TimePicker ampm={false} label="Eind Tijd" />
+                  <TimePicker
+                      onChange={(e) => this.handleChange(e)}
+                      ampm={false} label="Eind Tijd" />
                 </LocalizationProvider>
               </div>
-              <Tabs
-                  value={value}
-                  onChange={handleTabs}
-                  textColor="secondary"
-                  indicatorColor="secondary"
-                  aria-label="secondary tabs example"
-              >
-                <Tab value="one" label="Item One" />
-                <Tab value="two" label="Item Two" />
-                <Tab value="three" label="Item Three" />
-              </Tabs>
               <FormControlLabel
                   control={<Checkbox checked={this.state.showRooms} onChange={(e) => this.setState({ showRooms: e.target.checked })} />}
                   label="Locatie De Loods"
+                  onChange={(e) => this.handleChange(e)}
               />
               {this.state.showRooms ? (
                   <FormControl fullWidth>
@@ -183,13 +159,10 @@ export class EventModal extends Component {
                   />
               )}
 
-
-
-              <TextField id="outlined-basic"
-                         placeholder="Status"
-                         label="Status" variant="outlined" className={"w-[100%]"}/>
-
             </div>
+          <div className={'m-auto w-full flex justify-center'}>
+            <button className='mt-3 bg-[#792F82] p-2 text-[20px] rounded-[15px] w-[175px] text-white font-bold'>Opslaan</button>
+          </div>
           </div>
 
       </div>

@@ -3,14 +3,11 @@ import { Header } from './Header';
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {
     faCalendar,
-    faCircle,
     faCirclePlus,
     faClock,
-    faSquarePlus,
-    faUser,
-    faXmark
+    faUser
 } from "@fortawesome/free-solid-svg-icons";
-import {DatePicker, DesktopTimePicker, LocalizationProvider, TimePicker} from '@mui/x-date-pickers';
+import {DatePicker, LocalizationProvider} from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { getCookie } from '../include/util_functions';
 import Drawer from '@mui/material/Drawer';
