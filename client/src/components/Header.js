@@ -148,7 +148,7 @@ export class Header extends Component {
 
                 <div className="bg-[#792F82] h-[112px] w-100 flex items-center pl-6">
                     <div className='flex flex-col'>
-                        <span className="text-white font-medium text-[32px]"><HeaderTitle /></span>
+                        <h1 className="text-white font-medium text-[32px]"><HeaderTitle /></h1>
 						<span className='text-white font-medium text-[16px] sm:hidden'>Welkom {this.state.user.FirstName ?? ''}</span>
                     </div>
                     <div className="flex flex-col ml-auto pr-6">
