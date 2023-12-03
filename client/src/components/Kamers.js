@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
-import { Header } from './Header';
+import { Sidebar } from './Sidebar';
 
 export class Kamers extends Component {
     static displayName = Kamers.name;
 
-    constructor(props){
+    constructor(props) {
         super(props);
-        this.state = {data: []};
-        document.title = "Rooms"
+        this.state = {data: [], isOpen: false};
+        document.title = "Kamers";
     }
 
     componentDidMount() {
@@ -20,6 +20,18 @@ export class Kamers extends Component {
         this.setState({ data: data });
     }
 
+	setSidebarOpen = (roomID, isOpen) => {
+		let newData = this.state.data.map((room) => {
+			if (room.RoomsID === roomID) {
+				room.isOpen = !isOpen;
+			} else {
+				room.isOpen = false;
+			}
+			return room;
+		});
+		this.setState({ data: newData });
+	}
+
     render() {
         return (
             <div className="w-[95%] m-auto pb-[80px]">
@@ -27,10 +39,16 @@ export class Kamers extends Component {
                 <div className="gap-5 flex flex-col">
                     {this.state.data.length > 0 ? (
                             this.state.data.map((room, index) => (
-                        <div className=" m-auto  sm:mx-[20px] kamerbg max-w-[1200px] w-[95%] h-[150px] p-6 flex flex-col justify-center rounded-xl mt-[25px] border-[2px]">
-                            <h1 className="text-[#792F82] font-bold text-[23px]">{room.Name}</h1>
-                            <span className="text-[#848484]">Klik voor meer informatie</span>
-                        </div>
+								<div key={index}>
+                        			<div className=" m-auto  sm:mx-[20px] kamerbg max-w-[1200px] w-[95%] h-[150px] p-6 flex flex-col justify-center rounded-xl mt-[25px] border-[2px]"
+								         onClick={() => this.setSidebarOpen(room.RoomsID, room.isOpen ?? false)}>
+                        			    <h1 className="text-[#792F82] font-bold text-[23px]">{room.Name}</h1>
+                        			    <span className="text-[#848484]">
+											Klik voor meer informatie
+										</span>
+                        			</div>
+									<Sidebar isOpen={room.isOpen ?? false} type="1" room={room} />
+								</div>
                             ))
                     ) :
                         (
