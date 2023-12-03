@@ -36,7 +36,7 @@ export class AccountsOverview extends Component {
 			<div id='voorzieningen'>
 				<div className='under-header'>
 					<h2>AccountsOverview</h2>
-					<span className='add'><a href='voorzieningen?modal=2'>Account Toevoegen</a></span>
+					<span className='add'><a href='AccountsOverview?modal=4'>Account Toevoegen</a></span>
 					&nbsp;
 				</div>
 				<div className="table-wrapper">
@@ -44,8 +44,7 @@ export class AccountsOverview extends Component {
 						<thead>
 							<tr>
 								<th>#&emsp;ID</th>
-								<th>Voornaam</th>
-								<th>Achternaam</th>
+								<th>voor-en achternaam</th>
 								<th>Functie</th>
 								<th>Admin</th>
 								<th>Email</th>
@@ -55,14 +54,13 @@ export class AccountsOverview extends Component {
 							{this.state.data.map(account => 
 								<tr>
 									<td>
-										<a href={`voorzieningen?modal=2&id=${account.AccountsID}`}>
+										<a href={`AccountsOverview?modal=4&id=${account.AccountsID}`}>
 											{account.AccountsID}
 										</a>
 									</td>
-									<td>{account.FirstName}</td>
-									<td>{account.LastName}</td>
+									<td>{account.FirstName} {account.LastName}</td>
 									<td>{account.Function}</td>
-									<td>{account.IsAdmin}</td>
+									<td>{account.IsAdmin === "1" ? "Ja" : "Nee"}</td>
 									<td>{account.Email}</td>
 								</tr>
 							)}
