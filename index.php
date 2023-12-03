@@ -37,6 +37,15 @@ $router->get('/supplies/{integer}', 'SupplyController@show');
 $router->post('/supplies', 'SupplyController@store');
 $router->put('/supplies/{integer}', 'SupplyController@update');
 $router->delete('/supplies/{integer}', 'SupplyController@destroy');
+/*{ Notifications }*/
+$router->get('/notifications', 'NotificationController@index');
+$router->get('/notifications/{integer}', 'NotificationController@show');
+$router->post('/mailnotification', "NotificationController@sendMailToUser");
+$router->post('/notifications', "NotificationController@store");
+
+$router->get('/news', 'NewsController@index');
+$router->get('/rooms', 'RoomsController@index');
+$router->get('/rooms/{integer}', 'RoomsController@showUsers');
 
 $router->dispatch(); // Handle the request
 

@@ -37,9 +37,10 @@ code {
 
 /**( agenda )**/
 table.agenda {
-  width: 100%;
+  width: 95%;
   border-collapse: collapse;
   table-layout: fixed;
+  margin: 0 auto;
 }
 
 table.agenda td {
@@ -101,6 +102,68 @@ footer {
     cursor: pointer;
 }
 
+div.kamers.sidebar {
+	position: absolute;
+	top: 0;
+	right: 0;
+	width: 40%;
+	height: 100%;
+	border-radius: 10px;
+	border: 1px solid #F9F9F9;
+	background: #F9F9F9;
+	box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+}
+
+div.kamers.name {
+	text-align: center;
+	padding: 1.5em;
+}
+
+div.name {
+	color: #792F82;
+	font-size: 36px;
+}
+
+div.userlist {
+	display: flex;
+	flex-flow: row wrap;
+	width: 80%;
+	max-height: 60vh; /* zodat het er niet bovenheen gaat */
+	height: 60vh;
+	overflow-y: auto;
+	margin: 0 auto;
+}
+
+div.user {
+	width: 50%;
+}
+
+div.user em {
+	color: rgba(95, 95, 95, 0.29);
+	font-size: 12px;
+}
+
+div.date {
+	width: 100%;
+	text-align: center;
+}
+
+div.date a {
+	text-decoration: none;
+	color: rgba(132, 132, 132, 0.76);
+	font-size: 16px;
+}
+
+div.date .datestring {
+	color: #8A8A8A;
+	font-size: 25px;
+}
+
+hr {
+	width: 70%;
+	margin: auto !important;
+}
+
 @media only screen and (max-width: 600px) {
   table.agenda .table-wrapper {
     overflow-x: auto;
@@ -128,5 +191,17 @@ footer {
     background-color: white;
     flex: 0 0 auto;
     width: 40%;
+  }
+
+  div.kamers.sidebar {
+	width: 95%;
+  }
+
+  div.userlist {
+	display: block;
+  }
+
+  div.user {
+	width: 100%;
   }
 }

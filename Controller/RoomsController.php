@@ -29,6 +29,17 @@ class RoomsController {
             echo json_encode(['error' => 'user not found']);
         }
     }
+
+	public function showUsers(int $id): void {
+		header('Content-Type: application/json');
+		$users = $this->roomsModel->getUsersInRoom($id);
+		if (count($users) > 0) {
+			echo json_encode($users);
+		} else {
+			http_response_code(404);
+			echo json_encode(['error' => 'Users not found in room']);
+		}
+	}
 }
 
 ?>
