@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { AgendaItemsModal } from "./AgendaItemsModal";
 import { SupplyModal } from "./SupplyModal";
+import { AccountModal } from "./AccountModal";
 import "../css/modal.css";
 import CloseIcon from "../static/close-icon.svg";
 
@@ -29,7 +30,10 @@ export class BaseModal extends Component {
         break;
       case "2":
         modalSwitch = < SupplyModal onClose={this.props.onClose} />
-      break
+        break
+      case "4":
+        modalSwitch = < AccountModal onClose={this.props.onClose} />
+        break
       /* Error message if there is no corresponding Modal */
       default:
         modalSwitch = "The following modal type could not be loaded"

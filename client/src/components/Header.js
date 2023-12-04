@@ -133,9 +133,12 @@ export class Header extends Component {
                                 Agenda
                             </NavLink>
                         {isAdmin === 'true' && (
-                                <NavLink tag={Link} className="text-black text-[20px]" to="/Voorzieningen">
+                                <><NavLink tag={Link} className="text-black text-[20px]" to="/Voorzieningen">
                                     Voorzieningen
                                 </NavLink>
+                                <NavLink tag={Link} className="text-black text-[20px]" to="/AccountsOverview">
+                                    Accounts
+                                </NavLink></>
                         )}
                             <NavLink tag={Link} className="text-black text-[20px]" to="/Nieuws">
                                 Nieuws
