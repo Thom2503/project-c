@@ -46,8 +46,37 @@ class Supply extends Database {
 		return $stmt->execute();
 	}
 
-	public function setUserSupplies(int $id, array $data) {
-	
+	public function setUserSupplies(array $data): int|bool {
+		$query = "INSERT INTO `UserSupplies` (`AgendaItemID`, `SupplyID`, `Date`)".
+		         "VALUES (:uid, :sid, :date)";
+		$stmt = $this->db->prepare($query);
+		foreach ($data['supplies'] as $supply) {
+			$stmt->bindParam(":uid", $data['itemid']);
+			$stmt->bindParam(":sid", $supply);
+			$stmt->bindParam(":date", $data['date']);
+			$stmt->execute();
+		}
+		return $this->db->lastInsertId();
+	}
+
+	public function getUserSupplies(int $id, string|int $date): array {
+		$query = "SELECT `SupplyID` FROM `UserSupplies` WHERE `AgendaItemID` = :aid AND `Date` = :date";
+		$stmt = $this->db->prepare($query);
+		$stmt->bindParam(":aid", $id);
+		$stmt->bindParam(":date", $date);
+		$stmt->execute();
+		return $stmt->fetchAll(PDO::FETCH_COLUMN);
+	}
+
+	public function deleteUserSupplies(array $diff, array $data): int|bool {
+		$query = "DELETE FROM `UserSupplies` WHERE `SupplyID` = :sid AND `AgendaItemID` = :aid";
+		$stmt = $this->db->prepare($query);
+		foreach ($diff as $supply) {
+			$stmt->bindParam(":aid", $data['itemid']);
+			$stmt->bindParam(":sid", $supply);
+			$stmt->execute();
+		}
+		return $this->db->lastInsertId();
 	}
 }
 

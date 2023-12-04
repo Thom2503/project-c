@@ -99,6 +99,21 @@ class SupplyController {
 			}
 		}
     }
+
+    public function setSupplies(): void {
+		$data = json_decode(file_get_contents("php://input"), true);
+		$dataAlready = $this->supplyModel->getUserSupplies($data['itemid'], $data['date']);
+		$diff = array_unique(array_diff($dataAlready, $data['supplies']));
+		header('Content-Type: application/json');
+		$success = $this->supplyModel->setUserSupplies($data);
+		$deleteSuccess = $this->supplyModel->deleteUserSupplies($diff, $data);
+		if ($success == true && $deleteSuccess == true) {
+			echo json_encode(['success' => true]);
+		} else {
+			http_response_code(404);
+			echo json_encode(['error' => 'Supplies not added']);
+		}
+    }
 }
 
 ?>

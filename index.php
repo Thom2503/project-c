@@ -40,7 +40,8 @@ $router->post('/supplies', 'SupplyController@store');
 $router->put('/supplies/{integer}', 'SupplyController@update');
 $router->delete('/supplies/{integer}', 'SupplyController@destroy');
 $router->get('/usersupplies/{integer}', 'SupplyController@showUser');
-$router->post('/usersupplies', 'SupplyController@setSupply');
+$router->post('/usersupplies', 'SupplyController@setSupplies');
+$router->delete('/usersupplies', 'SupplyController@deleteUserSupplies');
 /*{ Notifications }*/
 $router->get('/notifications', 'NotificationController@index');
 $router->get('/notifications/{integer}', 'NotificationController@show');
