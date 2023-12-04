@@ -44,7 +44,7 @@ export class AccountsOverview extends Component {
 						<thead>
 							<tr>
 								<th>#&emsp;ID</th>
-								<th>voor-en achternaam</th>
+								<th>Voor-en achternaam</th>
 								<th>Functie</th>
 								<th>Admin</th>
 								<th>Email</th>

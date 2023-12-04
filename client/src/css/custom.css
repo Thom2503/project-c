@@ -89,6 +89,15 @@ footer {
 	margin-top: 15px;
 	margin-bottom: 15px;
 	text-align: center;
+  cursor: pointer;
+  transition: background-color 0.3s, border-color 0.3s, color 0.3s;
+}
+
+/* Hover effect voor loguit knop */
+.loguit-button:hover {
+  background: #6E6E6E;
+  border-color: #6E6E6E;
+  color: #FFFFFF;
 }
 
 .kamerbg {

@@ -1,11 +1,17 @@
 div#voorzieningen {
 	width: 100%;
+	padding: 0 2% 0 2%;
+}
+
+div#voorzieningen table{
+	width: 100%;
 }
 
 div#voorzieningen .under-header {
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
+	margin-bottom: 1%;
 }
 
 div#voorzieningen .under-header h2 {
@@ -27,11 +33,17 @@ div#voorzieningen thead {
 
 div#voorzieningen td, div#voorzieningen th {
 	width: 10%;
+	text-align: center;
+}
+
+div#voorzieningen td {
+	border: 1px solid #8A8A8A;
 }
 
 div#voorzieningen td:nth-child(2), div#voorzieningen th:nth-child(2) {
-	width: 60%;
+	width: 20%;
 	text-align: left;
+	padding-left: 2px;
 } 
 
 div#voorziening span.add a, div#voorzieningen span.date-picker a {
