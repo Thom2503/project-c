@@ -27,7 +27,7 @@ export class EventModal extends Component {
       istentative: 0,
       tentativetime: "null",
       declinetime: "null",
-      isexternal: 0,
+      isexternal: 1,
       accountsid: 1,
       status: 'dd',
       date: "null",
@@ -48,10 +48,12 @@ export class EventModal extends Component {
 
   handleChange(event) {
     const { name, value, type, checked } = event.target;
-
-    if (type === "checkbox") {
-      this.setState({ showRooms: checked, isexternal: checked ? 0 : 1 });
-    } else {
+  
+    if (type === "checkbox" && name === "showRooms") {
+      // If checkbox for showRooms is checked, update showRooms state
+      this.setState({ showRooms: checked });
+      this.setState({ isexternal: checked ? 0 : 1 });
+    }  else {
       this.setState({ [name]: value });
     }
   }
@@ -86,7 +88,7 @@ export class EventModal extends Component {
             istentative: 0,
             tentativetime: 'not set',
             declinetime: 'not set',
-            isexternal: 1,
+            isexternal: isexternal,
             accountsid: 0,
             status: 'not set',
             date: date,
@@ -182,11 +184,15 @@ export class EventModal extends Component {
                 </LocalizationProvider>
               </div>
               <FormControlLabel
-                  control={<Checkbox checked={this.state.showRooms} onChange={(e) => this.setState({ showRooms: e.target.checked })} />}
+                  control={<Checkbox checked={this.state.showRooms} onChange={this.handleChange} />}
                   label="Locatie De Loods"
                   onChange={this.handleChange}
                   name="showRooms"
               />
+              {/* <FormControlLabel
+  control={<Checkbox checked={this.state.isexternal === 0} onChange={this.handleChange} name="isexternal" />}
+  label="Is External"
+/> */}
               {this.state.showRooms ? (
                   <FormControl fullWidth>
                     <InputLabel id="demo-simple-select-label">Kamer</InputLabel>
@@ -195,7 +201,7 @@ export class EventModal extends Component {
                         id="demo-simple-select"
                         label="Kamer"
                         name="location"
-                        value={this.state.location}
+                        value={this.state.location} // If isexternal is 0, check the checkbox
                         onChange={this.handleChange}
                     >
                       {this.state.rooms.map((room) => (

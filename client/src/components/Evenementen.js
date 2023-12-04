@@ -59,7 +59,7 @@ export class Evenementen extends Component {
     async getEvents() {
         const response = await fetch('events');
         const data = await response.json();
-        this.setState({ data: data, filteredData: data }); // Set filteredData initially
+        this.setState({ data: data, filteredData: data ? data : [] });
     }
 
     async getRooms() {
@@ -78,7 +78,9 @@ export class Evenementen extends Component {
         // Calculate indexes for pagination
         const indexOfLastEvent = currentPage * eventsPerPage;
         const indexOfFirstEvent = indexOfLastEvent - eventsPerPage;
-        const eventsToDisplay = this.state.date === null ? data.slice(indexOfFirstEvent, indexOfLastEvent) : filteredData.slice(indexOfFirstEvent, indexOfLastEvent);
+        const eventsToDisplay = this.state.date === null && filteredData 
+    ? data.slice(indexOfFirstEvent, indexOfLastEvent) 
+    : (Array.isArray(filteredData) ? filteredData.slice(indexOfFirstEvent, indexOfLastEvent) : []);
 
         // Logic for displaying page numbers
         const pageNumbers = [];
@@ -95,7 +97,7 @@ export class Evenementen extends Component {
                         </div>
                         <div className='items-stretch flex gap-4 flex-row'>
                             {getCookie("isadmin") !== "true" && (
-                                <a href="?modal=3" className='h-full text-[23px] gap-2 text-[#8A8A8A] font-normal cursor-pointer flex justify-center items-center'
+                                <a href="?modal=5" className='h-full text-[23px] gap-2 text-[#8A8A8A] font-normal cursor-pointer flex justify-center items-center'
                                     onClick={this.toggleSidebar}
                                 >
                                     Evenement Toevoegen <FontAwesomeIcon icon={faCirclePlus} />
@@ -120,14 +122,14 @@ export class Evenementen extends Component {
                             eventsToDisplay.map((event, index) => (
                                 <div key={event.id} className="bg-[#F9F9F9] sm:mx-[20px] max-w-[1200px] w-[100%] h-[150px] p-4 flex flex-col justify-center rounded-xl border-[2px] duration-300 transition-all hover:bg-[#FEF3FF] hover:border-[#7100a640] hover:cursor-pointer">
                                     <div className="">
-                                        <h1 className="text-[#792F82] font-medium text-[23px]">{event.Title}
-
-                                            {event.IsExternal === 0 ? (
-                                                <span className="ml-[5px] px-[9px] py-[3px] bg-[#BAFFA1] rounded-[100px] p-1 text-[#02BB15] text-[13px]">Internal</span>
-                                            ) : (
-                                                <span className="ml-[5px] px-[9px] py-[3px] bg-[#FFCEA1] rounded-[100px] p-1 text-[#EE5600] text-[13px]">External</span>
-                                            )}
-                                        </h1>
+                                    <h1 className="text-[#792F82] font-medium text-[23px]">
+                                    {event.Title}
+                                    {event.IsExternal === 0 ? (
+                                        <span className="px-[9px] py-[3px] bg-[#BAFFA1] rounded-[100px] p-1 text-[#02BB15] text-[13px] ml-4">Internal</span>
+                                    ) : (
+                                        <span className="px-[9px] py-[3px] bg-[#FFCEA1] rounded-[100px] p-1 text-[#EE5600] text-[13px] ml-4">External</span>
+                                    )}
+                                    </h1>
                                         <span className="text-[#848484] text-[14px]">Klik voor meer informatie</span>
                                     </div>
                                     <div className="mt-auto flex flex-row gap-8">
@@ -137,7 +139,7 @@ export class Evenementen extends Component {
                                             </div>
                                             <div className="flex flex-col">
                                                 <span className="text-[#B0B0B0] text-[12px]">Host</span>
-                                                <span className="text-[#5F5F5F] text-[13px] font-medium">Name</span>
+                                                <span className="text-[#5F5F5F] text-[13px] font-bold">Name</span>
                                             </div>
                                         </div>
                                         <div className="flex flex-row items-center gap-2">
@@ -145,8 +147,8 @@ export class Evenementen extends Component {
                                                 <FontAwesomeIcon icon={faCalendar} className="text-[#D8D8D8]" />
                                             </div>
                                             <div className="flex flex-col">
-                                                <span className="text-[#B0B0B0] text-[12px]">Datum</span>
-                                                <span className="text-[#5F5F5F] text-[13px] font-medium ">{event.Date}</span>
+                                                <span className="text-[#B0B0B0] text-[12px]">Time</span>
+                                                <span className="text-[#5F5F5F] text-[13px] font-bold ">{event.startTime} - {event.endTime}</span>
                                             </div>
                                         </div>
                                         <div className="flex flex-row items-center gap-2">
@@ -154,8 +156,8 @@ export class Evenementen extends Component {
                                                 <FontAwesomeIcon icon={faClock} className="text-[#D8D8D8]" />
                                             </div>
                                             <div className="flex flex-col">
-                                                <span className="text-[#B0B0B0] text-[12px]">Tijd</span>
-                                                <span className="text-[#5F5F5F] text-[13px] font-medium">{event.startTime} - {event.endTime}</span>
+                                                <span className="text-[#B0B0B0] text-[12px]">Date</span>
+                                                <span className="text-[#5F5F5F] text-[13px] font-bold">{event.Date}</span>
                                             </div>
                                         </div>
                                     </div>
@@ -172,7 +174,6 @@ export class Evenementen extends Component {
                             page={currentPage}
                             variant="outlined"
                             shape="rounded"
-                            variant="outlined"
                             color="secondary"
                             onChange={(event, page) => this.paginate(page)}
                         />
