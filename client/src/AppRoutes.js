@@ -1,25 +1,17 @@
-import { Counter } from "./components/Counter";
-import { FetchData } from "./components/FetchData";
 import { Home } from "./components/Home";
 import { Login } from "./components/Login";
 import { Agenda } from "./components/Agenda";
 import { Kamers } from "./components/Kamers";
-import {Evenementen} from "./components/Evenementen";
+import {Supplies} from "./components/Supplies";
+import { Nieuws } from './components/Nieuws';
+import {CreateAccount} from "./components/CreateAccount";
 
 const AppRoutes = [
   {
-    index: true,
     element: <Home />
   },
   {
-    path: '/counter',
-    element: <Counter />
-  },
-  {
-    path: '/fetch-data',
-    element: <FetchData />
-  },
-  {
+    index: true,
     path: '/login',
     element: <Login />
   },
@@ -32,8 +24,16 @@ const AppRoutes = [
     element: <Kamers />
   },
   {
-    path: '/evenementen',
-    element: <Evenementen />
+    path: '/voorzieningen',
+    element: <Supplies />
+  },
+  {
+    path: '/Nieuws',
+    element: <Nieuws />
+  },
+  {
+	path: '/create',
+	element: <CreateAccount />
   }
 ];
 

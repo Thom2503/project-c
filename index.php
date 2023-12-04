@@ -23,14 +23,16 @@ $router = new Router();
 $router->get('/accounts', 'AccountsController@index');
 $router->get('/accounts/{integer}', 'AccountsController@show');
 $router->get('/accounts/{string}', 'AccountsController@showEmail');
+$router->post('/accounts', 'AccountsController@store');
+$router->post('/accounts/{string}', 'AccountsController@verify');
 
-$router->get('/rooms', 'RoomsController@index');
-$router->get('/events', 'EventsController@index');
-$router->post('/events', 'EventsController@store');
-// TODO: implementeer deze, dit moet dan ook in Router.php gebeuren
-/* router->post('/accounts', 'UserController@store'); */
-/* $router->put('/accounts/{id}', 'UserController@update'); */
-/* $router->delete('/accounts/{id}', 'UserController@destroy'); */
+/*{ Agenda Routing }*/
+$router->get('/agendaitems', 'AgendaController@index');
+$router->get('/agendaitems/{integer}', 'AgendaController@show');
+$router->get('/useritems/{integer}', 'AgendaController@showUser');
+$router->post('/agendaitems', 'AgendaController@store');
+$router->put('/agendaitems/{integer}', 'AgendaController@update');
+$router->delete('/agendaitems/{integer}', 'AgendaController@destroy');
 /*{ Supplies Routing }*/
 $router->get('/supplies', 'SupplyController@index');
 $router->get('/supplies/{integer}', 'SupplyController@show');

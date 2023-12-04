@@ -69,10 +69,10 @@ table.agenda th {
 
 footer {
 	width: 100%;
+	position: absolute;
 	bottom: 0;
 	height: 60px;
 	background-color: #3D3D3D;
-    position: absolute;
 }
 
 .loguit-button {
