@@ -89,13 +89,13 @@ export class Evenementen extends Component {
         return (
             <>
                 <div className='w-[95%] m-auto pb-[80px]'>
-                    <div className="flex flex-row justify-between items-stretch mb-4 items-center">
+                    <div className="flex flex-col sm:flex-row justify-between items-stretch mb-4 items-center">
                         <div className='flex items-center'>
                             <h1 className="text-[#792F82] font-bold text-[25px]">Evenementen</h1>
                         </div>
-                        <div className='items-stretch flex gap-4 flex-row'>
+                        <div className='items-stretch flex gap-4 flex-col sm:flex-row'>
                             {getCookie("isadmin") !== "true" && (
-                                <a href="?modal=3" className='h-full text-[23px] gap-2 text-[#8A8A8A] font-normal cursor-pointer flex justify-center items-center'
+                                <a href="?modal=3" className='h-full text-[20px] gap-2 text-[#8A8A8A] font-normal cursor-pointer flex items-center'
                                     onClick={this.toggleSidebar}
                                 >
                                     Evenement Toevoegen <FontAwesomeIcon icon={faCirclePlus} />
