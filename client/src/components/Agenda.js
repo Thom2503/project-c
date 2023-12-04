@@ -38,7 +38,6 @@ export class Agenda extends Component {
 	 */
 	convertDates() {
 		return this.getWeekDays().map((day) => {
-			console.log(day);
 			let date = new Date(day);
 			return date.toLocaleDateString("nl-NL", { year: 'numeric', month: 'short', day: 'numeric' });
 		});

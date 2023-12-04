@@ -45,6 +45,10 @@ class Supply extends Database {
 		$stmt->bindParam(":sid", $id, PDO::PARAM_INT);
 		return $stmt->execute();
 	}
+
+	public function setUserSupplies(int $id, array $data) {
+	
+	}
 }
 
 ?>

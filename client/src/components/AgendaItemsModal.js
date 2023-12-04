@@ -18,6 +18,9 @@ export class AgendaItemsModal extends Component {
       status: "in",
       agenda: "",
       deleteAgenda: false,
+      supplies: [],
+      userSupplies: [],
+      selectExpanded: false,
     };
   }
 
@@ -44,6 +47,8 @@ export class AgendaItemsModal extends Component {
     } catch (error) {
       console.error("Error fetching rooms:", error);
     }
+
+	this.getAllSupplies();
   }
 
   handleInputChange = (event) => {
@@ -60,6 +65,14 @@ export class AgendaItemsModal extends Component {
         this.setState({ title: "Uit de loods" });
       }
     }
+
+	if (name === "usersupplies") {
+		console.log("boe");
+		let options = event.target.options;
+		for (let i = 0; i < options.length; i++) {
+			if (options[i].selected) this.state.userSupplies.push(options[i].value);
+		}
+	}
 
     // checkbox logic
     if (name === "deleteAgenda") {
@@ -128,6 +141,16 @@ export class AgendaItemsModal extends Component {
       });
     }
   }
+
+  async getAllSupplies() {
+	const response = await fetch("supplies");
+	const data = await response.json();
+
+	if (!data.error) {
+		this.setState({supplies: data});
+	}
+  }
+
   render() {
     //show the modal that you can change and fill only for the appropriate user
     if (this.state.accountsid === this.state.currentaccountsid) {
@@ -212,6 +235,18 @@ export class AgendaItemsModal extends Component {
                 ))}
             </select>
           </div>
+		  {this.state.supplies && (
+		  <div className="input-field-div">
+		  	<label htmlFor="supplies" className="input-field-label">Voorzieningen:</label>
+			<select id="supplies" name="usersupplies" className="input-field" onChange={this.handleInputChange} multiple={true}>
+			{this.state.supplies.map((supply) => (
+				<option key={supply.SupplyID} value={supply.SupplyID}>
+				  {supply.Name} - {supply.Total}
+				</option>
+			))}
+			</select>
+		  </div>
+		  )}
 
           <div className="input-field-div">
             <label htmlFor="agendaDelete">Delete:</label>
