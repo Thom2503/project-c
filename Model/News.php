@@ -33,5 +33,25 @@ class News extends Database {
 		$stmt->execute();
 		return $this->db->lastInsertId();
 	}
+
+	public function updateNews(int $id, array $data): bool {
+        $query = "UPDATE `News`".
+                 " SET `Title` = :title, `Description` = :description, `Image` = :image, `PostTime` = :posttime".
+                 " WHERE `AccountsId` = :id";
+        $stmt = $this->db->prepare($query);
+        $stmt->bindParam(":title", $data['title'], PDO::PARAM_STR);
+        $stmt->bindParam(":description", $data['description'], PDO::PARAM_STR);
+        $stmt->bindParam(":image", $data['image'], PDO::PARAM_STR);
+        $stmt->bindParam(":posttime", $data['posttime']);
+        $stmt->bindParam(":id", $id, PDO::PARAM_INT);
+        return $stmt->execute();
+    }
+
+	public function deleteNews(int $id): bool {
+		$query = "DELETE FROM `News` WHERE `AccountsId` = :id";
+		$stmt = $this->db->prepare($query);
+		$stmt->bindParam(":id", $id, PDO::PARAM_INT);
+		return $stmt->execute();
+	}
 }
 ?>

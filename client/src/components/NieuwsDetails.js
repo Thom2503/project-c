@@ -15,7 +15,9 @@ export class NieuwsDetails extends Component {
             description: ' ',
             image: "nieuwsimage",
             posttime: '2023-12-02 19:44',
-            accountsid: Number.parseInt(getCookie("user"))
+            accountsid: Number.parseInt(getCookie("user")),
+            NewsID: ' ',
+            deleteNews: false,
           };
     }
 
@@ -50,13 +52,20 @@ export class NieuwsDetails extends Component {
 
     const { title, description, posttime, image, accountsid} = this.state;
 
-    const fetchURL = "../news";
+    // const fetchURL = "../news";
+
+    const fetchURL =
+      !Number.isNaN(this.state.NewsID) || this.state.deleteNews === true
+        ? `../news/${this.state.NewsID}`
+        : "../news";
+
+    // const fetchURL = isUpdate ? `'../news/{this.state.filteredData.NewsID}' : "../news"` : "../news";
 
     try {
-        const response = await fetch(fetchURL, {
-        method: "POST",
+         const response = await fetch(fetchURL, {
+        method: this.state.deleteNews === true?  "DELETE" : "POST",
         headers: {
-            "Content-Type": "application/json",
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
             title,
@@ -91,83 +100,83 @@ export class NieuwsDetails extends Component {
         if (isAdmin){
             if(fromAddNews)
             {
-                // return (
-                //     <>
-                //     <Link to="/Nieuws" className="text-[#848484] mb-4" style={{ marginLeft: '30px' }}>&lt; Terug</Link>
-                //     <form onSubmit={this.handleSubmit} className="max-w-[400px] sm:max-w-[600px] mx-auto"style={{ marginTop: '50px' }}>
-                //         <div className="input-field-div" style={{ marginBottom: '2rem' }}>
-                //             <label
-                //                 htmlFor="title"
-                //                 className="input-field-label"
-                //             >
-                //                 Titel:
-                //             </label>
-                //             <input
-                //                 type="text"
-                //                 id="title"
-                //                 name="title"
-                //                 className="input-field"
-                //                 value={this.state.title}
-                //                 onChange={this.handleInputChange}
-                //             />
-                //         </div>
+                return (
+                    <>
+                    <Link to="/Nieuws" className="text-[#848484] mb-4" style={{ marginLeft: '30px' }}>&lt; Terug</Link>
+                    <form onSubmit={this.handleSubmit} className="max-w-[400px] sm:max-w-[600px] mx-auto"style={{ marginTop: '50px' }}>
+                        <div className="input-field-div" style={{ marginBottom: '2rem' }}>
+                            <label
+                                htmlFor="title"
+                                className="input-field-label"
+                            >
+                                Titel:
+                            </label>
+                            <input
+                                type="text"
+                                id="title"
+                                name="title"
+                                className="input-field"
+                                value={this.state.title}
+                                onChange={this.handleInputChange}
+                            />
+                        </div>
 
-                //         <div className="input-field-div" style={{ marginBottom: '2rem' }}>
-                //             <label
-                //                 htmlFor="note"
-                //                 className="input-field-label"
-                //             >
-                //                 Beschrijving:
-                //             </label>
-                //             <input
-                //                 type="text"
-                //                 id="description"
-                //                 name="description"
-                //                 className="input-field"
-                //                 value={this.state.description}
-                //                 onChange={this.handleInputChange}
-                //             />
-                //         </div>
+                        <div className="input-field-div" style={{ marginBottom: '2rem' }}>
+                            <label
+                                htmlFor="note"
+                                className="input-field-label"
+                            >
+                                Beschrijving:
+                            </label>
+                            <input
+                                type="text"
+                                id="description"
+                                name="description"
+                                className="input-field"
+                                value={this.state.description}
+                                onChange={this.handleInputChange}
+                            />
+                        </div>
 
-                //         <div className="input-field-div" style={{ marginBottom: '2rem' }}>                            <label
-                //                 htmlFor="note"
-                //                 className="input-field-label"
-                //             >
-                //                 Posttijd:
-                //             </label>
-                //             <input
-                //                 type="text"
-                //                 id="posttime"
-                //                 name="posttime"
-                //                 className="input-field"
-                //                 value={this.state.posttime}
-                //                 onChange={this.handleInputChange}
-                //             />
-                //         </div>
-                //         {/* <div className="input-field-div" style={{ marginBottom: '2rem' }}>
-                //             <p className="static-text">Huidige afbeelding:</p>
-                //             <label
-                //                 htmlFor="note"
-                //                 className="input-field-label"
-                //             >
-                //                 Afbeelding:
-                //             </label>
-                //             <input
-                //                 type="file"
-                //                 id="image"
-                //                 name="image"
-                //                 className="input-field"
-                //                 onChange={this.handleImageChange}
-                //             />
-                //         </div> */}
-                //         <input
-                //             className="save-button"
-                //             type="submit"
-                //             value="Opslaan & Sluiten"
-                //         />
-                //     </form>
-                // </>
-                // );
+                        <div className="input-field-div" style={{ marginBottom: '2rem' }}>                            <label
+                                htmlFor="note"
+                                className="input-field-label"
+                            >
+                                Posttijd:
+                            </label>
+                            <input
+                                type="text"
+                                id="posttime"
+                                name="posttime"
+                                className="input-field"
+                                value={this.state.posttime}
+                                onChange={this.handleInputChange}
+                            />
+                        </div>
+                        {/* <div className="input-field-div" style={{ marginBottom: '2rem' }}>
+                            <p className="static-text">Huidige afbeelding:</p>
+                            <label
+                                htmlFor="note"
+                                className="input-field-label"
+                            >
+                                Afbeelding:
+                            </label>
+                            <input
+                                type="file"
+                                id="image"
+                                name="image"
+                                className="input-field"
+                                onChange={this.handleImageChange}
+                            />
+                        </div> */}
+                        <input
+                            className="save-button"
+                            type="submit"
+                            value="Opslaan & Sluiten"
+                        />
+                    </form>
+                </>
+                );
             }
             else {
             return(
@@ -243,6 +252,16 @@ export class NieuwsDetails extends Component {
                                 onChange={this.handleImageChange}
                             />
                         </div> */}
+                        <div className="input-field-div">
+                        <label htmlFor="deleteNews">Delete: </label>
+                        <input
+                            type="checkbox"
+                            id="deleteNews"
+                            name="deleteNews"
+                            value={this.state.deleteNews}
+                            onChange={this.handleInputChange}
+                        />
+                        </div>
                         <input
                             className="save-button"
                             type="submit"
