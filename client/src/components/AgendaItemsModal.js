@@ -135,7 +135,7 @@ export class AgendaItemsModal extends Component {
         <form onSubmit={this.handleSubmit}>
           <div className="time-div">
             {this.state.date &&
-              new Date(parseInt(this.state.date)).toLocaleDateString("en-GB")}
+              new Date(parseInt(this.state.date)).toLocaleDateString("nl-NL")}
           </div>
 
           <div className="status-div">

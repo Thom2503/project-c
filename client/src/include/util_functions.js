@@ -63,11 +63,21 @@ export const getNextDay = (firstDay, day) => {
  * @returns {int} today - de timestamp van de eerste dag
  */
 export const getFirstDayTimeStamp = () => {
+	// let today = new Date();
+	// let dayOfWeek = today.getDay();
+	// // false is woensdag true is donderdag
+	// let wedOrThur = today.toLocaleDateString("nl-NL", {weekday: 'long'}) === "donderdag";
+	// // dit is niet heel netjes met die 1 er nog af maar dat is om voor zondag te rekenen
+	// // let daysUntilSun = (dayOfWeek === 0 ? 0 : 7 - dayOfWeek);
+	// // console.log(daysUntilSun);
+	// console.log(today.getDate());
+	// let firstDay = new Date(today);
+	// // firstDay.setDate(today.getDate() - daysUntilSun);
+	// firstDay.setHours(0, 0, 0, 0);
+	// return firstDay.getTime();
 	let today = new Date();
-	let dayOfWeek = today.getDay();
-	let daysUntilSun = dayOfWeek === 0 ? 0 : 7 - dayOfWeek;
-	let firstDay = new Date(today);
-	firstDay.setDate(today.getDate() + daysUntilSun);
-	firstDay.setHours(0, 0, 0, 0);
-	return firstDay.getTime();
+	let dayOfWeek = today.getDay() || 7;
+	if (dayOfWeek !== 1) today.setDate(today.getDate() - dayOfWeek);
+	today.setHours(0,0,0,0);
+	return today.getTime();
 };

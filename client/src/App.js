@@ -14,6 +14,7 @@ export default function App() {
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const modalParam = params.get("modal");
+	const sidebarParam = params.get("sidebar");
 
     // check if the modal needs to be loaded
     if (modalParam !== null) {
@@ -22,7 +23,7 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    if (ignoredLocations.indexOf(location.pathname) >= 0 !== true) {
+    if ((ignoredLocations.indexOf(location.pathname) >= 0) !== true) {
       import("./css/tailwind.css");
     }
   }, [location.pathname]);
