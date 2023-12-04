@@ -119,14 +119,16 @@ export class AgendaItemsModal extends Component {
       }
 
       const data = await response.json();
+	  let d = null;
 	  if (this.state.userSupplies.length > 0) {
-	  	this.postUserSupplies();
+	  	let d = this.postUserSupplies();
+		setTimeout(() => console.log("...."), 200);
 	  }
 
       // Continue with your success handling
-      if (data.id > 0 || data.success === true) {
+      if (data.id > 0 || data.success === true || d.success === true) {
         console.log("Done");
-        // this.props.onClose();
+        this.props.onClose();
       } else {
         // Handle form validation errors or other issues
         console.log(data);
@@ -173,7 +175,7 @@ export class AgendaItemsModal extends Component {
 		});
 
 		const data = await response.json();
-		console.log(data);
+		return data;
 	}
 
   render() {

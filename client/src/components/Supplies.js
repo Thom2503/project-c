@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { getCookie } from '../include/util_functions';
+import { getCookie, getFirstDayTimeStamp, getNextDay } from '../include/util_functions';
 import '../css/voorzieningen.css';
 
 export class Supplies extends Component {
@@ -7,12 +7,13 @@ export class Supplies extends Component {
 
 	constructor(props) {
 		super(props);
-		this.state = {data: []};
+		this.state = {data: [], today: getNextDay(getFirstDayTimeStamp(), new Date().getDay()), usedData: []};
 		document.title = "Voorzieningen";
 	}
 
 	componentDidMount() {
 		this.getSupplies();
+		this.getUsedSupplies();
 	}
 
 	/**
@@ -27,6 +28,16 @@ export class Supplies extends Component {
 			this.setState({data: ["No data found"]});
 		} else {
 			this.setState({data: data});
+		}
+	}
+
+	async getUsedSupplies() {
+		const response = await fetch(`usersupplies/ts${this.state.today.toString()}`);
+		const data = await response.json();
+		if (data.error) {
+			this.setState({usedData: []});
+		} else {
+			this.setState({usedData: data});
 		}
 	}
 

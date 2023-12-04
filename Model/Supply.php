@@ -78,6 +78,14 @@ class Supply extends Database {
 		}
 		return $this->db->lastInsertId();
 	}
+
+	public function getTodaySupplies(string|int $date): array {
+		$query = "SELECT DISTINCT `SupplyID`, COUNT(*) FROM `UserSupplies` WHERE `Date` = :date;";
+		$stmt = $this->db->prepare($query);
+		$stmt->bindParam(":date", $date);
+		$stmt->execute();
+		return $stmt->fetchAll(PDO::FETCH_ASSOC);
+	}
 }
 
 ?>
