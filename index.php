@@ -55,6 +55,8 @@ $router->get('/rooms/{integer}', 'RoomsController@showUsers');
 $router->put('/news/{integer}', 'NewsController@update');
 $router->delete('/news/{integer}', 'NewsController@destroy');
 
+$router->get('/events', 'EventsController@index');
+$router->post('/events', 'EventsController@store');
 
 $router->dispatch(); // Handle the request
 
