@@ -7,6 +7,7 @@ import { Nieuws } from './components/Nieuws'
 import {CreateAccount} from "./components/CreateAccount";
 import {NieuwsDetails} from "./components/NieuwsDetails";
 import { AccountsOverview } from "./components/AccountsOverview";
+import { Evenementen } from "./components/Evenementen";
 
 
 const AppRoutes = [
@@ -45,6 +46,10 @@ const AppRoutes = [
   {
     path: '/AccountsOverview',
     element: <AccountsOverview />
+  },
+  {
+    path: '/evenementen',
+    element: <Evenementen />
   }
 ];
 
