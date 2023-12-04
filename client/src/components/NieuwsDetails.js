@@ -7,7 +7,6 @@ export class NieuwsDetails extends Component {
     static displayName = NieuwsDetails.name;
     constructor(props) {
         super(props);
-        this.state = {   };
         this.state = {
             data: [],
             filteredData: null,
@@ -16,7 +15,7 @@ export class NieuwsDetails extends Component {
             image: "nieuwsimage",
             posttime: '2023-12-02 19:44',
             accountsid: Number.parseInt(getCookie("user")),
-            NewsID: ' ',
+            NewsID: null,
             deleteNews: false,
           };
     }
@@ -24,7 +23,6 @@ export class NieuwsDetails extends Component {
     componentDidMount() {
         this.fetchNewsDetails();
     }
-
     async fetchNewsDetails() {
         const response = await fetch('../news');
         const data = await response.json();
@@ -32,42 +30,44 @@ export class NieuwsDetails extends Component {
 
         // Get the URL parameter
         const urlParams = new URLSearchParams(window.location.search);
-        const urlId = parseInt(urlParams.get("ID"), 10);
+        const urlId =  Number.parseInt(urlParams.get('ID'));
 
         // Filter data based on the URL parameter
         const filteredData = data.filter(news => news.NewsID === urlId);
 
         if (filteredData.length > 0) {
-            this.setState({ filteredData: filteredData[0] });
+            this.setState({ filteredData: filteredData[0], NewsID: urlId });
         }
     }
 
     handleInputChange = (event) => {
-        const { name, value } = event.target;
-        this.setState({ [name]: value });
+        if (event.target.name === "deleteNews") {
+            this.setState({ [event.target.name]: event.target.checked });
+          } else {
+            this.setState({ [event.target.name]: event.target.value });
+          }
     };
 
     handleSubmit = async (event) => {
     event.preventDefault();
 
-    const { title, description, posttime, image, accountsid} = this.state;
+    // is de oude manier hierbij word nieuws wel gwn toegevoegd:
+    // const fetchURL = "../news";
+
+
+    const { title, description, posttime, image, accountsid, NewsID} = this.state;
 
     // is de oude manier hierbij word nieuws wel gwn toegevoegd:
-    const fetchURL = "../news";
+    // const fetchURL = "../news";
 
-    // nieuwe manier:
-    // const fetchURL =
-    //   !Number.isNaN(this.state.NewsID) || this.state.deleteNews === true
-    //     ? `../news/${this.state.NewsID}`
-    //     : "../news";
+    const fetchURL = NewsID ? `/news/${NewsID}` : '/news';
 
-    // const fetchURL = isUpdate ? `'../news/{this.state.filteredData.NewsID}' : "../news"` : "../news";
 
     try {
-         const response = await fetch(fetchURL, {
-        // Nieuwe manier:
-        // method: this.state.deleteNews === true?  "DELETE" : "POST",
-        method: "POST",
+        console.log("DELETE request to:", fetchURL);
+        const response = await fetch(fetchURL, {
+        method: this.state.deleteNews === true ?  "DELETE" : "POST",
+        // method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
@@ -79,6 +79,7 @@ export class NieuwsDetails extends Component {
             accountsid
         }),
         });
+        console.log(this.state.deleteNews);
 
         if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
@@ -86,12 +87,10 @@ export class NieuwsDetails extends Component {
 
         const data = await response.json();
 
-        // Continue with your success handling
         if (data.id > 0 || data.success === true) {
         console.log("Done");
-        window.location.replace("news");
+            window.location.replace("/Nieuws");
         } else {
-        // Handle form validation errors or other issues
         console.log(data);
         }
     } catch (e) {
@@ -303,3 +302,4 @@ export class NieuwsDetails extends Component {
         }
     }
 }
+
