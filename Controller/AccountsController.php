@@ -66,36 +66,11 @@ class AccountsController {
 	}
 
     public function update($id) {
-        $data = json_decode(file_get_contents("php://input"), true);
-        $success = $this->userModel->updateAccount($id, $data);
-        header('Content-Type: application/json');
-		if ($success == true) {
-        	echo json_encode(['success' => true]);
-		} else {
-			http_response_code(404);
-			echo json_encode(['success' => 'false']);
-		}
+        // Implement logic to update user by ID
     }
 
     public function destroy($id) {
-        $errors = [];
-		$data = json_decode(file_get_contents("php://input"), true);
-		if (count($data) <= 0) {
-			$errors['data'] = "Data is empty";	
-		}
-
-		header('Content-Type: application/json');
-		if (count($errors) > 0) {
-			echo json_encode($errors);
-		} else {
-			$success = $this->userModel->deleteAccount($id);
-			if ($success == true) {
-				echo json_encode(['success' => true]);
-			} else {
-				http_response_code(404);
-				echo json_encode(['error' => 'Supply not deleted']);
-			}
-		}
+        // Implement logic to delete user by ID
     }
 }
 

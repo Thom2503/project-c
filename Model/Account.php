@@ -42,27 +42,6 @@ class Account extends Database {
 		$stmt->execute();
 		return $this->db->lastInsertId();
 	}
-
-	public function updateAccount(int $id, array $data): bool {
-		$query = "UPDATE `Accounts`".
-		         " SET `FirstName` = :first, `LastName` = :last, `IsAdmin` = :admin, `Email` = :email, `Function` = :function".
-		         " WHERE `AccountsId` = :sid ";
-		$stmt = $this->db->prepare($query);
-		$stmt->bindParam(":first", $data['FirstName'], PDO::PARAM_STR);
-		$stmt->bindParam(":last", $data['LastName'], PDO::PARAM_STR);
-		$stmt->bindParam(":function", $data['Function'], PDO::PARAM_STR);
-		$stmt->bindParam(":admin", $data['IsAdmin'], PDO::PARAM_BOOL);
-		$stmt->bindParam(":email", $data['Email'], PDO::PARAM_STR);
-		$stmt->bindParam(":sid", $id, PDO::PARAM_INT);
-		return $stmt->execute();
-	}
-
-	public function deleteAccount(int $id): bool {
-		$query = "DELETE FROM `Accounts` WHERE `AccountsID` = :sid";
-		$stmt = $this->db->prepare($query);
-		$stmt->bindParam(":sid", $id, PDO::PARAM_INT);
-		return $stmt->execute();
-	}
 }
 
 ?>
