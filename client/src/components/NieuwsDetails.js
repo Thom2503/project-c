@@ -52,18 +52,22 @@ export class NieuwsDetails extends Component {
 
     const { title, description, posttime, image, accountsid} = this.state;
 
-    // const fetchURL = "../news";
+    // is de oude manier hierbij word nieuws wel gwn toegevoegd:
+    const fetchURL = "../news";
 
-    const fetchURL =
-      !Number.isNaN(this.state.NewsID) || this.state.deleteNews === true
-        ? `../news/${this.state.NewsID}`
-        : "../news";
+    // nieuwe manier:
+    // const fetchURL =
+    //   !Number.isNaN(this.state.NewsID) || this.state.deleteNews === true
+    //     ? `../news/${this.state.NewsID}`
+    //     : "../news";
 
     // const fetchURL = isUpdate ? `'../news/{this.state.filteredData.NewsID}' : "../news"` : "../news";
 
     try {
          const response = await fetch(fetchURL, {
-        method: this.state.deleteNews === true?  "DELETE" : "POST",
+        // Nieuwe manier:
+        // method: this.state.deleteNews === true?  "DELETE" : "POST",
+        method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
