@@ -3,7 +3,6 @@ import { AgendaItemsModal } from "./AgendaItemsModal";
 import { SupplyModal } from "./SupplyModal";
 import "../css/modal.css";
 import CloseIcon from "../static/close-icon.svg";
-import {EventModal} from "./EventModal";
 
 export class BaseModal extends Component {
   static displayName = BaseModal.name;
@@ -30,8 +29,6 @@ export class BaseModal extends Component {
         break;
       case "2":
         modalSwitch = < SupplyModal onClose={this.props.onClose} />
-      case "3":
-        modalSwitch = < EventModal onClose={this.props.onClose} />
       break
       /* Error message if there is no corresponding Modal */
       default:
