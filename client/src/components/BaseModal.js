@@ -6,6 +6,7 @@ import { AccountModal } from "./AccountModal";
 
 import "../css/modal.css";
 import CloseIcon from "../static/close-icon.svg";
+import {EventModal} from "./EventModal";
 
 export class BaseModal extends Component {
   static displayName = BaseModal.name;
@@ -39,6 +40,9 @@ export class BaseModal extends Component {
       case "4":
         modalSwitch = < AccountModal onClose={this.props.onClose} />
         break
+      case "5":
+        modalSwitch = < EventModal onClose={this.props.onClose} />
+      break
       /* Error message if there is no corresponding Modal */
       default:
         modalSwitch = "The following modal type could not be loaded"

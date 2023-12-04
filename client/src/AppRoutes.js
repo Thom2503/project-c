@@ -7,14 +7,15 @@ import { Nieuws } from './components/Nieuws'
 import {CreateAccount} from "./components/CreateAccount";
 import {NieuwsDetails} from "./components/NieuwsDetails";
 import { AccountsOverview } from "./components/AccountsOverview";
+import {Evenementen} from "./components/Evenementen";
 
 
 const AppRoutes = [
   {
+    index: true,
     element: <Home />
   },
   {
-    index: true,
     path: '/login',
     element: <Login />
   },
@@ -42,9 +43,13 @@ const AppRoutes = [
     path: 'nieuws/details',
     element: <NieuwsDetails />
   },
-  {
-    path: '/AccountsOverview',
-    element: <AccountsOverview />
+    {
+        path: '/AccountsOverview',
+        element: <AccountsOverview/>
+    },
+    {
+    path: '/evenementen',
+    element: <Evenementen />
   }
 ];
 
