@@ -1,7 +1,9 @@
 import React, { Component } from "react";
 import { AgendaItemsModal } from "./AgendaItemsModal";
 import { SupplyModal } from "./SupplyModal";
+import { Nieuws } from "./Nieuws";
 import { AccountModal } from "./AccountModal";
+
 import "../css/modal.css";
 import CloseIcon from "../static/close-icon.svg";
 
@@ -31,6 +33,9 @@ export class BaseModal extends Component {
       case "2":
         modalSwitch = < SupplyModal onClose={this.props.onClose} />
         break
+      case "3":
+        modalSwitch = < Nieuws onClose={this.props.onClose} />
+        break;
       case "4":
         modalSwitch = < AccountModal onClose={this.props.onClose} />
         break

@@ -20,4 +20,11 @@
       max-width: calc(50% - 1rem);
     }
   }
+  /* Add this CSS to center the content */
+.custom-centered-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 50vh; /* Adjust as needed based on your layout */
+}
   
