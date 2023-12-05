@@ -43,8 +43,7 @@ export class Supplies extends Component {
 
     render() {
 		// om vandaag de dag aan te geven
-		const currentDate = new Date();
-		const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun','Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+		const date = new Date().toLocaleDateString("nl-NL", {day: 'numeric', month: 'short', year: 'numeric'});
 		// als je geen admin bent mag je niet naar deze pagina
 		if (getCookie("isadmin") !== "true") window.location.replace("agenda");
         return (
@@ -55,7 +54,7 @@ export class Supplies extends Component {
 					&nbsp;
 					<span className='date-picker'>
 						<a href='voorzieningen?pick-date'>
-							{`${currentDate.getDate()} ${months[currentDate.getMonth()]} ${currentDate.getFullYear()}`}
+							{date}
 						</a>
 					</span>
 				</div>
@@ -79,7 +78,7 @@ export class Supplies extends Component {
 									</td>
 									<td>{supply.Name}</td>
 									<td>{supply.Total}</td>
-									<td>0</td>
+									<td>{this.state.usedData.find(s => s.SupplyID === supply.SuppliesID)?.C ?? 0}</td>
 								</tr>
 							)}
 						</tbody>

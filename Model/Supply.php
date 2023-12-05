@@ -84,9 +84,10 @@ class Supply extends Database {
 	}
 
 	public function getTodaySupplies(string|int $date): array {
-		$query = "SELECT DISTINCT `SupplyID`, COUNT(*) FROM `UserSupplies` WHERE `Date` = :date;";
+		$query = "SELECT `SupplyID`, COUNT(*) AS `C` FROM `UserSupplies`".
+		         " WHERE `Date` = :date GROUP BY `SupplyID`";
 		$stmt = $this->db->prepare($query);
-		$stmt->bindParam(":date", $date);
+		$stmt->bindParam(":date", $date, PDO::PARAM_STR);
 		$stmt->execute();
 		return $stmt->fetchAll(PDO::FETCH_ASSOC);
 	}
