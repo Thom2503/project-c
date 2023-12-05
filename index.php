@@ -57,6 +57,8 @@ $router->delete('/news/{integer}', 'NewsController@destroy');
 
 $router->get('/events', 'EventsController@index');
 $router->post('/events', 'EventsController@store');
+$router->get('/events/{integer}', 'EventsController@showUsers');
+$router->put('/events/{integer}', 'EventsController@joinEvent');
 
 $router->dispatch(); // Handle the request
 

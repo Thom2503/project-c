@@ -28,6 +28,25 @@ class Events extends Database {
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
+    public function getUsersInEvent(int $eventID): array {
+        $query = "SELECT `account_id` FROM `AccountEvents` WHERE `event_id` = :eventid";
+
+        $stmt = $this->db->prepare($query);
+        $stmt->bindParam(":eventid", $eventID); // Use $eventID instead of $data['eventid']
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function joinEvent(int $accountid, int $eventid): int {
+        $query = "INSERT INTO `AccountEvents` (`account_id`, `event_id`) VALUES (:accountid, :eventid)";
+
+        $stmt = $this->db->prepare($query);
+        $stmt->bindParam(":accountid", $accountid); // Use $eventID instead of $data['eventid']
+        $stmt->bindParam(":eventid", $eventid); // Use $eventID instead of $data['eventid']
+        $stmt->execute();
+        return $this->db->lastInsertId();
+    }
+
     public function createEvent(array $data): int {
         $query = "INSERT INTO `Events` 
           (`Title`, `Description`, `Location`, `IsTentative`, 

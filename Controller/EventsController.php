@@ -36,5 +36,26 @@ class EventsController {
         header('Content-Type: application/json');
         echo json_encode(['id' => $eventId]);
     }
+
+    public function joinEvent(): void {
+        $data = json_decode(file_get_contents("php://input"), true);
+        $accountid = $data['accountid'];
+        $eventid = $data['eventid'];
+        $eventId = $this->eventsModel->joinEvent($accountid, $eventid);
+        header('Content-Type: application/json');
+        echo json_encode(['id' => $eventId]);
+    }
+
+
+    public function showUsers(int $id): void {
+        header('Content-Type: application/json');
+        $users = $this->eventsModel->getUsersInEvent($id);
+        if (count($users) > 0) {
+            echo json_encode($users);
+        } else {
+            http_response_code(404);
+            echo json_encode(['error' => 'Users not found in event room with id ' . $id]);
+        }
+    }
 }
 ?>
