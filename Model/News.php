@@ -37,7 +37,7 @@ class News extends Database {
 	public function updateNews(int $id, array $data): bool {
         $query = "UPDATE `News`".
                  " SET `Title` = :title, `Description` = :description, `Image` = :image, `PostTime` = :posttime".
-                 " WHERE `AccountsId` = :id";
+                 " WHERE `NewsId` = :id";
         $stmt = $this->db->prepare($query);
         $stmt->bindParam(":title", $data['title'], PDO::PARAM_STR);
         $stmt->bindParam(":description", $data['description'], PDO::PARAM_STR);
@@ -48,7 +48,7 @@ class News extends Database {
     }
 
 	public function deleteNews(int $id): bool {
-		$query = "DELETE FROM `News` WHERE `AccountsId` = :id";
+		$query = "DELETE FROM `News` WHERE `NewsId` = :id";
 		$stmt = $this->db->prepare($query);
 		$stmt->bindParam(":id", $id, PDO::PARAM_INT);
 		return $stmt->execute();
