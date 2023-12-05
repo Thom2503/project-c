@@ -121,8 +121,7 @@ export class AgendaItemsModal extends Component {
       const data = await response.json();
 	  let d = null;
 	  if (this.state.userSupplies.length > 0) {
-	  	let d = this.postUserSupplies();
-		setTimeout(() => console.log("...."), 200);
+		  d = await this.postUserSupplies();
 	  }
 
       // Continue with your success handling

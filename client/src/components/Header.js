@@ -13,7 +13,7 @@ export class Header extends Component {
 			user: [],
 			item: false,
 			isHere: false,
-			today: getNextDay(getFirstDayTimeStamp(), new Date().getDay() - 1)
+			today: getNextDay(getFirstDayTimeStamp(), new Date().getDay())
 		};
     }
 

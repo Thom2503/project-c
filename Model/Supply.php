@@ -48,7 +48,11 @@ class Supply extends Database {
 
 	public function setUserSupplies(array $data): int|bool {
 		$query = "INSERT INTO `UserSupplies` (`AgendaItemID`, `SupplyID`, `Date`)".
-		         "VALUES (:uid, :sid, :date)";
+		         " SELECT :uid, :sid, :date".
+		         " WHERE NOT EXISTS (".
+		         "     SELECT 1 FROM `UserSupplies`".
+		         "     WHERE `AgendaItemID` = :uid AND `SupplyID` = :sid AND `Date` = :date".
+		         " )";
 		$stmt = $this->db->prepare($query);
 		foreach ($data['supplies'] as $supply) {
 			$stmt->bindParam(":uid", $data['itemid']);
