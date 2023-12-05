@@ -119,6 +119,38 @@ footer {
     cursor: pointer;
 }
 
+.MuiTabs-root {
+    border: 2px solid #E2E2E2;
+    border-radius: 8px;
+    text-transform: capitalize;
+}
+
+.MuiTab-root {
+    text-transform: capitalize !important;
+}
+
+.MuiTabs-scroller {
+    background: #f6f8fc !important;
+}
+
+.Mui-selected {
+    color: #a200b0 !important;
+}
+/*.MuiTabs-indicator {*/
+/*    display: none !important;*/
+/*}*/
+.MuiTabs-indicator {
+    transition: none;
+    display: none;
+}
+.MuiTabs-scroller {
+    border: none !important;
+}
+
+.Mui-selected {
+    outline: none;
+}
+
 div.kamers.sidebar {
 	position: absolute;
 	top: 0;
@@ -186,6 +218,11 @@ hr {
     overflow-x: auto;
   }
 
+    .agenda {
+        max-width: 100%;
+        overflow-y: scroll;
+    }
+
   table.agenda {
     width: 100%;
   }
@@ -222,3 +259,4 @@ hr {
 	width: 100%;
   }
 }
+

@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
     faCalendar,
     faCirclePlus,
-    faClock,
+    faClock, faThumbsDown, faThumbsUp,
     faUser,
     faXmark,
 } from "@fortawesome/free-solid-svg-icons";
@@ -198,9 +198,6 @@ export class Evenementen extends Component {
                         />
                     </div>
                 </div>
-
-                // ...
-
                 <Drawer
                     anchor="right"
                     open={drawerOpen}
@@ -219,23 +216,63 @@ export class Evenementen extends Component {
                                     <span className="px-[9px] py-[3px] bg-[#FFCEA1] rounded-[100px] p-1 text-[#EE5600] text-[13px] ml-4">External</span>
                                 )}
                             </h1>
-                            <p className="event-description">{selectedEvent.Description}</p>
-                                        {/* ...existing code... */}
-                                        <Tabs value={selectedTab} onChange={this.handleTabChange} aria-label="Event Details">
-          <Tab label="Beschrijving" />
-          <Tab label="Deelnemers" />
+                            <div className="mt-4">
+                                <p className='text-[#5F5F5F] font-medium text-[16px]'>Jaap Hoogbergen</p>
+                                <p className='text-[14px] text-[#b8b8b8] font-medium'>Founder</p>
+                            </div>
+                                        <Tabs value={selectedTab}
+                                              className="mt-4 mb-4"
+                                              onChange={this.handleTabChange} aria-label="Event Details">
+          <Tab
+
+              label="Beschrijving"
+
+              className={
+                  this.state.selectedTab === 0
+                      ? 'active-tab !bg-[#FFFFFF] !rounded-r-[8px] w-[50%] text-black font-bold'
+                      : '!bg-[#F6F8FC] !rounded-r-[0px] w-[50%]'
+              }
+          />
+          <Tab label="Aanmeldingen"
+               className={
+              this.state.selectedTab === 1
+                  ? 'active-tab !bg-[#FFFFFF] !rounded-l-[8px] w-[50%] font-bold'
+                  : '!bg-[#F6F8FC] !rounded-r-[8px] w-[50%]'
+          }
+          />
         </Tabs>
         {selectedTab === 0 && (
-          <div>
-            <p>
-            Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
+            <>
+                <div>
+                    <p className='text-[#A9A9A9]'>
+                        {selectedEvent.Description}
+                    </p>
+                </div>
+                <div className='buttons flex flex-col gap-2'>
+                    <button className='w-full bg-[#792F82] py-3 px-8 rounded-[10px] text-white font-bold text-[20px]'>Aanmelden </button>
+                    <button className='w-full bg-[#792F82] py-3 px-8 rounded-[10px] text-white font-bold text-[20px]'>Afzeggen </button>
+                    <button className='w-full bg-[#a3a3a3] py-3 px-8 rounded-[10px] text-white font-bold text-[15px]'>Evenement Veranderen </button>
 
-            </p>
-          </div>
+                </div>
+                <div className="pb-4">
+                    <h1 className='text-[#792F82] font-medium text-[18px] mt-4'>Vond het leuk:</h1>
+
+                    <div className='flex flex-row gap-2'>
+                        <button className='bg-[#09A719BD] w-[50%] h-[40px] text-[25px] rounded-[8px]'><FontAwesomeIcon className='text-white' icon={faThumbsUp} /></button>
+                        <button className='bg-[#DB3131] text-white w-[50%] h-[40px] text-[25px] rounded-[8px]'><FontAwesomeIcon icon={faThumbsDown} /></button>
+                    </div>
+                </div>
+            </>
         )}
         {selectedTab === 1 && (
-          <div>
-            {/* Content for Tab 2 */}
+          <div className='grid grid-cols-2 gap-2 max-w-[100%] break-words'>
+
+              {/*map here the users */}
+            <div className='flex flex-col'>
+                <span className='text-[#5F5F5F] font-medium text-[17px]'>Jaap</span>
+                <span className='text-[10px] text-[#b8b8b8]'>Developer</span>
+            </div>
+
           </div>
         )}
                         </div>
