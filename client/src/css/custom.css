@@ -5,6 +5,13 @@
   font-family: 'Open Sans';
 }
 
+.MuiDrawer-root,
+.MuiDrawer-paper {
+  border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
+  background-color: F9F9F9;
+}
+
 /* elk kopje van pagina */
 h2 {
   color: #792F82;
