@@ -53,16 +53,11 @@ export class NieuwsDetails extends Component {
 
     // is de oude manier hierbij word nieuws wel gwn toegevoegd:
     // const fetchURL = "../news";
-
-
     const { title, description, posttime, image, accountsid, NewsID} = this.state;
-
     // is de oude manier hierbij word nieuws wel gwn toegevoegd:
     // const fetchURL = "../news";
-
     const fetchURL = NewsID ? `/news/${NewsID}` : '/news';
-
-
+    console.log(this.state);
     try {
         console.log("DELETE request to:", fetchURL);
         const response = await fetch(fetchURL, {
@@ -89,7 +84,7 @@ export class NieuwsDetails extends Component {
 
         if (data.id > 0 || data.success === true) {
         console.log("Done");
-            window.location.replace("/Nieuws");
+            // window.location.replace("/Nieuws");
         } else {
         console.log(data);
         }
