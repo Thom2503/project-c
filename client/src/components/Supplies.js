@@ -30,6 +30,10 @@ export class Supplies extends Component {
 		}
 	}
 
+	onClickHref(supply) {
+		window.location.replace(`voorzieningen?modal=2&id=${supply.SuppliesID}`);
+	}
+
     render() {
 		// om vandaag de dag aan te geven
 		const currentDate = new Date();
@@ -61,10 +65,8 @@ export class Supplies extends Component {
 						<tbody>
 							{this.state.data.map(supply => 
 								<tr>
-									<td>
-										<a href={`voorzieningen?modal=2&id=${supply.SuppliesID}`}>
-											{supply.SuppliesID}
-										</a>
+									<td onClick={() => this.onClickHref(supply)} style={{cursor: "pointer"}}>
+										{supply.SuppliesID}
 									</td>
 									<td>{supply.Name}</td>
 									<td>{supply.Total}</td>

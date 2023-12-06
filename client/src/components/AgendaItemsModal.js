@@ -18,6 +18,7 @@ export class AgendaItemsModal extends Component {
       status: "in",
       agenda: "",
       deleteAgenda: false,
+      formValidation: [],
     };
   }
 
@@ -74,6 +75,18 @@ export class AgendaItemsModal extends Component {
 
     const { title, note, date, roomID, accountsid, status } = this.state;
 
+    // Form Validation
+    const formValidation = [];
+
+    if (!title) formValidation.push('Een titel is verplicht');
+    if (title.length > 30) formValidation.push('Titel is te lang, maximale lengte is 30');
+    if (note.length > 120) formValidation.push('Beschrijving is te lang, maximale lengte is 120');
+    if (!roomID) formValidation.push('Een Kamer is verplicht');
+    if (formValidation.length > 0) {
+      this.setState({ formValidation });
+      return;
+    }
+
     // change url for updating or deleting
     const fetchURL =
       !Number.isNaN(this.state.agenda) || this.state.deleteAgenda === true
@@ -123,7 +136,7 @@ export class AgendaItemsModal extends Component {
       this.setState({
         title: data.Title,
         note: data.Note,
-        roomID: data.roomID,
+        roomID: data.RoomID,
         status: data.Status,
       });
     }
@@ -173,6 +186,7 @@ export class AgendaItemsModal extends Component {
               className="input-field"
               value={this.state.title}
               onChange={this.handleInputChange}
+              required
             />
           </div>
 
@@ -180,7 +194,7 @@ export class AgendaItemsModal extends Component {
             <label htmlFor="note" className="input-field-label">
               Beschrijving:
             </label>
-            <input
+            <textarea
               type="text"
               id="note"
               name="note"
@@ -213,16 +227,28 @@ export class AgendaItemsModal extends Component {
             </select>
           </div>
 
-          <div className="input-field-div">
-            <label htmlFor="agendaDelete">Delete:</label>
-            <input
-              type="checkbox"
-              id="agendaDelete"
-              name="deleteAgenda"
-              value={this.state.deleteAgenda}
-              onChange={this.handleInputChange}
-            />
-          </div>
+          {!Number.isNaN(this.state.agenda) && (
+            <div className="input-field-div">
+              <label htmlFor="agendaDelete">Delete:</label>
+              <input
+                type="checkbox"
+                id="agendaDelete"
+                name="deleteAgenda"
+                value={this.state.deleteAgenda}
+                onChange={this.handleInputChange}
+              />
+            </div>
+          )}
+
+          {this.state.formValidation.length > 0 && (
+            <div className="validation-errors input-field-div">
+              {this.state.formValidation.map((error, index) => (
+                <div key={index} className="error">
+                  {error}
+                </div>
+              ))}
+            </div>
+          )}
 
           <input
             className="save-button"
