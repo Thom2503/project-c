@@ -47,11 +47,11 @@ class AgendaController {
 			$errors['status'] = "Status is either null or empty or doesn't exist";
 		}
 
+		header('Content-Type: application/json');
 		if (count($errors) > 0) {
 			echo json_encode($errors);
 		} else {
 			$agendaItemID = $this->agendaModel->createAgendaItem($data);
-			header('Content-Type: application/json');
 			echo json_encode(['id' => $agendaItemID]);
 		}
     }

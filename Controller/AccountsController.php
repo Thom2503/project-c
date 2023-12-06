@@ -52,11 +52,11 @@ class AccountsController {
 			$errors['Email'] = "LastName is either null or empty or doesn't exist";
 		}
 
+		header('Content-Type: application/json');
 		if (count($errors) > 0) {
 			echo json_encode($errors);
 		} else {
 			$userID = $this->userModel->createUserAccount($data);
-			header('Content-Type: application/json');
 			echo json_encode(['id' => $userID]);
 		}
     }
@@ -95,11 +95,11 @@ class AccountsController {
 			$errors['Email'] = "LastName is either null or empty or doesn't exist";
 		}
 
+		header('Content-Type: application/json');
 		if (count($errors) > 0) {
 			echo json_encode($errors);
 		} else {
 			$success = $this->userModel->updateAccount($id, $data);
-			header('Content-Type: application/json');
 			if ($success == true) {
 				echo json_encode(['success' => true]);
 			} else {
