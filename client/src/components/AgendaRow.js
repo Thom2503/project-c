@@ -94,15 +94,17 @@ export class AgendaRow extends Component {
 		}
 	}
 
+	onClickHref(cell) {
+		window.location.replace(`agenda?modal=1&id=${cell.id}&user=${this.state.user}&ts=${cell.ts}`);
+	}
+
 	render() {
 		return (
 			<tr>
 				<td className="fixed">{this.state.name}</td>
 				{this.state.cells.map(cell =>
-					<td key={cell.ts} style={{backgroundColor: this.getCellColour(cell)}}>
-						<a href={`agenda?modal=1&id=${cell.id}&user=${this.state.user}&ts=${cell.ts}`}>
-							{cell.status ?? "&nbsp;"}
-						</a>
+					<td onClick={() => this.onClickHref(cell)} key={cell.ts} style={{backgroundColor: this.getCellColour(cell), cursor: "pointer"}}>
+						{cell.status ?? "&nbsp;"}
 					</td>
 				)}
 			</tr>

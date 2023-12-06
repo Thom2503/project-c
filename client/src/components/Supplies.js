@@ -31,6 +31,10 @@ export class Supplies extends Component {
 		}
 	}
 
+	onClickHref(supply) {
+		window.location.replace(`voorzieningen?modal=2&id=${supply.SuppliesID}`);
+	}
+
 	async getUsedSupplies() {
 		const response = await fetch(`usersupplies/ts${this.state.today.toString()}`);
 		const data = await response.json();
@@ -71,10 +75,8 @@ export class Supplies extends Component {
 						<tbody>
 							{this.state.data.map(supply => 
 								<tr>
-									<td>
-										<a href={`voorzieningen?modal=2&id=${supply.SuppliesID}`}>
-											{supply.SuppliesID}
-										</a>
+									<td onClick={() => this.onClickHref(supply)} style={{cursor: "pointer"}}>
+										{supply.SuppliesID}
 									</td>
 									<td>{supply.Name}</td>
 									<td>{supply.Total}</td>

@@ -24,9 +24,11 @@ export class AccountModal extends Component {
             isAdmin: false,
             email: "",
             password: "",
+            confirmPassword: "",
             suggestions: [],
             account: "",
             deleteAccount: false,
+            formValidation: [],
         };
     }
 
@@ -74,8 +76,26 @@ export class AccountModal extends Component {
   handleSubmit = async (event) => {
     event.preventDefault();
 
-    const { email, password, firstName, lastName, compentancy, isAdmin } = this.state;
+    const { email, password, confirmPassword, firstName, lastName, compentancy, isAdmin } = this.state;
 
+
+    // Form Validation
+    const formValidation = [];
+
+    if (firstName.length > 32) formValidation.push('Voornaam is te lang, maximale lengte is 32');
+    if (lastName.length > 32) formValidation.push('Achternaam is te lang, maximale lengte is 32');
+    const emailRegex = /^(?:[a-zA-Z0-9._-]+@(?:cavero\.nl|gmail\.com|hr\.nl))$/;
+		if (!emailRegex.test(email)) formValidation.push('Email voldoet niet aan de eisen. Om te registreren moet de email @cavero.nl bevatten');;
+    const passRegex = /^(?=.*[A-Z])(?=.*\d).{6,}$/;
+    if (!passRegex.test(password) &&  Number.isNaN(this.state.account)) {
+      formValidation.push('Wachtwoord voldoet niet aan de eisen. Minimaal 1 hoofdletter, 1 cijfer en minimaal 6 tekens lang.');
+    }
+    if (confirmPassword !== password &&  Number.isNaN(this.state.account)) formValidation.push('Wachtwoord en Bevestig Wachtwoord zijn niet hetzelfde'); 
+    if (formValidation.length > 0) {
+      this.setState({ formValidation });
+      return;
+    }
+    
     // change url for updating or deleting
     const fetchURL =
       !Number.isNaN(this.state.account) || this.state.deleteAccount === true
@@ -177,6 +197,7 @@ export class AccountModal extends Component {
                   className="input-field"
                   value={this.state.firstName}
                   onChange={this.handleInputChange}
+                  required
               />
             </div>
 
@@ -191,6 +212,7 @@ export class AccountModal extends Component {
                   className="input-field"
                   value={this.state.lastName}
                   onChange={this.handleInputChange}
+                  required
               />
             </div>
 
@@ -205,13 +227,14 @@ export class AccountModal extends Component {
               className="input-field"
               value={this.state.email}
               onChange={this.handleInputChange}
+              required
             />
             </div>
 
             {!this.state.account && (
-              <div className="input-field-div">
+              <><div className="input-field-div">
                 <label htmlFor="password" className="input-field-label">
-                  Password:
+                  Wachtwoord:
                 </label>
                 <input
                   type="password"
@@ -220,8 +243,21 @@ export class AccountModal extends Component {
                   className="input-field"
                   value={this.state.password}
                   onChange={this.handleInputChange}
-                />
+                  required />
               </div>
+              <div className="input-field-div">
+                <label htmlFor="confirmPassword" className="input-field-label">
+                  Bevestig Wachtwoord:
+                </label>
+                <input
+                  type="password"
+                  id="confirmPassword"
+                  name="confirmPassword"
+                  className="input-field"
+                  value={this.state.confirmPassword}
+                  onChange={this.handleInputChange}
+                  required />
+              </div></>
             )}
 
             <div className="input-field-div">
@@ -263,21 +299,33 @@ export class AccountModal extends Component {
               />
             </div>
             
-            <div className="input-field-div">
-              <label htmlFor="deleteAccount">Delete:</label>
-              <input
-                type="checkbox"
-                id="deleteAccount"
-                name="deleteAccount"
-                value={this.state.deleteAccount}
-                onChange={this.handleInputChange}
-              />
-            </div>
+            {!Number.isNaN(this.state.account) && (
+              <div className="input-field-div">
+                <label htmlFor="deleteAccount">Delete:</label>
+                <input
+                  type="checkbox"
+                  id="deleteAccount"
+                  name="deleteAccount"
+                  value={this.state.deleteAccount}
+                  onChange={this.handleInputChange}
+                />
+              </div>
+            )}
+
+            {this.state.formValidation.length > 0 && (
+              <div className="validation-errors input-field-div">
+                {this.state.formValidation.map((error, index) => (
+                  <div key={index} className="error">
+                    {error}
+                  </div>
+                ))}
+              </div>
+            )}
 
             <input
-            className="save-button"
-            type="submit"
-            value="Opslaan & Sluiten"
+              className="save-button"
+              type="submit"
+              value="Opslaan & Sluiten"
             />
         </form>
     );

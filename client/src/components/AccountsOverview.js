@@ -29,6 +29,10 @@ export class AccountsOverview extends Component {
 		}
 	}
 
+	onClickHref(account) {
+		window.location.replace(`AccountsOverview?modal=4&id=${account.AccountsID}`);
+	}
+
     render() {
 		// als je geen admin bent mag je niet naar deze pagina
 		if (getCookie("isadmin") !== "true") window.location.replace("agenda");
@@ -53,10 +57,8 @@ export class AccountsOverview extends Component {
 						<tbody>
 							{this.state.data.map(account => 
 								<tr>
-									<td>
-										<a href={`AccountsOverview?modal=4&id=${account.AccountsID}`}>
-											{account.AccountsID}
-										</a>
+									<td onClick={() => this.onClickHref(account)} style={{cursor: "pointer"}}>
+										{account.AccountsID}
 									</td>
 									<td>{account.FirstName} {account.LastName}</td>
 									<td>{account.Function}</td>

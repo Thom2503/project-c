@@ -37,12 +37,28 @@ class AccountsController {
 	}
 
     public function store(): void {
+		$errors = [];
 		$data = json_decode(file_get_contents("php://input"), true);
 		$password = password_hash($data['Password'], PASSWORD_BCRYPT);
 		$data['secure_pass'] = $password;
-        $userID = $this->userModel->createUserAccount($data);
-        header('Content-Type: application/json');
-        echo json_encode(['id' => $userID]);
+
+		if (!isset($data['FirstName']) || (isset($data['FirstName']) && (trim($data['FirstName']) == "" && $data['FirstName'] == null))) {
+			$errors['FirstName'] = "FirstName is either null or empty or doesn't exist";
+		}
+		if (!isset($data['LastName']) || (isset($data['LastName']) && (trim($data['LastName']) == "" && $data['LastName'] == null))) {
+			$errors['LastName'] = "LastName is either null or empty or doesn't exist";
+		}
+		if (!isset($data['Email']) || (isset($data['Email']) && (trim($data['Email']) == "" && $data['Email'] == null))) {
+			$errors['Email'] = "LastName is either null or empty or doesn't exist";
+		}
+
+		header('Content-Type: application/json');
+		if (count($errors) > 0) {
+			echo json_encode($errors);
+		} else {
+			$userID = $this->userModel->createUserAccount($data);
+			echo json_encode(['id' => $userID]);
+		}
     }
 
 	public function verify(string $email): void {
@@ -66,14 +82,30 @@ class AccountsController {
 	}
 
     public function update($id) {
+		$errors = [];
         $data = json_decode(file_get_contents("php://input"), true);
-        $success = $this->userModel->updateAccount($id, $data);
-        header('Content-Type: application/json');
-		if ($success == true) {
-        	echo json_encode(['success' => true]);
+
+		if (!isset($data['FirstName']) || (isset($data['FirstName']) && (trim($data['FirstName']) == "" && $data['FirstName'] == null))) {
+			$errors['FirstName'] = "FirstName is either null or empty or doesn't exist";
+		}
+		if (!isset($data['LastName']) || (isset($data['LastName']) && (trim($data['LastName']) == "" && $data['LastName'] == null))) {
+			$errors['LastName'] = "LastName is either null or empty or doesn't exist";
+		}
+		if (!isset($data['Email']) || (isset($data['Email']) && (trim($data['Email']) == "" && $data['Email'] == null))) {
+			$errors['Email'] = "LastName is either null or empty or doesn't exist";
+		}
+
+		header('Content-Type: application/json');
+		if (count($errors) > 0) {
+			echo json_encode($errors);
 		} else {
-			http_response_code(404);
-			echo json_encode(['success' => 'false']);
+			$success = $this->userModel->updateAccount($id, $data);
+			if ($success == true) {
+				echo json_encode(['success' => true]);
+			} else {
+				http_response_code(404);
+				echo json_encode(['success' => 'false']);
+			}
 		}
     }
 
