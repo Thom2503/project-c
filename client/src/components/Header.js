@@ -133,9 +133,12 @@ export class Header extends Component {
                                 Agenda
                             </NavLink>
                         {isAdmin === 'true' && (
-                                <NavLink tag={Link} className="text-black text-[20px]" to="/Voorzieningen">
+                                <><NavLink tag={Link} className="text-black text-[20px]" to="/Voorzieningen">
                                     Voorzieningen
                                 </NavLink>
+                                <NavLink tag={Link} className="text-black text-[20px]" to="/AccountsOverview">
+                                    Accounts
+                                </NavLink></>
                         )}
                             <NavLink tag={Link} className="text-black text-[20px]" to="/Nieuws">
                                 Nieuws
@@ -155,7 +158,7 @@ export class Header extends Component {
                         <span className="text-white font-medium text-[32px] text-white hidden sm:block">Welkom {this.state.user.FirstName ?? ''}</span>
                         <div className="flex flex-row">
               <span className="text-white font-medium text-[18px] ml-auto hidden sm:block">Momenteel</span>
-              <a className="bg-[#DB3131] ml-[5px] drop-shadow-lg rounded-sm font-normal pr-2 pl-2 pt-1 pb-1 text-white"
+              <a className="ml-1 shadow-lg rounded-sm font-normal px-2 py-1 text-white transition ease-in-out hover:filter hover:brightness-90 cursor-pointer"
 				 style={{backgroundColor: this.state.isHere === true ? '#46bf52' : '#DB3131'}}
 	 		     onClick={() => this.setUserAgendaItem()}>
 				{this.state.isHere == true ? "Aanwezig" : "Afwezig"}
