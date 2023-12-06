@@ -57,5 +57,15 @@ class EventsController {
             echo json_encode(['error' => 'Users not found in event room with id ' . $id]);
         }
     }
+
+    public function unjoinEvent(): void {
+        $data = json_decode(file_get_contents("php://input"), true);
+        $accountid = $data['accountid'];
+        $eventid = $data['eventid'];
+        $eventId = $this->eventsModel->unjoinEvent($accountid, $eventid);
+        header('Content-Type: application/json');
+        echo json_encode(['id' => $eventId]);
+    }
+
 }
 ?>

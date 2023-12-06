@@ -16,6 +16,7 @@ import { Pagination } from "@mui/material";
 import Drawer from '@mui/material/Drawer';
 import { Tabs, Tab } from '@mui/material';
 import { useState } from 'react';
+import FetchUserDetails from './FetchUserDetails';
 
 export class Evenementen extends Component {
     static displayName = Evenementen.name;
@@ -34,15 +35,40 @@ export class Evenementen extends Component {
             selectedEvent: null,
             selectedTab: 0,
             accountid: getCookie('user'),
+            eventid: 0,
+            deelnemers: [],
         };
         document.title = "Events";
         this.handleDateChange = this.handleDateChange.bind(this);
+        this.getUsersInEvent = this.getUsersInEvent.bind(this);
     }
 
-    toggleDrawer = (event) => {
-        this.setState({ selectedEvent: event, drawerOpen: true });
+    toggleDrawer = async (event) => {
+        await this.setState({ selectedEvent: event, drawerOpen: true, eventid: event.EventsID, selectedTab: 0 });
+        await this.getUsersInEvent(event.EventsID);
     };
+    
+    
+    
 
+    async getUsersInEvent(evenementid) {
+        console.log('getUsersInEvent is called');
+        try {
+            console.log(evenementid);
+            const response = await fetch('/events/' + evenementid);
+            if (!response.ok) {
+                throw new Error('No users found for this event');
+            }
+            const data = await response.json();
+            this.setState({ deelnemers: data }, () => {
+                console.log(this.state.deelnemers);
+            });
+        } catch (error) {
+            console.error(error);
+            this.setState({ deelnemers: [] });
+        }
+    }
+ // Join event voor als je op de knop aanmelden drukt
     async handleJoinEvent(event) {
         const accountid = this.state.accountid;
 
@@ -66,6 +92,29 @@ export class Evenementen extends Component {
                 // Handle form validation errors or other issues
                 console.log(data);
             }
+        } catch (e) {
+            console.error("Error: ", e.message);
+        }
+    }
+
+    // Leave event voor als je op de knop afzeggen drukt
+
+    async handleLeaveEvent(event) {
+        const accountid = this.state.accountid;
+    
+        try {
+            const response = await fetch('/events/' + parseInt(event.EventsID), {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    accountid: accountid,
+                    eventid: event.EventsID,
+                }),
+            });
+            const data = await response.json();
+            window.location.replace("evenementen");
         } catch (e) {
             console.error("Error: ", e.message);
         }
@@ -131,7 +180,7 @@ export class Evenementen extends Component {
         }
 
 
-        const {selectedTab} = this.state;
+        const {selectedTab} = this.state.selectedTab;
 
         return (
             <>
@@ -166,7 +215,7 @@ export class Evenementen extends Component {
                         {eventsToDisplay.length > 0 ? (
                             eventsToDisplay.map((event, index) => (
                                 <div
-                                    key={event.id}
+                                    key={index}
                                     className="bg-[#F9F9F9] sm:mx-[20px] max-w-[1200px] w-[100%] h-[150px] p-4 flex flex-col justify-center rounded-xl border-[2px] duration-300 transition-all hover:bg-[#FEF3FF] hover:border-[#7100a640] hover:cursor-pointer"
                                     onClick={() => this.toggleDrawer(event)}
                                 >
@@ -235,7 +284,11 @@ export class Evenementen extends Component {
                 <Drawer
                     anchor="right"
                     open={drawerOpen}
-                    onClose={() => this.setState({drawerOpen: false})}
+                    onClose={() => {
+                        this.setState({
+                            drawerOpen: false,
+                        });
+                    }}
                     hideBackdrop={true}
                 >
                     {/* Render the event information in the drawer */}
@@ -257,28 +310,28 @@ export class Evenementen extends Component {
                                 <p className='text-[#5F5F5F] font-medium text-[16px]'>Jaap Hoogbergen</p>
                                 <p className='text-[14px] text-[#b8b8b8] font-medium'>Founder</p>
                             </div>
-                            <Tabs value={selectedTab}
-                                  className="mt-4 mb-4"
-                                  onChange={this.handleTabChange} aria-label="Event Details">
-                                <Tab
+                            <Tabs value={this.state.selectedTab}
+      className="mt-4 mb-4"
+      onChange={this.handleTabChange} aria-label="Event Details">
+    <Tab
+        label="Beschrijving"
+        className={
+            this.state.selectedTab === 0
+                ? 'active-tab !bg-[#FFFFFF] !rounded-r-[8px] w-[50%] text-black font-bold'
+                : '!bg-[#F6F8FC] !rounded-r-[0px] w-[50%]'
+        }
+    />
+    <Tab label="Aanmeldingen"
+        onClick={() => this.getUsersInEvent(selectedEvent.EventsID)}
+        className={
+            this.state.selectedTab === 1
+                ? 'active-tab !bg-[#FFFFFF] !rounded-l-[8px] w-[50%] font-bold'
+                : '!bg-[#F6F8FC] !rounded-r-[8px] w-[50%]'
+        }
+    />
+</Tabs>
 
-                                    label="Beschrijving"
-
-                                    className={
-                                        this.state.selectedTab === 0
-                                            ? 'active-tab !bg-[#FFFFFF] !rounded-r-[8px] w-[50%] text-black font-bold'
-                                            : '!bg-[#F6F8FC] !rounded-r-[0px] w-[50%]'
-                                    }
-                                />
-                                <Tab label="Aanmeldingen"
-                                     className={
-                                         this.state.selectedTab === 1
-                                             ? 'active-tab !bg-[#FFFFFF] !rounded-l-[8px] w-[50%] font-bold'
-                                             : '!bg-[#F6F8FC] !rounded-r-[8px] w-[50%]'
-                                     }
-                                />
-                            </Tabs>
-                            {selectedTab === 0 && (
+                            {this.state.selectedTab === 0 && (
                                 <>
                                     <div>
                                         <p className='text-[#A9A9A9]'>
@@ -287,12 +340,16 @@ export class Evenementen extends Component {
                                     </div>
                                     <div className='buttons flex flex-col gap-2'>
                                         <button
+    onClick={() => {
+        if (this.state.deelnemers.includes(parseInt(this.state.accountid))) {
+            this.handleLeaveEvent(selectedEvent);
+        } else {
+            this.handleJoinEvent(selectedEvent);
+        }
+    }}
+    className='w-full bg-[#792F82] py-3 px-8 rounded-[10px] text-white font-bold text-[20px]'>
+{this.state.deelnemers.includes(parseInt(this.state.accountid)) ? 'Afzeggen' : 'Aanmelden'}
 
-                                            onClick={() => this.handleJoinEvent(selectedEvent)}
-                                            className='w-full bg-[#792F82] py-3 px-8 rounded-[10px] text-white font-bold text-[20px]'>Aanmelden
-                                        </button>
-                                        <button
-                                            className='w-full bg-[#792F82] py-3 px-8 rounded-[10px] text-white font-bold text-[20px]'>Afzeggen
                                         </button>
                                         <button
                                             className='w-full bg-[#a3a3a3] py-3 px-8 rounded-[10px] text-white font-bold text-[15px]'>Evenement
@@ -314,14 +371,19 @@ export class Evenementen extends Component {
                                     </div>
                                 </>
                             )}
-                            {selectedTab === 1 && (
+                            {this.state.selectedTab === 1 && (
                                 <div className='grid grid-cols-2 gap-2 max-w-[100%] break-words'>
 
-                                    {/*map here the users */}
-                                    <div className='flex flex-col'>
-                                        <span className='text-[#5F5F5F] font-medium text-[17px]'>Jaap</span>
-                                        <span className='text-[10px] text-[#b8b8b8]'>Developer</span>
+                            {this.state.deelnemers && this.state.deelnemers.length > 0 ? (
+                                this.state.deelnemers.map((user, index) => (
+                                    
+                                    <div key={index} className='flex flex-col'>
+                                        <FetchUserDetails userId={user} />
                                     </div>
+                                ))
+                            ) : (
+                                <p>Geen deelnemers in deze kamer</p>
+                            )}
 
                                 </div>
                             )}

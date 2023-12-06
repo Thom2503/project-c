@@ -30,15 +30,32 @@ class Events extends Database {
 
     public function getUsersInEvent(int $eventID): array {
         $query = "SELECT `account_id` FROM `AccountEvents` WHERE `event_id` = :eventid";
-
+    
         $stmt = $this->db->prepare($query);
-        $stmt->bindParam(":eventid", $eventID); // Use $eventID instead of $data['eventid']
+        $stmt->bindParam(":eventid", $eventID);
         $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    
+        // Extract the account IDs from the result and return them as an array of integers.
+        $accountIds = array_map(function($item) {
+            return (int)$item['account_id'];
+        }, $result);
+    
+        return $accountIds;
     }
 
     public function joinEvent(int $accountid, int $eventid): int {
         $query = "INSERT INTO `AccountEvents` (`account_id`, `event_id`) VALUES (:accountid, :eventid)";
+
+        $stmt = $this->db->prepare($query);
+        $stmt->bindParam(":accountid", $accountid); // Use $eventID instead of $data['eventid']
+        $stmt->bindParam(":eventid", $eventid); // Use $eventID instead of $data['eventid']
+        $stmt->execute();
+        return $this->db->lastInsertId();
+    }
+
+    public function unjoinEvent(int $accountid, int $eventid): int {
+        $query = "DELETE FROM `AccountEvents` WHERE `account_id` = :accountid AND `event_id` = :eventid";
 
         $stmt = $this->db->prepare($query);
         $stmt->bindParam(":accountid", $accountid); // Use $eventID instead of $data['eventid']

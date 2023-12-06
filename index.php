@@ -59,6 +59,7 @@ $router->get('/events', 'EventsController@index');
 $router->post('/events', 'EventsController@store');
 $router->get('/events/{integer}', 'EventsController@showUsers');
 $router->put('/events/{integer}', 'EventsController@joinEvent');
+$router->delete('/events/{integer}', 'EventsController@unjoinEvent');
 
 $router->dispatch(); // Handle the request
 
