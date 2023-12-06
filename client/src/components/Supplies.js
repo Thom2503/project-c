@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { getCookie } from '../include/util_functions';
+import { getCookie, getFirstDayTimeStamp, getNextDay } from '../include/util_functions';
 import '../css/voorzieningen.css';
 
 export class Supplies extends Component {
@@ -7,12 +7,13 @@ export class Supplies extends Component {
 
 	constructor(props) {
 		super(props);
-		this.state = {data: []};
+		this.state = {data: [], today: getNextDay(getFirstDayTimeStamp(), new Date().getDay()), usedData: []};
 		document.title = "Voorzieningen";
 	}
 
 	componentDidMount() {
 		this.getSupplies();
+		this.getUsedSupplies();
 	}
 
 	/**
@@ -34,10 +35,19 @@ export class Supplies extends Component {
 		window.location.replace(`voorzieningen?modal=2&id=${supply.SuppliesID}`);
 	}
 
+	async getUsedSupplies() {
+		const response = await fetch(`usersupplies/ts${this.state.today.toString()}`);
+		const data = await response.json();
+		if (data.error) {
+			this.setState({usedData: []});
+		} else {
+			this.setState({usedData: data});
+		}
+	}
+
     render() {
 		// om vandaag de dag aan te geven
-		const currentDate = new Date();
-		const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun','Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+		const date = new Date().toLocaleDateString("nl-NL", {day: 'numeric', month: 'short', year: 'numeric'});
 		// als je geen admin bent mag je niet naar deze pagina
 		if (getCookie("isadmin") !== "true") window.location.replace("agenda");
         return (
@@ -48,7 +58,7 @@ export class Supplies extends Component {
 					&nbsp;
 					<span className='date-picker'>
 						<a href='voorzieningen?pick-date'>
-							{`${currentDate.getDate()} ${months[currentDate.getMonth()]} ${currentDate.getFullYear()}`}
+							{date}
 						</a>
 					</span>
 				</div>
@@ -70,7 +80,7 @@ export class Supplies extends Component {
 									</td>
 									<td>{supply.Name}</td>
 									<td>{supply.Total}</td>
-									<td>0</td>
+									<td>{this.state.usedData.find(s => s.SupplyID === supply.SuppliesID)?.C ?? 0}</td>
 								</tr>
 							)}
 						</tbody>

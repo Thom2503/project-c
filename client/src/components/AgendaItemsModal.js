@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import Select from 'react-select';
 import { getCookie } from "../include/util_functions";
 import "../css/modal.css";
 
@@ -19,6 +20,9 @@ export class AgendaItemsModal extends Component {
       agenda: "",
       deleteAgenda: false,
       formValidation: [],
+      supplies: [],
+      userSupplies: [],
+      selectExpanded: false,
     };
   }
 
@@ -45,6 +49,9 @@ export class AgendaItemsModal extends Component {
     } catch (error) {
       console.error("Error fetching rooms:", error);
     }
+
+	this.getAllSupplies();
+	this.getAgendaSupplies();
   }
 
   handleInputChange = (event) => {
@@ -105,7 +112,7 @@ export class AgendaItemsModal extends Component {
           date,
           roomID,
           accountsid,
-          status,
+          status
         }),
       });
 
@@ -114,9 +121,10 @@ export class AgendaItemsModal extends Component {
       }
 
       const data = await response.json();
+	  const d = await this.postUserSupplies();
 
       // Continue with your success handling
-      if (data.id > 0 || data.success === true) {
+      if (data.id > 0 || data.success === true || d.success === true) {
         console.log("Done");
         this.props.onClose();
       } else {
@@ -141,8 +149,55 @@ export class AgendaItemsModal extends Component {
       });
     }
   }
+
+  async getAllSupplies() {
+	const response = await fetch("supplies");
+	const data = await response.json();
+
+	if (!data.error) {
+		this.setState({supplies: data});
+	}
+  }
+
+	async postUserSupplies() {
+		const response = await fetch("usersupplies", {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({
+				supplies: this.state.userSupplies,
+				itemid: this.state.agenda,
+				date: this.state.date
+			}),
+		});
+
+		const data = await response.json();
+		return data;
+	}
+
+	handleSupplyChange = (selectedOpts) => {
+		const selectedSupplies = selectedOpts.map((opt) => opt.value);
+		this.setState({ userSupplies: selectedSupplies });
+	}
+
+	async getAgendaSupplies() {
+		if (this.state.agenda !== "") {
+			const response = await fetch(`usersupplies/${this.state.agenda}`);
+			const data = await response.json();
+			if (!data.error) {
+				this.setState({userSupplies: data});
+			}
+		}
+	}
+
   render() {
-    //show the modal that you can change and fill only for the appropriate user
+	const { supplies, userSupplies } = this.state;
+	const selectOptions = supplies.map((supply) => ({
+		value: supply.SuppliesID,
+		label: `${supply.Name} - ${supply.Total} totaal`,
+	}));
+
     if (this.state.accountsid === this.state.currentaccountsid) {
       return (
         <form onSubmit={this.handleSubmit}>
@@ -226,6 +281,21 @@ export class AgendaItemsModal extends Component {
                 ))}
             </select>
           </div>
+
+            <div className="input-field-div">
+              <label htmlFor="supplies" className="input-field-label">
+                Voorzieningen:
+              </label>
+              {this.state.supplies && (
+                <Select id="supplies"
+                        name="usersupplies"
+                        className="input-field"
+                        isMulti
+                        options={selectOptions}
+                        onChange={this.handleSupplyChange}
+                        value={selectOptions.filter((opt) => userSupplies.includes(opt.value))} />
+              )}
+            </div>
 
           {!Number.isNaN(this.state.agenda) && (
             <div className="input-field-div">
@@ -312,6 +382,20 @@ export class AgendaItemsModal extends Component {
               ))}
             </select>
           </div>
+		  <div className="input-field-div">
+            <label htmlFor="supplies" className="input-field-label">
+              Voorzieningen:
+            </label>
+		  {this.state.supplies && (
+			  <Select id="supplies"
+			          name="usersupplies"
+			          className="input-field"
+			          isMulti
+			          options={selectOptions}
+			          onChange={this.handleSupplyChange}
+			          value={selectOptions.filter((opt) => userSupplies.includes(opt.value))} />
+		  )}
+		  </div>
         </form>
       );
     }

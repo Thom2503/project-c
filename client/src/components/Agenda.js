@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { AgendaRow } from './AgendaRow';
 import '../css/custom.css';
-import {getFirstDayTimeStamp} from '../include/util_functions';
+import {getFirstDayTimeStamp, getNextDay} from '../include/util_functions';
 
 export class Agenda extends Component {
 	static displayName = Agenda.name;
@@ -21,29 +21,13 @@ export class Agenda extends Component {
 	 * @returns {Array} week - de dagen van deze week
 	 */
 	getWeekDays() {
-		let currentDateObj = new Date(new Date().getTime());
-		let week           = [];
+		let firstDay = getFirstDayTimeStamp();
+		let week = [];
 		for (let i = 0; i < 7; i++) {
-			let currentDate = currentDateObj.getDate();
-			let currentDay  = currentDateObj.getDay();
-			let first = currentDate - currentDay + i;
-			let day   = new Date(currentDateObj.setDate(first)).toISOString().slice(5, 10);
-			week.push(day);
+			let nextDay = getNextDay(firstDay, i);
+			week.push(nextDay);
 		}
 		return week;
-	}
-
-	/**
-	 * Functie om een maand nummer te converten naar een naam, dus 10 -> okt enz.
-	 * 
-	 * @param {int} monthNumber - het nummer van de maand om te converten 
-	 * @returns 
-	 */
-	getMonthName(monthNumber) {
-		const monthNames = [
-			"Jan", "Feb", "Maa", "Apr", "Mei", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dec"
-		];
-		return monthNames[monthNumber - 1];
 	}
 
 	/**
@@ -54,9 +38,8 @@ export class Agenda extends Component {
 	 */
 	convertDates() {
 		return this.getWeekDays().map((day) => {
-			const month  = day.split("-")[0];
-			const dayNum = day.split("-")[1];
-			return `${dayNum} ${this.getMonthName(month)} ${new Date().getFullYear()}`;
+			let date = new Date(day);
+			return date.toLocaleDateString("nl-NL", { year: 'numeric', month: 'short', day: 'numeric' });
 		});
 	}
 
