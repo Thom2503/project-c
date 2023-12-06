@@ -267,7 +267,7 @@ export class AgendaItemsModal extends Component {
                 ))}
             </select>
           </div>
-		  <div>
+		  <div className="input-field-div">
             <label htmlFor="supplies" className="input-field-label">
               Voorzieningen:
             </label>
@@ -354,7 +354,7 @@ export class AgendaItemsModal extends Component {
               ))}
             </select>
           </div>
-		  <div>
+		  <div className="input-field-div">
             <label htmlFor="supplies" className="input-field-label">
               Voorzieningen:
             </label>
