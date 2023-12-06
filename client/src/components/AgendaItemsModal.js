@@ -50,6 +50,7 @@ export class AgendaItemsModal extends Component {
     }
 
 	this.getAllSupplies();
+	this.getAgendaSupplies();
   }
 
   handleInputChange = (event) => {
@@ -66,22 +67,6 @@ export class AgendaItemsModal extends Component {
         this.setState({ title: "Uit de loods" });
       }
     }
-
-	if (name === "usersupplies") {
-		let options = event.target.options;
-		let selectedOpts = [...this.state.userSupplies];
-		for (let i = 0; i < options.length; i++) {
-			const opt = options[i];
-			const optID = opt.id;
-			if (opt.selected && !selectedOpts.includes(optID) && !this.state.userSupplies.includes(optID)) {
-				selectedOpts.push(optID);
-			}
-			if (opt.selected === false && (selectedOpts.includes(optID) || this.state.userSupplies.includes(optID))) {
-				selectedOpts.splice(selectedOpts.indexOf(optID), 1);
-			}
-		}
-		this.setState({userSupplies: selectedOpts});
-	}
 
     // checkbox logic
     if (name === "deleteAgenda") {
@@ -123,15 +108,12 @@ export class AgendaItemsModal extends Component {
       }
 
       const data = await response.json();
-	  let d = null;
-	  if (this.state.userSupplies.length > 0) {
-		  d = await this.postUserSupplies();
-	  }
+	  const d = await this.postUserSupplies();
 
       // Continue with your success handling
       if (data.id > 0 || data.success === true || d.success === true) {
         console.log("Done");
-        // this.props.onClose();
+        this.props.onClose();
       } else {
         // Handle form validation errors or other issues
         console.log(data);
@@ -184,6 +166,16 @@ export class AgendaItemsModal extends Component {
 	handleSupplyChange = (selectedOpts) => {
 		const selectedSupplies = selectedOpts.map((opt) => opt.value);
 		this.setState({ userSupplies: selectedSupplies });
+	}
+
+	async getAgendaSupplies() {
+		if (this.state.agenda !== "") {
+			const response = await fetch(`usersupplies/${this.state.agenda}`);
+			const data = await response.json();
+			if (!data.error) {
+				this.setState({userSupplies: data});
+			}
+		}
 	}
 
   render() {
@@ -275,26 +267,20 @@ export class AgendaItemsModal extends Component {
                 ))}
             </select>
           </div>
+		  <div>
+            <label htmlFor="supplies" className="input-field-label">
+              Voorzieningen:
+            </label>
 		  {this.state.supplies && (
-		  // <div className="input-field-div">
-		  // 	<label htmlFor="supplies" className="input-field-label">Voorzieningen:</label>
-			// <select id="supplies"
-			        // name="usersupplies"
-			        // className="input-field"
-			        // onChange={this.handleInputChange}
-			        // defaultValue={[this.state.userSupplies]}
-			        // multiple={true}>
-			// {this.state.supplies.map((supply) => (
-				// <option key={supply.SuppliesID}
-				        // id={supply.SuppliesID}
-				        // value={supply.SuppliesID}>
-					// {supply.Name} - {supply.Total} totaal
-				// </option>
-			// ))}
-			// </select>
-		  // </div>
+			  <Select id="supplies"
+			          name="usersupplies"
+			          className="input-field"
+			          isMulti
+			          options={selectOptions}
+			          onChange={this.handleSupplyChange}
+			          value={selectOptions.filter((opt) => userSupplies.includes(opt.value))} />
 		  )}
-
+		  </div>
           <div className="input-field-div">
             <label htmlFor="agendaDelete">Delete:</label>
             <input
@@ -368,6 +354,20 @@ export class AgendaItemsModal extends Component {
               ))}
             </select>
           </div>
+		  <div>
+            <label htmlFor="supplies" className="input-field-label">
+              Voorzieningen:
+            </label>
+		  {this.state.supplies && (
+			  <Select id="supplies"
+			          name="usersupplies"
+			          className="input-field"
+			          isMulti
+			          options={selectOptions}
+			          onChange={this.handleSupplyChange}
+			          value={selectOptions.filter((opt) => userSupplies.includes(opt.value))} />
+		  )}
+		  </div>
         </form>
       );
     }

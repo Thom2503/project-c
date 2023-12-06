@@ -102,9 +102,20 @@ class SupplyController {
 
     public function setSupplies(): void {
 		$data = json_decode(file_get_contents("php://input"), true);
+		// haal de data op van de huidige agendaitem om te kijken of er iets verwijderd moet worden
+		$dbData = array_values($this->supplyModel->getUserSupplies($data['itemid']));
+		// als er verschil is verwijder die dan uit de database
+		$diff = array_diff($dbData, array_values($data['supplies']));
+		$ret = false;
+		if (count($diff) > 0) {
+			foreach ($diff as $d) {
+				$ret = $this->supplyModel->deleteUserSupplies($d, $data['itemid']);
+			}
+		}
 		header('Content-Type: application/json');
 		$success = $this->supplyModel->setUserSupplies($data);
-		if ($success == true) {
+		// nu is success gebaseerd of het verwijderd is /OF/ of het toegevoegd is /OF/ beide
+		if ($success == true || $ret == true) {
 			echo json_encode(['success' => true]);
 		} else {
 			http_response_code(404);
@@ -115,6 +126,17 @@ class SupplyController {
 	public function showDay(string $ts): void {
 		header('Content-Type: application/json');
 		$supplies = $this->supplyModel->getTodaySupplies(substr($ts, 2));
+		if (count($supplies) > 0) {
+			echo json_encode($supplies);
+		} else {
+			http_response_code(404);
+			echo json_encode(['error' => 'supplies not found']);
+		}
+	}
+
+	public function showUser(int $id): void {
+		header('Content-Type: application/json');
+		$supplies = $this->supplyModel->getUserSupplies($id);
 		if (count($supplies) > 0) {
 			echo json_encode($supplies);
 		} else {

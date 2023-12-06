@@ -63,24 +63,20 @@ class Supply extends Database {
 		return $this->db->lastInsertId();
 	}
 
-	public function getUserSupplies(int $id, string|int $date): array {
-		$query = "SELECT `SupplyID` FROM `UserSupplies` WHERE `AgendaItemID` = :aid AND `Date` = :date";
+	public function getUserSupplies(int $id): array {
+		$query = "SELECT `SupplyID` FROM `UserSupplies` WHERE `AgendaItemID` = :aid";
 		$stmt = $this->db->prepare($query);
 		$stmt->bindParam(":aid", $id);
-		$stmt->bindParam(":date", $date);
 		$stmt->execute();
 		return $stmt->fetchAll(PDO::FETCH_COLUMN);
 	}
 
-	public function deleteUserSupplies(array $diff, array $data): int|bool {
+	public function deleteUserSupplies(int $supplyID, int $itemID): int|bool {
 		$query = "DELETE FROM `UserSupplies` WHERE `SupplyID` = :sid AND `AgendaItemID` = :aid";
 		$stmt = $this->db->prepare($query);
-		foreach ($diff as $supply) {
-			$stmt->bindParam(":aid", $data['itemid']);
-			$stmt->bindParam(":sid", $supply);
-			$stmt->execute();
-		}
-		return $this->db->lastInsertId();
+		$stmt->bindParam(":aid", $itemID);
+		$stmt->bindParam(":sid", $supplyID);
+		return $stmt->execute();
 	}
 
 	public function getTodaySupplies(string|int $date): array {
