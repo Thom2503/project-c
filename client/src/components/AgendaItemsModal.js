@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import Select from 'react-select';
 import { getCookie } from "../include/util_functions";
 import "../css/modal.css";
 
@@ -75,6 +76,9 @@ export class AgendaItemsModal extends Component {
 			if (opt.selected && !selectedOpts.includes(optID) && !this.state.userSupplies.includes(optID)) {
 				selectedOpts.push(optID);
 			}
+			if (opt.selected === false && (selectedOpts.includes(optID) || this.state.userSupplies.includes(optID))) {
+				selectedOpts.splice(selectedOpts.indexOf(optID), 1);
+			}
 		}
 		this.setState({userSupplies: selectedOpts});
 	}
@@ -127,7 +131,7 @@ export class AgendaItemsModal extends Component {
       // Continue with your success handling
       if (data.id > 0 || data.success === true || d.success === true) {
         console.log("Done");
-        this.props.onClose();
+        // this.props.onClose();
       } else {
         // Handle form validation errors or other issues
         console.log(data);
@@ -177,8 +181,18 @@ export class AgendaItemsModal extends Component {
 		return data;
 	}
 
+	handleSupplyChange = (selectedOpts) => {
+		const selectedSupplies = selectedOpts.map((opt) => opt.value);
+		this.setState({ userSupplies: selectedSupplies });
+	}
+
   render() {
-    //show the modal that you can change and fill only for the appropriate user
+	const { supplies, userSupplies } = this.state;
+	const selectOptions = supplies.map((supply) => ({
+		value: supply.SuppliesID,
+		label: `${supply.Name} - ${supply.Total} totaal`,
+	}));
+
     if (this.state.accountsid === this.state.currentaccountsid) {
       return (
         <form onSubmit={this.handleSubmit}>
@@ -255,23 +269,30 @@ export class AgendaItemsModal extends Component {
               </option>
               {this.state.rooms &&
                 this.state.rooms.map((room) => (
-                  <option key={room.RoomsID} value={room.RoomsID} selected={room.RoomsID === this.state.roomID}>
+                  <option key={room.RoomsID} value={room.RoomsID}>
                     {room.Name}
                   </option>
                 ))}
             </select>
           </div>
 		  {this.state.supplies && (
-		  <div className="input-field-div">
-		  	<label htmlFor="supplies" className="input-field-label">Voorzieningen:</label>
-			<select id="supplies" name="usersupplies" className="input-field" onChange={this.handleInputChange} multiple={true}>
-			{this.state.supplies.map((supply) => (
-				<option key={supply.SuppliesID} id={supply.SuppliesID} value={supply.SuppliesID}>
-					{supply.Name} - {supply.Total} totaal
-				</option>
-			))}
-			</select>
-		  </div>
+		  // <div className="input-field-div">
+		  // 	<label htmlFor="supplies" className="input-field-label">Voorzieningen:</label>
+			// <select id="supplies"
+			        // name="usersupplies"
+			        // className="input-field"
+			        // onChange={this.handleInputChange}
+			        // defaultValue={[this.state.userSupplies]}
+			        // multiple={true}>
+			// {this.state.supplies.map((supply) => (
+				// <option key={supply.SuppliesID}
+				        // id={supply.SuppliesID}
+				        // value={supply.SuppliesID}>
+					// {supply.Name} - {supply.Total} totaal
+				// </option>
+			// ))}
+			// </select>
+		  // </div>
 		  )}
 
           <div className="input-field-div">
