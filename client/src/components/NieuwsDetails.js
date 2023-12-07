@@ -25,7 +25,6 @@ export class NieuwsDetails extends Component {
     }
 
     async fetchNewsDetails() {
-        // Get the URL parameter
         const urlParams = new URLSearchParams(window.location.search);
         const urlId = Number.parseInt(urlParams.get('ID'));
 
@@ -48,19 +47,13 @@ export class NieuwsDetails extends Component {
 
     handleSubmit = async (event) => {
         event.preventDefault();
-
-        // is de oude manier hierbij word nieuws wel gwn toegevoegd:
-        // const fetchURL = "../news";
         const { title, description, posttime, image, accountsid, NewsID } = this.state;
-        // is de oude manier hierbij word nieuws wel gwn toegevoegd:
-        // const fetchURL = "../news";
         const fetchURL = NewsID ? `/news/${NewsID}` : '/news';
         console.log(this.state);
         try {
             console.log("DELETE request to:", fetchURL);
             const response = await fetch(fetchURL, {
                 method: this.state.deleteNews === true ? "DELETE" : "POST",
-                // method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
@@ -280,8 +273,8 @@ export class NieuwsDetails extends Component {
                                     <p className="text-left">{this.state.filteredData.PostTime}</p>
                                 </div>
                                 <p
-                                    className="text-[#848484] text-left" // Left-align the description
-                                    style={{ whiteSpace: 'pre-line' }} // Preserve line breaks in the text
+                                    className="text-[#848484] text-left"
+                                    style={{ whiteSpace: 'pre-line' }}
                                 >
                                     {this.state.filteredData.Description}
                                 </p>
