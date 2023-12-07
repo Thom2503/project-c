@@ -59,7 +59,13 @@ table.agenda td a {
 }
 
 table.agenda td a:empty::after {
-  content: "new";
+  content: "In de loods";
+}
+
+table.agenda td a:empty:hover {
+	-webkit-box-shadow: 0px 0px 0px 10px #792F82;
+	-moz-box-shadow: 0px 0px 0px 10px #792F82;
+	box-shadow: 0px 0px 0px 10px #792F82;
 }
 
 table.agenda th {
