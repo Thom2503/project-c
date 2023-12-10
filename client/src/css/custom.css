@@ -179,6 +179,39 @@ hr {
 	margin: auto !important;
 }
 
+#notificationTrayIcon:hover {
+	--webkit-filter: invert(100%);
+	filter: invert(100%);
+	cursor: pointer;
+}
+
+.notificationTray {
+	position: relative;
+	display: inline-block;
+}
+
+.notificationTrayContent {
+	position: absolute;
+	background-color: #F9F9F9;
+	min-width: 8em;
+	max-height: 40vh;
+	height: 40vh;
+	overflow-y: auto;
+	box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+	padding: .75em 1em;
+	z-index: 1;
+	right: 50%;
+	color: black;
+}
+
+.notificationTrayContent h4 {
+	font-size: 24px;
+}
+
+.notificationTrayContent p {
+	font-size: 20px;
+}
+
 @media only screen and (max-width: 600px) {
   table.agenda .table-wrapper {
     overflow-x: auto;
