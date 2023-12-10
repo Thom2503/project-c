@@ -43,6 +43,17 @@ class NotificationController {
 		}
     }
 
+	public function showNotifications(): void {
+		header('Content-Type: application/json');
+		$notifications = $this->notification->getUserNotification();
+		if (count($notifications) > 0) {
+			echo json_encode($notifications);
+		} else {
+			http_response_code(404);
+			echo json_encode(['error' => 'no notifications found']);
+		}
+	}
+
 	public function sendMailToUser(): void {
 		$errors = [];
 		$data = json_decode(file_get_contents("php://input"), true);
@@ -107,12 +118,12 @@ class NotificationController {
 		}
     }
 
-    public function update($id) {
-        // Implement logic to update user by ID
-    }
-
-    public function destroy($id) {
-        // Implement logic to delete user by ID
+    public function storeNotification() {
+		//XXX: op iets checken of het wel veilig is.
+		$data = json_decode(file_get_contents("php://input"), true);
+		header('Content-Type: application/json');
+		$notificationID = $this->notification->addNotificationContent($data);
+		echo json_encode(['id' => $notificationID]);
     }
 
 	/**

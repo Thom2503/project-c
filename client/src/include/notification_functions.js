@@ -10,10 +10,10 @@
 export const getSubscriber = async (all = true, userid = 0) => {
 	let response, data;
 	if (all === false && userid === 0) {
-		response = await fetch("notifications");
+		response = await fetch("usernotifications");
 		data = await response.json();
 	} else {
-		response = await fetch(`notifications/${userid}`);
+		response = await fetch(`usernotifications/${userid}`);
 		data = await response.json();
 	}
 	return data;
@@ -95,7 +95,7 @@ export const sendMailNotification = async (userID) => {
 export const changeUserSubscription = async (userID, wantsNotification, type = "mail") => {
 	if (["mail", "push"].includes(type) === false) return;
 	try {
-		const response = await fetch("notifications", {
+		const response = await fetch("usernotifications", {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',

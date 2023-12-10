@@ -35,6 +35,21 @@ class Notification extends Database {
 		$stmt->execute();
 		return $this->db->lastInsertId();
 	}
+
+	public function getUserNotification(): array {
+		$query = "SELECT * FROM `Notifications`".
+		         " WHERE `Timestamp` BETWEEN STRFTIME('%s', 'now', '-1 month') AND STRFTIME('%s', 'now')";
+		return $this->db->query($query)->fetchAll(PDO::FETCH_ASSOC);
+	}
+
+	public function addNotificationContent(array $data): int {
+		$query = "INSERT INTO `Notifications` (`Content`, `Timestamp`) VALUES (:content, :ts)";
+		$stmt = $this->db->prepare($query);
+		$stmt->bindParam(":content", $data['content']);
+		$stmt->bindParam(":ts", time());
+		$stmt->execute();
+		return $this->db->lastInsertId();
+	}
 }
 
 ?>

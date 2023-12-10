@@ -46,10 +46,12 @@ $router->get('/usersupplies/{string}', 'SupplyController@showDay');
 $router->post('/usersupplies', 'SupplyController@setSupplies');
 $router->delete('/usersupplies', 'SupplyController@deleteUserSupplies');
 /*{ Notifications }*/
-$router->get('/notifications', 'NotificationController@index');
-$router->get('/notifications/{integer}', 'NotificationController@show');
+$router->get('/usernotifications', 'NotificationController@index');
+$router->get('/usernotifications/{integer}', 'NotificationController@show');
 $router->post('/mailnotification', "NotificationController@sendMailToUser");
-$router->post('/notifications', "NotificationController@store");
+$router->post('/usernotifications', "NotificationController@store");
+$router->get('/notifications', 'NotificationController@showNotifications');
+$router->post('/notifications', "NotificationController@storeNotification");
 
 $router->get('/news', 'NewsController@index');
 $router->get('/news/{integer}', 'NewsController@show');
