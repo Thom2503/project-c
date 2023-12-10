@@ -26,7 +26,7 @@ export class AgendaRow extends Component {
 		if (data === false) {
 			for (let i = 0; i < 7; i++) {
 				let newDateTS = getNextDay(this.state.begin, i);
-				let obj = {status: "", isOut: false, ts: newDateTS};
+				let obj = {status: "", isOut: false, ts: newDateTS, id: ""};
 				returnArr.push(obj);
 			}
 		} else {
@@ -51,6 +51,7 @@ export class AgendaRow extends Component {
 				// standaard waardes
 				let status = "";
 				let isOut = false;
+				let id = "";
 				// zoek een item in items, als die er is return dan de eerste item van de lijst zodat die gebruikt
 				// kan worden voor cell data
 				let item = items.filter(it => {
@@ -62,8 +63,10 @@ export class AgendaRow extends Component {
 					status = item.Title;
 					// of je eruit met dus niet in de loods is de status niet "in"
 					isOut = item.Status !== "in";
+					// de id die wordt gebruikt in de href
+					id = item.ID;
 				}
-				let obj = {status: status, isOut: isOut, ts: newDateTS};
+				let obj = {status: status, isOut: isOut, ts: newDateTS, id: id };
 				returnArr.push(obj);
 			}
 		}
@@ -91,15 +94,17 @@ export class AgendaRow extends Component {
 		}
 	}
 
+	onClickHref(cell) {
+		window.location.replace(`agenda?modal=1&id=${cell.id}&user=${this.state.user}&ts=${cell.ts}`);
+	}
+
 	render() {
 		return (
 			<tr>
 				<td className="fixed">{this.state.name}</td>
 				{this.state.cells.map(cell =>
-					<td key={cell.ts} style={{backgroundColor: this.getCellColour(cell)}}>
-						<a href={`agenda?modal=1&user=${this.state.user}&ts=${cell.ts}`}>
-							{cell.status ?? "&nbsp;"}
-						</a>
+					<td onClick={() => this.onClickHref(cell)} key={cell.ts} style={{backgroundColor: this.getCellColour(cell), cursor: "pointer"}}>
+						{cell.status ?? "&nbsp;"}
 					</td>
 				)}
 			</tr>

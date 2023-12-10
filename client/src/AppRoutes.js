@@ -3,8 +3,12 @@ import { Login } from "./components/Login";
 import { Agenda } from "./components/Agenda";
 import { Kamers } from "./components/Kamers";
 import {Supplies} from "./components/Supplies";
-import { Nieuws } from './components/Nieuws';
+import { Nieuws } from './components/Nieuws'
 import {CreateAccount} from "./components/CreateAccount";
+import {NieuwsDetails} from "./components/NieuwsDetails";
+import { AccountsOverview } from "./components/AccountsOverview";
+import { Evenementen } from "./components/Evenementen";
+
 
 const AppRoutes = [
   {
@@ -34,6 +38,18 @@ const AppRoutes = [
   {
 	path: '/create',
 	element: <CreateAccount />
+  },
+  {
+    path: 'nieuws/details',
+    element: <NieuwsDetails />
+  },
+  {
+    path: '/AccountsOverview',
+    element: <AccountsOverview />
+  },
+  {
+    path: '/evenementen',
+    element: <Evenementen />
   }
 ];
 

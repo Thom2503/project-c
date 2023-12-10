@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { NavItem, NavLink } from 'reactstrap';
 import { Link, useLocation } from 'react-router-dom';
 import { getCookie, getFirstDayTimeStamp, getNextDay } from '../include/util_functions';
-import ('../css/tailwind.css');
+import '../css/tailwind.css';
 
 export class Header extends Component {
     static displayName = Header.name;
@@ -124,18 +124,21 @@ export class Header extends Component {
                     <NavLink to="/">
                         <img
                             className="w-[170px]"
-                            src="https://cdn.discordapp.com/attachments/826352506623361104/1158339204363853854/image.png?ex=651be2f3&is=651a9173&hm=a1017c97f67b0407a334b0d64790e135b67965bc7a335aaf54d8050e659e0e81&"
+                            src='../static/logo.png'
                             alt="Logo"
                         />
                     </NavLink>
-                    <div className="flex flex-row ml-auto gap-4">
+                    <div className="flex-row ml-auto gap-4 hidden sm:flex">
                             <NavLink tag={Link} className="text-black text-[20px]" to="/agenda">
                                 Agenda
                             </NavLink>
                         {isAdmin === 'true' && (
-                                <NavLink tag={Link} className="text-black text-[20px]" to="/Voorzieningen">
+                                <><NavLink tag={Link} className="text-black text-[20px]" to="/Voorzieningen">
                                     Voorzieningen
                                 </NavLink>
+                                <NavLink tag={Link} className="text-black text-[20px]" to="/AccountsOverview">
+                                    Accounts
+                                </NavLink></>
                         )}
                             <NavLink tag={Link} className="text-black text-[20px]" to="/Nieuws">
                                 Nieuws
@@ -147,19 +150,20 @@ export class Header extends Component {
                 </div>
 
                 <div className="bg-[#792F82] h-[112px] w-100 flex items-center pl-6">
-                    <div>
-                        <span className="text-white font-medium text-[32px]"><HeaderTitle /></span>
+                    <div className='flex flex-col'>
+                        <h1 className="text-white font-medium text-[32px]"><HeaderTitle /></h1>
+						<span className='text-white font-medium text-[16px] sm:hidden'>Welkom {this.state.user.FirstName ?? ''}</span>
                     </div>
                     <div className="flex flex-col ml-auto pr-6">
-                        <span className="text-white font-medium text-[32px] text-white">Welkom {this.state.user.FirstName ?? ''}</span>
-                        <span className="text-white font-medium text-[18px] ml-auto">
-              Momenteel
-              <a className="bg-[#DB3131] ml-[5px] drop-shadow-lg rounded-sm font-normal pr-2 pl-2 pt-1 pb-1"
+                        <span className="text-white font-medium text-[32px] text-white hidden sm:block">Welkom {this.state.user.FirstName ?? ''}</span>
+                        <div className="flex flex-row">
+              <span className="text-white font-medium text-[18px] ml-auto hidden sm:block">Momenteel</span>
+              <a className="ml-1 shadow-lg rounded-sm font-normal px-2 py-1 text-white transition ease-in-out hover:filter hover:brightness-90 cursor-pointer"
 				 style={{backgroundColor: this.state.isHere === true ? '#46bf52' : '#DB3131'}}
 	 		     onClick={() => this.setUserAgendaItem()}>
 				{this.state.isHere == true ? "Aanwezig" : "Afwezig"}
 			  </a>
-            </span>
+            </div>
                     </div>
                 </div>
 

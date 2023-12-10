@@ -45,6 +45,48 @@ class Supply extends Database {
 		$stmt->bindParam(":sid", $id, PDO::PARAM_INT);
 		return $stmt->execute();
 	}
+
+	public function setUserSupplies(array $data): int|bool {
+		$query = "INSERT INTO `UserSupplies` (`AgendaItemID`, `SupplyID`, `Date`)".
+		         " SELECT :uid, :sid, :date".
+		         " WHERE NOT EXISTS (".
+		         "     SELECT 1 FROM `UserSupplies`".
+		         "     WHERE `AgendaItemID` = :uid AND `SupplyID` = :sid AND `Date` = :date".
+		         " )";
+		$stmt = $this->db->prepare($query);
+		foreach ($data['supplies'] as $supply) {
+			$stmt->bindParam(":uid", $data['itemid']);
+			$stmt->bindParam(":sid", $supply);
+			$stmt->bindParam(":date", $data['date']);
+			$stmt->execute();
+		}
+		return $this->db->lastInsertId();
+	}
+
+	public function getUserSupplies(int $id): array {
+		$query = "SELECT `SupplyID` FROM `UserSupplies` WHERE `AgendaItemID` = :aid";
+		$stmt = $this->db->prepare($query);
+		$stmt->bindParam(":aid", $id);
+		$stmt->execute();
+		return $stmt->fetchAll(PDO::FETCH_COLUMN);
+	}
+
+	public function deleteUserSupplies(int $supplyID, int $itemID): int|bool {
+		$query = "DELETE FROM `UserSupplies` WHERE `SupplyID` = :sid AND `AgendaItemID` = :aid";
+		$stmt = $this->db->prepare($query);
+		$stmt->bindParam(":aid", $itemID);
+		$stmt->bindParam(":sid", $supplyID);
+		return $stmt->execute();
+	}
+
+	public function getTodaySupplies(string|int $date): array {
+		$query = "SELECT `SupplyID`, COUNT(*) AS `C` FROM `UserSupplies`".
+		         " WHERE `Date` = :date GROUP BY `SupplyID`";
+		$stmt = $this->db->prepare($query);
+		$stmt->bindParam(":date", $date, PDO::PARAM_STR);
+		$stmt->execute();
+		return $stmt->fetchAll(PDO::FETCH_ASSOC);
+	}
 }
 
 ?>
