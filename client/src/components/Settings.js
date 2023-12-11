@@ -1,4 +1,9 @@
 import React, { Component } from 'react';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+    faGear,
+    faEnvelope,
+} from "@fortawesome/free-solid-svg-icons";
 import { askPermission, changeUserSubscription, userWantsMail, userWantsPushNotification } from '../include/notification_functions';
 import {getCookie} from '../include/util_functions';
 
@@ -18,35 +23,20 @@ export class Settings extends Component {
 
 	changeSubscription(event) {
         this.setState({[event.target.name]: event.target.checked});
-		if (event.target.name === "push") {
-			askPermission(this.state.userid);
-			navigator.serviceWorker.controller.postMessage({
-				type: 'PUSH_NOTIFICATION',
-				payload: { title: 'Test!', content: 'TEsstsat!'}
-			});
-		} else {
-			changeUserSubscription(this.state.userid, event.target.checked, event.target.name);
-		}
+		changeUserSubscription(this.state.userid, event.target.checked, event.target.name);
 	}
 
     render() {
         return (
-			<div style={{display: 'flex', color: 'white', float: 'left'}}>
-				<span style={{margin: '0.8em'}}>Settings</span>&nbsp;
-				<ul style={{color: 'white'}}>
-					<li>
-						<input onChange={this.changeSubscription}
-						       type='checkbox'
-						       name='mail'
-						       checked={this.state.mail} />&emsp;Mail
-					</li>
-					<li>
-						<input onChange={this.changeSubscription}
-						       type='checkbox'
-						       name='push'
-						       checked={this.state.push} />&emsp;Push notifications
-					</li>
-				</ul>
+			<div style={{color: 'black', fontSize: '18px'}}>
+				<span>
+					<FontAwesomeIcon icon={faEnvelope} />
+					&nbsp;Mail ontvangen?&nbsp;
+					<input onChange={this.changeSubscription}
+					       type='checkbox'
+					       name='mail'
+					       checked={this.state.mail} />
+				</span>
 			</div>
         );
     }

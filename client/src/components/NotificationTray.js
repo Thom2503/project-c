@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
     faBell,
 } from "@fortawesome/free-solid-svg-icons";
+import { Settings } from './Settings';
 
 export class NotificationTray extends Component {
 
@@ -23,6 +24,8 @@ export class NotificationTray extends Component {
 				<span><FontAwesomeIcon id='notificationTrayIcon' icon={faBell} onClick={() => this.openTray()}/></span>
 				<div className='notificationTrayContent' style={{display: display}}>
 					<h4>Notificaties</h4>
+					<hr />
+					<Settings />
 					<hr />
 					{userNotifications.length > 0 ? (
 						userNotifications.map((notification) => (
