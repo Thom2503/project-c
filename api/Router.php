@@ -15,7 +15,7 @@ class Router {
 
 
     public function put(string $path, string $handler): void {
-        $this->routes['PUT'][$path] = $handler;
+        $this->routes['POST'][$path] = $handler;
     }
 	
     public function delete(string $path, string $handler): void {

@@ -117,7 +117,7 @@ async fetchEventsData(eventid) {
         const eventid = params.get('eventid');
         console.log(eventid);
         const response = await fetch(`/events/` + parseInt(eventid), {
-          method: 'PUT',
+          method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
