@@ -216,3 +216,29 @@ export const addNotification = async (type, titel) => {
 		console.error(e);
 	}
 };
+
+/**
+ * Om een gebruikers notificatie te veranderen naar gelezen waar je dan ook niet meer de animatie ziet op
+ * het belletje achter je naam.
+ *
+ * @param {int} userid - id van de gebruiker om te veranderen
+ */
+export const readNotification = async (userid) => {
+	try {
+		const response = await fetch(`usernotifications/${userid}`, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({hasRead: true}),
+		});
+		const data = response.json();
+		if (data.success === true) {
+			console.log("Success!");
+		} else {
+			console.log("Not updated!");
+		}
+	} catch(e) {
+		console.error("Error: " + e);
+	}
+};

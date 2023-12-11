@@ -52,6 +52,14 @@ class Notification extends Database {
 		$stmt->execute();
 		return $this->db->lastInsertId();
 	}
+
+	public function updateUserNotification(int $id, array $data): bool {
+		$query = "UPDATE `Subscriptions` SET `HasRead` = :read WHERE `GebruikerID` = :uid";
+		$stmt = $this->db->prepare($query);
+		$stmt->bindParam(":read", $data['hasRead'], PDO::PARAM_BOOL);
+		$stmt->bindParam(":uid", $id, PDO::PARAM_INT);
+		return $stmt->execute();
+	}
 }
 
 ?>

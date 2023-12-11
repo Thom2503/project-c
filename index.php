@@ -50,6 +50,7 @@ $router->get('/usernotifications', 'NotificationController@index');
 $router->get('/usernotifications/{integer}', 'NotificationController@show');
 $router->post('/mailnotification', "NotificationController@sendMailToUser");
 $router->post('/usernotifications', "NotificationController@store");
+$router->put('/usernotifications/{integer}', "NotificationController@update");
 $router->get('/notifications', 'NotificationController@showNotifications');
 $router->post('/notifications', "NotificationController@storeNotification");
 

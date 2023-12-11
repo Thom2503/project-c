@@ -187,6 +187,19 @@ class NotificationController {
 		$mail->Body = $body;
 		return $mail;
 	}
+
+	public function update(int $id): void {
+		$data = json_decode(file_get_contents("php://input"), true);
+		header('Content-Type: application/json');
+		// zijn er errors? stuur die dan terug
+		$success = $this->notification->updateUserNotification($id, $data);
+		if ($success == true) {
+			echo json_encode(['success' => true]);
+		} else {
+			http_response_code(404);
+			echo json_encode(['error' => 'Subscription not updated']);
+		}
+	}
 }
 
 ?>
