@@ -61,10 +61,13 @@ $router->delete('/news/{integer}', 'NewsController@destroy');
 
 $router->get('/events', 'EventsController@index');
 $router->post('/events', 'EventsController@store');
-$router->get('/events/{integer}', 'EventsController@showUsers');
-$router->put('/events/{integer}', 'EventsController@joinEvent');
-$router->delete('/events/{integer}', 'EventsController@unjoinEvent');
-
+$router->delete('/events/{integer}/delete', 'EventsController@destroy');
+$router->get('/events/{integer}', 'EventsController@eventById');
+$router->put('/events/{integer}', 'EventsController@update');
+$router->get('/events/{integer}/users', 'EventsController@showUsers');
+$router->put('/events/{integer}/join', 'EventsController@joinEvent');
+$router->delete('/events/{integer}/leave', 'EventsController@unjoinEvent');
+$router->get('/events/{integer}/voted', 'EventsController@getVoted');
 $router->dispatch(); // Handle the request
 
 ?>

@@ -15,10 +15,9 @@ class Router {
 
 
     public function put(string $path, string $handler): void {
-        $this->routes['POST'][$path] = $handler;
+        $this->routes['PUT'][$path] = $handler;
     }
-
-
+	
     public function delete(string $path, string $handler): void {
         $this->routes['DELETE'][$path] = $handler;
     }
@@ -31,34 +30,79 @@ class Router {
 	 *
 	 * @return void
 	 */
-    public function dispatch(): void {
-        $method = $_SERVER['REQUEST_METHOD'];
-        $uri = $_SERVER['REQUEST_URI'];
-		// maak onderdelen van de uri om te kijken of er gezocht wordt op ids
-		$uriParts = explode("/", $uri);
-		if (count($uriParts) > 2) {
-			// de parameter bijvoorbeeld een primary key
-			$parameter = $uriParts[2];
-			$paramType = getRealType($parameter);	
-			// de route voor de handler
-			$uriRoute = "/".$uriParts[1]."/{".$paramType."}";
-			$handler = $this->routes[$method][$uriRoute];
-		} else {
-        	$handler = $this->routes[$method][$uri] ?? null;
-		}
-
-        if ($handler != null) {
-			if (isset($parameter) == true && $parameter >= 0) {
-				$this->callHandler($handler, $parameter);
-			} else {
-            	$this->callHandler($handler);
+	public function dispatch(): void {
+		$method = $_SERVER['REQUEST_METHOD'];
+		$uri = $_SERVER['REQUEST_URI'];
+	
+		// Split the URI into parts
+		$uriParts = explode("/", trim($uri, "/"));
+	
+		// Loop through routes
+		foreach ($this->routes[$method] as $route => $handler) {
+			// Split the route into parts
+			$routeParts = explode("/", trim($route, "/"));
+	
+			// Check if the number of parts match
+			if (count($uriParts) === count($routeParts)) {
+				$params = [];
+	
+				// Compare each part
+				$match = true;
+				foreach ($routeParts as $key => $part) {
+					if (strpos($part, '{') !== false) {
+						// It's a parameter, add it to the params array
+						$params[] = $uriParts[$key];
+					} elseif ($part !== $uriParts[$key]) {
+						// Parts don't match
+						$match = false;
+						break;
+					}
+				}
+	
+				// If all parts match, call the handler
+				if ($match) {
+					$this->callHandler($handler, ...$params);
+					return;
+				}
 			}
-        } else {
-            // Handle 404
-            http_response_code(404);
-            echo 'Not Found';
-        }
-    }
+		}
+	
+		// Handle 404
+		http_response_code(404);
+		echo 'Not Found';
+	}
+	
+	
+	
+	
+
+	// public function dispatch(): void {
+	// 	$method = $_SERVER['REQUEST_METHOD'];
+	// 	$uri = $_SERVER['REQUEST_URI'];
+	// 	// Split the URI into parts
+	// 	$uriParts = explode("/", $uri);
+	// 	// Initialize the URI route with the first part
+	// 	$uriRoute = "/".$uriParts[1];
+	// 	// Loop over the rest of the parts
+	// 	for ($i = 2; $i < count($uriParts); $i++) {
+	// 		// Append the placeholder to the URI route
+	// 		$uriRoute .= "/{id}";
+	// 	}
+	// 	// Get the handler for the URI route
+	// 	$handler = $this->routes[$method][$uriRoute] ?? null;
+	
+	// 	if ($handler != null) {
+	// 		if (isset($uriParts[2]) == true && $uriParts[2] >= 0) {
+	// 			$this->callHandler($handler, $uriParts[2]);
+	// 		} else {
+	// 			$this->callHandler($handler);
+	// 		}
+	// 	} else {
+	// 		// Handle 404
+	// 		http_response_code(404);
+	// 		echo 'Not Found';
+	// 	}
+	// }
 
 
 	/**

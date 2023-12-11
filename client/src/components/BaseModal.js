@@ -24,31 +24,34 @@ export class BaseModal extends Component {
   }
 
   render() {
-    if (!this.props.isOpen) return null;
+  if (!this.props.isOpen) return null;
 
-    let modalSwitch
+    // Get the eventid from the query parameters
+    const params = new URLSearchParams(window.location.search);
+    const eventid = params.get('eventid');
+
+    let modalSwitch;
     switch (this.state.modalType) {
-      case "1":
-        modalSwitch = < AgendaItemsModal onClose={this.props.onClose} />
-        break;
-      case "2":
-        modalSwitch = < SupplyModal onClose={this.props.onClose} />
-        break
-      case "3":
-        modalSwitch = < Nieuws onClose={this.props.onClose} />
-        break;
-      case "4":
-        modalSwitch = < AccountModal onClose={this.props.onClose} />
-        break
-      case "5":
-        modalSwitch = < EventModal onClose={this.props.onClose} />
-        break
-      /* Error message if there is no corresponding Modal */
-      default:
-        modalSwitch = "The following modal type could not be loaded"
-        break;
+        case "1":
+            modalSwitch = <AgendaItemsModal onClose={this.props.onClose} />
+            break;
+        case "2":
+            modalSwitch = <SupplyModal onClose={this.props.onClose} />
+            break;
+        case "3":
+            modalSwitch = <Nieuws onClose={this.props.onClose} />
+            break;
+        case "4":
+            modalSwitch = <AccountModal onClose={this.props.onClose} />
+            break;
+        case "5":
+            modalSwitch = <EventModal onClose={this.props.onClose} eventid={eventid} />
+            break;
+        /* Error message if there is no corresponding Modal */
+        default:
+            modalSwitch = "The following modal type could not be loaded"
+            break;
     }
-
     return (
       <div className="base-modal-container">
         <div className="base-modal-content">

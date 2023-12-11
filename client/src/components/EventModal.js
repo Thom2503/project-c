@@ -11,6 +11,7 @@ import {
 import {DatePicker, LocalizationProvider, TimePicker} from "@mui/x-date-pickers";
 import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
+import { getCookie } from '../include/util_functions';
 
 export class EventModal extends Component {
   static displayName = EventModal.name;
@@ -18,6 +19,7 @@ export class EventModal extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      updateEvent: false,
       showRooms: false,
       selectedRoom: "",
       rooms: [],
@@ -27,18 +29,50 @@ export class EventModal extends Component {
       istentative: 0,
       tentativetime: "null",
       declinetime: "null",
-      isexternal: 1,
-      accountsid: 1,
+      isexternal: 0,
+      accountsid: getCookie('user'),
       status: 'dd',
-      date: "null",
-      starttime: "null",
-      endtime: "null",
+      date: null,
+      starttime: null,
+      endtime: null,
     };
 
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.getRooms();
   }
+
+  componentDidMount() {
+    const params = new URLSearchParams(window.location.search);
+    if (params.size >= 1) {
+      const paramID = params.get("eventid");
+      this.setState({ updateEvent: true });
+      this.fetchEventsData(paramID);
+    }
+}
+
+async fetchEventsData(eventid) {
+  const response = await fetch(`/events/${eventid}`);
+  const eventData = await response.json();
+  console.log(eventData);
+  this.setState({ eventData });
+    fetch(`/events/${eventid}`)
+        .then(response => response.json())
+        .then(data => {
+            this.setState({
+                title: data.Title,
+                description: data.Description,
+                location: data.Location,
+                isexternal: data.IsExternal,
+                date: data.Date,
+                starttime: data.startTime,
+                endtime: data.endTime,
+            });
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+}
 
   async getRooms() {
     const response = await fetch('/rooms');
@@ -57,6 +91,7 @@ export class EventModal extends Component {
       this.setState({ [name]: value });
     }
   }
+  
 
 
   async handleSubmit(event) {
@@ -76,12 +111,17 @@ export class EventModal extends Component {
     const endtime = dayjs(this.state.endtime).format('HH:mm');
 
     try {
-      const response = await fetch('/events', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
+      if(this.state.updateEvent) {
+        
+        const params = new URLSearchParams(window.location.search);
+        const eventid = params.get('eventid');
+        console.log(eventid);
+        const response = await fetch(`/events/` + parseInt(eventid), {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
             title: title,
             description: description,
             location: location,
@@ -89,21 +129,46 @@ export class EventModal extends Component {
             tentativetime: 'not set',
             declinetime: 'not set',
             isexternal: isexternal,
-            accountsid: 0,
+            accountsid: accountsid,
             status: 'not set',
             date: date,
             starttime: starttime,
             endtime: endtime,
-        }),
-      });
-      const data = await response.json();
-
-      if (data.id > 0 || data.success === true) {
-        console.log("Done");
-        window.location.replace("evenementen");
+          }),
+        });
+        const data = await response.json();
+  
+        if (data.id > 0 || data.success === true) {
+          console.log("Done");
+          window.location.replace("evenementen");
+        } else {
+          // Handle form validation errors or other issues
+          console.log(data);
+        }
+        
+      
       } else {
-        // Handle form validation errors or other issues
-        console.log(data);
+        const response = await fetch('/events', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+              title: title,
+              description: description,
+              location: location,
+              istentative: 0,
+              tentativetime: 'not set',
+              declinetime: 'not set',
+              isexternal: isexternal,
+              accountsid: 0,
+              status: 'not set',
+              date: date,
+              starttime: starttime,
+              endtime: endtime,
+          }),
+        });
+        const data = await response.json();
       }
     } catch (e) {
       console.error("Error: ", e.message);
@@ -134,7 +199,7 @@ export class EventModal extends Component {
                 <LocalizationProvider dateAdapter={AdapterDayjs}
                 >
                   <DatePicker
-                      value={this.state.date}
+                      value={dayjs(this.state.date)}
                       onChange={(newDate) => this.setState({ date: newDate })}
                       format="DD/MM/YYYY"
                       slotProps={{
@@ -160,7 +225,7 @@ export class EventModal extends Component {
                     dateAdapter={AdapterDayjs}>
                   <TimePicker
                       ampm={false} label="Start Tijd"
-                      value={this.state.starttime}
+                  value={dayjs(this.state.starttime, 'HH:mm')}
                       onChange={(startTime) => this.setState({ starttime: startTime })}
                       slotProps={{
                         textField: {
@@ -173,7 +238,7 @@ export class EventModal extends Component {
                     dateAdapter={AdapterDayjs}>
                   <TimePicker
                       ampm={false} label="Eind Tijd"
-                      value={this.state.endtime}
+                      value={dayjs(this.state.endtime, 'HH:mm')}
                       onChange={(endTime) => this.setState({ endtime: endTime })}
                       slotProps={{
                         textField: {

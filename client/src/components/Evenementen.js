@@ -47,6 +47,55 @@ export class Evenementen extends Component {
         await this.setState({ selectedEvent: event, drawerOpen: true, eventid: event.EventsID, selectedTab: 0 });
         await this.getUsersInEvent(event.EventsID);
     };
+
+    async voted(event) {
+        try {
+            const response = await fetch('/events/' + parseInt(event.EventsID) + '/voted', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    accountid: parseInt(this.state.accountid),
+                    eventid: parseInt(event.EventsID),
+                }),
+            });
+    
+            if (!response.ok) {
+                throw new Error(`Failed to vote: ${response.status} ${response.statusText}`);
+            }
+            
+            
+            const data = await response.json();
+            console.log(data);
+            // window.location.replace("evenementen");
+            } catch (e) {
+            }
+    }
+
+    async deleteEvent(event) {
+        try {
+            const response = await fetch('/events/' + parseInt(event.EventsID) + '/delete', {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    eventid: event.EventsID,
+                }),
+            });
+    
+            if (!response.ok) {
+                throw new Error(`Failed to delete event: ${response.status} ${response.statusText}`);
+            }
+    
+            const data = await response.json();
+            window.location.replace("evenementen");
+            } catch (e) {
+            }
+            
+    }
+    
     
     
     
@@ -55,7 +104,7 @@ export class Evenementen extends Component {
         console.log('getUsersInEvent is called');
         try {
             console.log(evenementid);
-            const response = await fetch('/events/' + evenementid);
+            const response = await fetch('/events/' + evenementid + '/users');
             if (!response.ok) {
                 throw new Error('No users found for this event');
             }
@@ -71,27 +120,22 @@ export class Evenementen extends Component {
  // Join event voor als je op de knop aanmelden drukt
     async handleJoinEvent(event) {
         const accountid = this.state.accountid;
+        console.log(event.EventsID); // Add this line
 
         try {
-            const response = await fetch('/events/' + parseInt(event.EventsID), {
+            const response = await fetch('/events/' + parseInt(event.EventsID) + '/join', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    accountid: accountid,
-                    eventid: event.EventsID,
+                    accountid: parseInt(accountid),
+                    eventid: parseInt(event.EventsID),
                 }),
             });
             const data = await response.json();
 
-            if (data.id > 0 || data.success === true) {
-                console.log("Done");
                 window.location.replace("evenementen");
-            } else {
-                // Handle form validation errors or other issues
-                console.log(data);
-            }
         } catch (e) {
             console.error("Error: ", e.message);
         }
@@ -100,10 +144,11 @@ export class Evenementen extends Component {
     // Leave event voor als je op de knop afzeggen drukt
 
     async handleLeaveEvent(event) {
+        console.log(this.state.accountid); // Add this line
         const accountid = this.state.accountid;
     
         try {
-            const response = await fetch('/events/' + parseInt(event.EventsID), {
+            const response = await fetch('/events/' + parseInt(event.EventsID) + '/leave', {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
@@ -119,7 +164,6 @@ export class Evenementen extends Component {
             console.error("Error: ", e.message);
         }
     }
-
     handleDateChange = (newDate) => {
         if (newDate) {
             const formattedDate = dayjs(newDate).format('DD/MM/YYYY');
@@ -351,9 +395,14 @@ export class Evenementen extends Component {
 {this.state.deelnemers.includes(parseInt(this.state.accountid)) ? 'Afzeggen' : 'Aanmelden'}
 
                                         </button>
-                                        <button
+                                        <a
+                                            href={`?modal=5&eventid=${selectedEvent.EventsID}`}
                                             className='w-full bg-[#a3a3a3] py-3 px-8 rounded-[10px] text-white font-bold text-[15px]'>Evenement
-                                            Veranderen
+                                            Wijzigen
+                                        </a>
+                                        <button
+                                            onClick={() => this.deleteEvent(selectedEvent)}
+                                            className='w-full bg-red-500 py-3 px-8 rounded-[10px] text-white font-bold text-[15px]'>Evenement Verwijderen
                                         </button>
 
                                     </div>
