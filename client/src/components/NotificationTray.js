@@ -4,18 +4,24 @@ import {
     faBell,
 } from "@fortawesome/free-solid-svg-icons";
 import { Settings } from './Settings';
-import {readNotification} from '../include/notification_functions';
+import {hasUserReadNotifications, readNotification} from '../include/notification_functions';
 import { getCookie } from '../include/util_functions';
 
 export class NotificationTray extends Component {
 
 	constructor(props) {
 		super(props);
-		this.state = {userNotifications: [], display: "none", read: false};
+		this.state = {
+			userid: Number.parseInt(getCookie("user")),
+			userNotifications: [],
+			display: "none",
+			read: false
+		};
 	}
 
 	componentDidMount() {
 		this.fetchNotifications();
+		this.fetchIfUserRead();
 	}
 
 	fetchNotifications = async () => {
@@ -26,10 +32,14 @@ export class NotificationTray extends Component {
 		}
 	}
 
+	fetchIfUserRead = async () => {
+		this.setState({read: await hasUserReadNotifications(this.state.userid)});
+	}
+
 	openTray = async () => {
 		const noneOrBlock = this.state.display === "none" ? "block" : "none";
 		this.setState({display: noneOrBlock});
-		await readNotification(Number.parseInt(getCookie("user")));
+		if (this.state.read === false) await readNotification(Number.parseInt(getCookie("user")));
 	}
 
 	render() {

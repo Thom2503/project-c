@@ -232,11 +232,37 @@ export const readNotification = async (userid) => {
 			},
 			body: JSON.stringify({hasRead: true}),
 		});
-		const data = response.json();
+		const data = await response.json();
 		if (data.success === true) {
 			console.log("Success!");
 		} else {
 			console.log("Not updated!");
+		}
+	} catch(e) {
+		console.error("Error: " + e);
+	}
+};
+
+/**
+ * Kijk of een gebruiker al de notificaties heeft gelezen om de animaties niet te laten zien.
+ *
+ * @param {int} userid - de gebruikers id
+ *
+ * @returns {boolean} of de gebruiker zijn/haar notificaties heeft gelezen 
+ */
+export const hasUserReadNotifications = async (userid) => {
+	try {
+		const response = await fetch(`usernotifications/${userid}`, {
+			method: 'GET',
+			headers: {
+				'Content-Type': 'application/json',
+			}
+		});
+		const data = await response.json();
+		if (data.SubscriptionsID > 0) {
+			return data.HasRead === "1";
+		} else {
+			console.log("No subscription found!");
 		}
 	} catch(e) {
 		console.error("Error: " + e);
