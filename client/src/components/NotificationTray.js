@@ -51,7 +51,8 @@ export class NotificationTray extends Component {
 	}
 
 	handleClickOutside(event) {
-		if (this.wrapperRef && this.wrapperRef.current && !this.wrapperRef.current.contains(event.target)) {
+		if (this.wrapperRef && this.wrapperRef.current &&
+		    !this.wrapperRef.current.contains(event.target) && this.state.display === "block") {
 			this.openTray();
 		}
 	}
@@ -59,7 +60,7 @@ export class NotificationTray extends Component {
 	render() {
 		const { userNotifications, display, read } = this.state;
 		return (
-			<div ref={this.wrapperRef} className='notificationTray'>
+			<div className='notificationTray'>
 				<span>
 					<FontAwesomeIcon id='notificationTrayIcon'
 					                 icon={faBell}
@@ -67,7 +68,7 @@ export class NotificationTray extends Component {
 					                 onClick={() => this.openTray()}
 					/>
 				</span>
-				<div className='notificationTrayContent' style={{display: display}}>
+				<div ref={this.wrapperRef} className='notificationTrayContent' style={{display: display}}>
 					<h4>Notificaties</h4>
 					<hr />
 					<h4>Notificatie Opties</h4>
