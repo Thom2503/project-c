@@ -2,6 +2,9 @@ import React, { Component } from 'react';
 import '../css/custom.css';
 import "../css/modal.css";
 import CloseIcon from "../static/close-icon.svg";
+import { getCookie } from '../include/util_functions';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCog } from "@fortawesome/free-solid-svg-icons";
 
 export class Sidebar extends Component {
 	static displayName = Sidebar.name;
@@ -60,6 +63,10 @@ export class Sidebar extends Component {
 		}
 	}
 
+	onClickHref(id) {
+		window.location.replace(`kamers?modal=6&id=${id}`);
+	}
+
 	render() {
 		if ((this.state.room.isOpen ?? false) === false) return;
 		switch (this.state.type) {
@@ -74,6 +81,11 @@ export class Sidebar extends Component {
 						     onClick={() => this.closeSidebar()}
 						/>
 					</div>
+					{getCookie("isadmin") === "true" && (
+						<div className="update-icon">
+                        	<FontAwesomeIcon icon={faCog} className="text-[#792F82]" onClick={() => this.onClickHref(this.state.room.RoomsID)} />
+                    	</div>
+					)}
 					<div className='kamers name'>
 						<h3>{this.state.room.Name}</h3>
 					</div>

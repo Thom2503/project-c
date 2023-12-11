@@ -3,6 +3,7 @@ import { AgendaItemsModal } from "./AgendaItemsModal";
 import { SupplyModal } from "./SupplyModal";
 import { Nieuws } from "./Nieuws";
 import { AccountModal } from "./AccountModal";
+import { KamerModal } from "./KamerModal";
 
 import "../css/modal.css";
 import CloseIcon from "../static/close-icon.svg";
@@ -42,6 +43,9 @@ export class BaseModal extends Component {
         break
       case "5":
         modalSwitch = < EventModal onClose={this.props.onClose} />
+        break
+      case "6":
+        modalSwitch = < KamerModal onClose={this.props.onClose} />
         break
       /* Error message if there is no corresponding Modal */
       default:
