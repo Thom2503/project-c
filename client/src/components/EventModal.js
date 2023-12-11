@@ -46,7 +46,9 @@ export class EventModal extends Component {
     const params = new URLSearchParams(window.location.search);
     if (params.size >= 1) {
       const paramID = params.get("eventid");
+      console.log(this.state.updateEvent);
       this.setState({ updateEvent: true });
+      console.log(paramID);
       this.fetchEventsData(paramID);
     }
 }
@@ -111,13 +113,13 @@ async fetchEventsData(eventid) {
     const endtime = dayjs(this.state.endtime).format('HH:mm');
 
     try {
-      if(this.state.updateEvent) {
+      console.log(this.state.updateEvent);
+      if(this.state.updateEvent === true) {
         
         const params = new URLSearchParams(window.location.search);
         const eventid = params.get('eventid');
-        console.log(eventid);
         const response = await fetch(`/events/` + parseInt(eventid), {
-          method: 'POST',
+          method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
           },
@@ -225,7 +227,7 @@ async fetchEventsData(eventid) {
                     dateAdapter={AdapterDayjs}>
                   <TimePicker
                       ampm={false} label="Start Tijd"
-                  value={dayjs(this.state.starttime, 'HH:mm')}
+                      value={dayjs(this.state.starttime, 'HH:mm')}
                       onChange={(startTime) => this.setState({ starttime: startTime })}
                       slotProps={{
                         textField: {
