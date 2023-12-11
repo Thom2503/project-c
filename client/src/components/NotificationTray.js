@@ -17,11 +17,19 @@ export class NotificationTray extends Component {
 			display: "none",
 			read: false
 		};
+
+		this.wrapperRef = React.createRef();
+		this.handleClickOutside = this.handleClickOutside.bind(this);
 	}
 
 	componentDidMount() {
 		this.fetchNotifications();
 		this.fetchIfUserRead();
+		document.addEventListener("mousedown", this.handleClickOutside);
+	}
+
+	componentWillUnmount() {
+		document.removeEventListener("mousedown", this.handleClickOutside)
 	}
 
 	fetchNotifications = async () => {
@@ -42,10 +50,16 @@ export class NotificationTray extends Component {
 		if (this.state.read === false) await readNotification(Number.parseInt(getCookie("user")));
 	}
 
+	handleClickOutside(event) {
+		if (this.wrapperRef && this.wrapperRef.current && !this.wrapperRef.current.contains(event.target)) {
+			this.openTray();
+		}
+	}
+
 	render() {
 		const { userNotifications, display, read } = this.state;
 		return (
-			<div className='notificationTray'>
+			<div ref={this.wrapperRef} className='notificationTray'>
 				<span>
 					<FontAwesomeIcon id='notificationTrayIcon'
 					                 icon={faBell}
