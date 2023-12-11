@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-    faGear,
     faEnvelope,
 } from "@fortawesome/free-solid-svg-icons";
 import { askPermission, changeUserSubscription, userWantsMail, userWantsPushNotification } from '../include/notification_functions';

@@ -11,6 +11,7 @@ import {
 import {DatePicker, LocalizationProvider, TimePicker} from "@mui/x-date-pickers";
 import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
+import {addNotification} from "../include/notification_functions";
 
 export class EventModal extends Component {
   static displayName = EventModal.name;
@@ -100,6 +101,7 @@ export class EventModal extends Component {
 
       if (data.id > 0 || data.success === true) {
         console.log("Done");
+		await addNotification(1, title);
         window.location.replace("evenementen");
       } else {
         // Handle form validation errors or other issues

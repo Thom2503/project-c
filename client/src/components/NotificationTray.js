@@ -12,6 +12,10 @@ export class NotificationTray extends Component {
 		this.state = {userNotifications: [], display: "none"};
 	}
 
+	componentDidMount() {
+
+	}
+
 	openTray = () => {
 		const noneOrBlock = this.state.display === "none" ? "block" : "none";
 		this.setState({display: noneOrBlock});

@@ -43,6 +43,8 @@ class Notification extends Database {
 	}
 
 	public function addNotificationContent(array $data): int {
+		// update alle subscribers dat ze hun notificaties niet hebben gelezen.
+		$this->db->query("UPDATE `Subscriptions` SET `HasRead` = 0")->execute();
 		$query = "INSERT INTO `Notifications` (`Content`, `Timestamp`) VALUES (:content, :ts)";
 		$stmt = $this->db->prepare($query);
 		$stmt->bindParam(":content", $data['content']);

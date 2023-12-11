@@ -171,3 +171,48 @@ export const sendNotification = async (userID, contentType, content = "") => {
 		console.error("error occured! " , error);
 	}
 };
+
+/**
+ * Stuurt een notificatie naar de server die dan terug te vinden is in de notification tray
+ * Voorbeelden van notificaties.
+ * Voorbeeld voor nieuws:     Nieuw nieuws artikel: <titel van artikel>
+ *                            20:45 11 Dec 2023
+ * Voorbeeld voor evnementen: Nieuw evenement toegevoegd: <titel van evementen>
+ *                            20:45 11 Dec 2023
+ *
+ * @param {int} type     - type notificatie, evenement (1), nieuws (2) bijv.
+ * @param {string} titel - de titel die wordt toegevoegd aan een standaard string
+ *
+ */
+export const addNotification = async (type, titel) => {
+	let typeText = "";
+	switch (type) {
+	case 1:
+		typeText = "evenement";
+		break;
+	case 2:
+		typeText = "nieuws artikel";
+		break;
+	default:
+		console.log("Geen geldig type notificatie");
+		return;
+	}
+	const notificationTitle = `Nieuw ${typeText} toegevoegd: ${titel}`;
+	try {
+		const response = await fetch("notifications", {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({content: notificationTitle})
+		});
+		const data = await response.json();
+		if (data.id > 0) {
+			console.log("Success!");
+		} else {
+			console.log("Niet genotified.");
+		}
+	} catch (e) {
+		console.error(e);
+	}
+};
