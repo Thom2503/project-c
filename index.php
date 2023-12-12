@@ -65,9 +65,13 @@ $router->delete('/events/{integer}/delete', 'EventsController@destroy');
 $router->get('/events/{integer}', 'EventsController@eventById');
 $router->put('/events/{integer}', 'EventsController@update');
 $router->get('/events/{integer}/users', 'EventsController@showUsers');
-$router->put('/events/{integer}/join', 'EventsController@joinEvent');
+$router->get('/events/{integer}/voters', 'EventsController@showVoters');
+$router->post('/events/{integer}/join', 'EventsController@joinEvent');
 $router->delete('/events/{integer}/leave', 'EventsController@unjoinEvent');
-$router->get('/events/{integer}/voted', 'EventsController@getVoted');
+$router->post('/events/{integer}/vote', 'EventsController@voteEvent');
+$router->put('/events/{integer}/resetvote', 'EventsController@resetVote');
+$router->get('/events/{integer}/comments', 'EventsController@getComments');
+$router->post('/events/{integer}/comments', 'EventsController@addComment');
 $router->dispatch(); // Handle the request
 
 ?>

@@ -16,8 +16,8 @@ import { getCookie } from '../include/util_functions';
 export class EventModal extends Component {
   static displayName = EventModal.name;
 
-  constructor(props) {
-    super(props);
+  constructor() {
+    super();
     this.state = {
       updateEvent: false,
       showRooms: false,
@@ -46,9 +46,10 @@ export class EventModal extends Component {
     const params = new URLSearchParams(window.location.search);
     if (params.size >= 1) {
       const paramID = params.get("eventid");
-      console.log(this.state.updateEvent);
-      this.setState({ updateEvent: true });
-      console.log(paramID);
+      if (paramID !== null) {
+        this.setState({ updateEvent: true });
+        this.fetchEventsData(paramID);
+      }
       this.fetchEventsData(paramID);
     }
 }
@@ -86,11 +87,15 @@ async fetchEventsData(eventid) {
     const { name, value, type, checked } = event.target;
   
     if (type === "checkbox" && name === "showRooms") {
-      // If checkbox for showRooms is checked, update showRooms state
       this.setState({ showRooms: checked });
       this.setState({ isexternal: checked ? 0 : 1 });
-    }  else {
-      this.setState({ [name]: value });
+    } else {
+      // Set raw time values without formatting
+      if (name === "starttime" || name === "endtime") {
+        this.setState({ [name]: value });
+      } else {
+        this.setState({ [name]: value });
+      }
     }
   }
   
@@ -109,11 +114,15 @@ async fetchEventsData(eventid) {
     const accountsid = this.state.accountsid;
     const status = this.state.status;
     const date = dayjs(this.state.date).format('DD/MM/YYYY');
-    const starttime = dayjs(this.state.starttime).format('HH:mm');
-    const endtime = dayjs(this.state.endtime).format('HH:mm');
+    const starttime = dayjs(this.state.starttime, 'HH:mm').format('HH:mm');
+    const endtime = dayjs(this.state.endtime, 'HH:mm').format('HH:mm');
+    
 
     try {
+      console.log(this.state.title);
+      console.log("DEBUG ------ ");
       console.log(this.state.updateEvent);
+      console.log("DEBUG ------ ");
       if(this.state.updateEvent === true) {
         
         const params = new URLSearchParams(window.location.search);
@@ -131,14 +140,16 @@ async fetchEventsData(eventid) {
             tentativetime: 'not set',
             declinetime: 'not set',
             isexternal: isexternal,
-            accountsid: accountsid,
+            accountsid: 0,
             status: 'not set',
             date: date,
             starttime: starttime,
             endtime: endtime,
+            eventid: eventid,
           }),
         });
         const data = await response.json();
+        window.location.replace("evenementen");
   
         if (data.id > 0 || data.success === true) {
           console.log("Done");
@@ -170,6 +181,7 @@ async fetchEventsData(eventid) {
               endtime: endtime,
           }),
         });
+        window.location.replace("evenementen");
         const data = await response.json();
       }
     } catch (e) {

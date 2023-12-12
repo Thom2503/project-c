@@ -19,11 +19,11 @@ class EventsController {
         }
     }
 
-    public function update(int $id): void {
+    public function update(): void {
         $data = json_decode(file_get_contents("php://input"), true);
-        $this->eventsModel->updateEvent($id, $data);
+        $this->eventsModel->updateEvent($data);
         header('Content-Type: application/json');
-        echo json_encode(['id' => $id]);
+        echo json_encode($this);
     }
 
     public function show(int $id): void {
@@ -65,6 +65,18 @@ class EventsController {
             echo json_encode(['error' => 'Users not found in event room with id ' . $id]);
         }
     }
+
+    public function showVoters(int $id): void {
+        header('Content-Type: application/json');
+        $users = $this->eventsModel->getVotersInEvent($id);
+        // Add debug output
+        if (count($users) > 0) {
+            echo json_encode($users);
+        } else {
+            http_response_code(404);
+            echo json_encode(['error' => 'Voters not found in event room with id ' . $id]);
+        }
+    }
     
 
     public function destroy(int $id): void {
@@ -84,6 +96,20 @@ class EventsController {
         }
     }
 
+    public function voteEvent(): void {
+        $data = json_decode(file_get_contents("php://input"), true);
+        $eventId = $this->eventsModel->voteEvent($data);
+        header('Content-Type: application/json');
+        echo json_encode(['id' => $eventId]);
+    }
+
+    public function resetVote(): void {
+        $data = json_decode(file_get_contents("php://input"), true);
+        $eventId = $this->eventsModel->resetVote($data);
+        header('Content-Type: application/json');
+        echo json_encode(['id' => $eventId]);
+    }
+
     public function unjoinEvent(): void {
         $data = json_decode(file_get_contents("php://input"), true);
 
@@ -96,19 +122,27 @@ class EventsController {
             header('Content-Type: application/json');
             echo json_encode(['id' => $eventId]);
         } else {
-            // Stuur een foutreactie als accountid of eventid ontbreken
             http_response_code(400); // Bad Request
             echo json_encode(['error' => 'accountid and eventid are required']);
         }
         
     }
 
-    public function getVoted(): void {
+    public function addComment(): void {
         $data = json_decode(file_get_contents("php://input"), true);
-        $this->eventsModel->hasVotedForEvent($data);
+        $eventId = $this->eventsModel->createComment($data);
         header('Content-Type: application/json');
-        echo json_encode(['id' => $data]);
+        echo json_encode(['id' => $eventId]);
     }
+
+    public function getComments(int $id): void {
+        $data = json_decode(file_get_contents("php://input"), true);
+        $eventId = $this->eventsModel->returnComments($id);
+        header('Content-Type: application/json');
+        // let it return the array of objects where it is account_id and comment
+        echo json_encode($eventId);
+    }
+    
 
 }
 ?>
