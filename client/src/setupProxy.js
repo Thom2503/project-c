@@ -9,7 +9,7 @@ const target = process.env.PHP_API_HOST
 console.log("Target URL:", target);
 
 const context = ["/accounts", "/supplies", "/agendaitems", "/useritems", "/rooms", "/notifications", "/mailnotification",
-                 "/news", "/usersupplies", "/NieuwsDetails", "/events"];
+                 "/news", "/usersupplies", "/NieuwsDetails", "/events", "/room"];
 
 
 const onError = (err, req, resp, target) => {

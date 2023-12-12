@@ -32,6 +32,34 @@ class Rooms extends Database {
 		return $stmt->fetchAll(PDO::FETCH_ASSOC);
 	}
 
+	public function createRoom(array $data): int {
+		$query = "INSERT INTO `Rooms` (`Name`, `Capacity`)".
+		         "VALUES (:name, :capacity)";	
+		$stmt = $this->db->prepare($query);
+		$stmt->bindParam(":name", $data['Name']);
+		$stmt->bindParam(":capacity", $data['Capacity']);
+		$stmt->execute();
+		return $this->db->lastInsertId();
+	}
+
+    public function updateRoom(int $id, array $data): bool {
+		$query = "UPDATE `Rooms`".
+		         " SET `Name` = :name, `Capacity` = :capacity".
+		         " WHERE `RoomsID` = :sid ";
+		$stmt = $this->db->prepare($query);
+		$stmt->bindParam(":name", $data['Name'], PDO::PARAM_STR);
+		$stmt->bindParam(":capacity", $data['Capacity'], PDO::PARAM_INT);
+		$stmt->bindParam(":sid", $id, PDO::PARAM_INT);
+		return $stmt->execute();
+	}
+
+	public function deleteRoom(int $id): bool {
+		$query = "DELETE FROM `Rooms` WHERE `RoomsID` = :sid";
+		$stmt = $this->db->prepare($query);
+		$stmt->bindParam(":sid", $id, PDO::PARAM_INT);
+		return $stmt->execute();
+	}
+
 }
 
 ?>

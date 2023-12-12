@@ -110,6 +110,12 @@
   cursor: pointer;
 }
 
+.update-icon {
+  float: right;
+  margin: 1vw;
+  cursor: pointer;
+}
+
 @media only screen and (max-width: 600px) {
   div.base-modal-content {
     width: 90%;
