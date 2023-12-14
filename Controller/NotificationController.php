@@ -4,11 +4,11 @@ define("SEND_MAIL", "socialekalenderteam4@gmail.com");
 define("SEND_PASSWORD", "hgev lxeu iqzg mibp");
 
 use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\Exception;
 
 require 'include/PHPMailer/src/Exception.php';
 require 'include/PHPMailer/src/PHPMailer.php';
 require 'include/PHPMailer/src/SMTP.php';
+
 require_once 'model/Notification.php';
 require_once 'model/Account.php';
 
@@ -42,6 +42,17 @@ class NotificationController {
 			echo json_encode(['error' => 'subscriber not found']);
 		}
     }
+
+	public function showNotifications(): void {
+		header('Content-Type: application/json');
+		$notifications = $this->notification->getUserNotification();
+		if (count($notifications) > 0) {
+			echo json_encode($notifications);
+		} else {
+			http_response_code(404);
+			echo json_encode(['error' => 'no notifications found']);
+		}
+	}
 
 	public function sendMailToUser(): void {
 		$errors = [];
@@ -107,12 +118,12 @@ class NotificationController {
 		}
     }
 
-    public function update($id) {
-        // Implement logic to update user by ID
-    }
-
-    public function destroy($id) {
-        // Implement logic to delete user by ID
+    public function storeNotification() {
+		//XXX: op iets checken of het wel veilig is.
+		$data = json_decode(file_get_contents("php://input"), true);
+		header('Content-Type: application/json');
+		$notificationID = $this->notification->addNotificationContent($data);
+		echo json_encode(['id' => $notificationID]);
     }
 
 	/**
@@ -175,6 +186,19 @@ class NotificationController {
 		$mail->Subject = $subject;
 		$mail->Body = $body;
 		return $mail;
+	}
+
+	public function update(int $id): void {
+		$data = json_decode(file_get_contents("php://input"), true);
+		header('Content-Type: application/json');
+		// zijn er errors? stuur die dan terug
+		$success = $this->notification->updateUserNotification($id, $data);
+		if ($success == true) {
+			echo json_encode(['success' => true]);
+		} else {
+			http_response_code(404);
+			echo json_encode(['error' => 'Subscription not updated']);
+		}
 	}
 }
 

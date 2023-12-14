@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { getCookie } from '../include/util_functions';
 import "../css/nieuws.css";
+import {addNotification} from '../include/notification_functions';
 
 export class NieuwsDetails extends Component {
     static displayName = NieuwsDetails.name;
@@ -75,6 +76,7 @@ export class NieuwsDetails extends Component {
 
             if (data.id > 0 || data.success === true) {
                 console.log("Done");
+				await addNotification(2, title);
                 window.location.replace("/Nieuws");
             } else {
                 console.log(data);

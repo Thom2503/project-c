@@ -1,8 +1,16 @@
 import React, { Component } from 'react';
-import { deleteCookie } from '../include/util_functions';
-import { Settings } from './Settings';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+	faRightFromBracket,
+} from "@fortawesome/free-solid-svg-icons";
+import { deleteCookie, getCookie } from '../include/util_functions';
 
 export class Footer extends Component {
+
+	constructor(props) {
+		super(props);
+		this.state = {userid: Number.parseInt(getCookie("user"))};
+	}
 	
 	loguitEvent() {
 		// verwijder de cookies die de gebruiker krijgt aan het begin
@@ -15,10 +23,12 @@ export class Footer extends Component {
     render() {
         return (
 			<footer>
-				<Settings />
 				<div>
 					<a onClick={() => this.loguitEvent()} className='loguit-button'>
-						<span className='loguit-text'>Loguit</span>
+						<span className='loguit-text'>
+							Loguit&nbsp;
+							<FontAwesomeIcon icon={faRightFromBracket} />
+						</span>
 					</a>
 				</div>
 			</footer>

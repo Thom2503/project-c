@@ -10,10 +10,10 @@
 export const getSubscriber = async (all = true, userid = 0) => {
 	let response, data;
 	if (all === false && userid === 0) {
-		response = await fetch("notifications");
+		response = await fetch("usernotifications");
 		data = await response.json();
 	} else {
-		response = await fetch(`notifications/${userid}`);
+		response = await fetch(`usernotifications/${userid}`);
 		data = await response.json();
 	}
 	return data;
@@ -95,7 +95,7 @@ export const sendMailNotification = async (userID) => {
 export const changeUserSubscription = async (userID, wantsNotification, type = "mail") => {
 	if (["mail", "push"].includes(type) === false) return;
 	try {
-		const response = await fetch("notifications", {
+		const response = await fetch("usernotifications", {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',
@@ -107,6 +107,162 @@ export const changeUserSubscription = async (userID, wantsNotification, type = "
 			console.log("Success!");
 		} else {
 			console.log("Not updated!");
+		}
+	} catch(e) {
+		console.error("Error: " + e);
+	}
+};
+
+/**
+ * Vraag permission aan de gebruiker om notificaties te sturen
+ *
+ * @param {int} userID - de id van de gebruiker
+ *
+ * @returns
+ */
+export const askPermission = (userID) => {
+	// vraag de gebruiker om notificaties te sturen
+	Notification.requestPermission().then((result) => {
+		// mogen wij notificaties sturen? mooi verander de subscription
+		if (result === "granted") {
+			changeUserSubscription(userID, true, "push");
+		} else {
+			changeUserSubscription(userID, false, "push");
+		}
+	}).catch((err) => {
+		console.error('Error requesting notification permission:', err);
+	});
+}
+
+/**
+ * Stuur de notificatie naar de gebruiker
+ *
+ * @param {int}    userID      - de id van de gebruiker
+ * @param {int}    contentType - over wat voor content het gaat om de titel te maken
+ * @param {string} content     - de content van de notificatie
+ *
+ */
+export const sendNotification = async (userID, contentType, content = "") => {
+	try {
+		// check of de gebruiker uberhaupt notificaties wilt
+		if (await userWantsPushNotification(userID) !== true || Notification.permission !== "granted") return;
+		// inititializeer de title
+		let title;
+		// bepaal op basis van de type welke title het moet zijn
+		switch (contentType) {
+		case 1:
+				title = "Evenement";
+				break;
+		case 2:
+				title = "Nieuws";
+				break;
+		default:
+				console.error("ContentType is not a valid type");
+				return;
+		}
+		// maak de opties voor de notificatie zoals het icoontje maar ook de content
+		const options = {
+			body: content,
+			icon: '/static/site_icon-256x256.png'
+		};
+		// maak en stuur de notificatie naar de gebruiker
+		new Notification(title, options);
+	} catch (error) {
+		console.error("error occured! " , error);
+	}
+};
+
+/**
+ * Stuurt een notificatie naar de server die dan terug te vinden is in de notification tray
+ * Voorbeelden van notificaties.
+ * Voorbeeld voor nieuws:     Nieuw nieuws artikel: <titel van artikel>
+ *                            20:45 11 Dec 2023
+ * Voorbeeld voor evnementen: Nieuw evenement toegevoegd: <titel van evementen>
+ *                            20:45 11 Dec 2023
+ *
+ * @param {int} type     - type notificatie, evenement (1), nieuws (2) bijv.
+ * @param {string} titel - de titel die wordt toegevoegd aan een standaard string
+ *
+ */
+export const addNotification = async (type, titel) => {
+	let typeText = "";
+	switch (type) {
+	case 1:
+		typeText = "evenement";
+		break;
+	case 2:
+		typeText = "nieuws artikel";
+		break;
+	default:
+		console.log("Geen geldig type notificatie");
+		return;
+	}
+	const notificationTitle = `Nieuw ${typeText} toegevoegd: ${titel}`;
+	try {
+		const response = await fetch("notifications", {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({content: notificationTitle})
+		});
+		const data = await response.json();
+		if (data.id > 0) {
+			console.log("Success!");
+		} else {
+			console.log("Niet genotified.");
+		}
+	} catch (e) {
+		console.error(e);
+	}
+};
+
+/**
+ * Om een gebruikers notificatie te veranderen naar gelezen waar je dan ook niet meer de animatie ziet op
+ * het belletje achter je naam.
+ *
+ * @param {int} userid - id van de gebruiker om te veranderen
+ */
+export const readNotification = async (userid) => {
+	try {
+		const response = await fetch(`usernotifications/${userid}`, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({hasRead: true}),
+		});
+		const data = await response.json();
+		if (data.success === true) {
+			console.log("Success!");
+		} else {
+			console.log("Not updated!");
+		}
+	} catch(e) {
+		console.error("Error: " + e);
+	}
+};
+
+/**
+ * Kijk of een gebruiker al de notificaties heeft gelezen om de animaties niet te laten zien.
+ *
+ * @param {int} userid - de gebruikers id
+ *
+ * @returns {boolean} of de gebruiker zijn/haar notificaties heeft gelezen 
+ */
+export const hasUserReadNotifications = async (userid) => {
+	try {
+		const response = await fetch(`usernotifications/${userid}`, {
+			method: 'GET',
+			headers: {
+				'Content-Type': 'application/json',
+			}
+		});
+		const data = await response.json();
+		if (data.SubscriptionsID > 0) {
+			return data.HasRead === "1";
+		} else {
+			console.log("No subscription found!");
 		}
 	} catch(e) {
 		console.error("Error: " + e);

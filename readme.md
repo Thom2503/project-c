@@ -69,4 +69,3 @@ open dan [localhost:3000](http://localhost:3000) om de website te bekijken en ge
 - [php](https://www.php.net/)
 - [react](https://www.react.dev/)
 - [PHPMailer](https://github.com/PHPMailer/PHPMailer)
-- [web-push](https://www.npmjs.com/package/web-push)
