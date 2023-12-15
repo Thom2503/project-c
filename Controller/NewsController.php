@@ -14,6 +14,7 @@ class NewsController {
 		echo json_encode($newsItem);
     }
 
+	
 	public function show(int $id): void {
 		header('Content-Type: application/json');
 		$news = $this->newsModel->getNewsByID($id);
@@ -27,22 +28,31 @@ class NewsController {
 
 	public function store(): void {
 		$data = json_decode(file_get_contents("php://input"), true);
-        $NewsID = $this->newsModel->createNewsItem($data);
-        header('Content-Type: application/json');
-        echo json_encode(['id' => $NewsID]);
-    }
+		$base64Image = isset($data['image']) ? $data['image'] : '';
+		$imageData = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $base64Image));
+		$data['image'] = $imageData;
+		$NewsID = $this->newsModel->createNewsItem($data);
+		header('Content-Type: application/json');
+		echo json_encode(['id' => $NewsID]);
+	}
+	
+	
 
 	public function update($id) {
 		$data = json_decode(file_get_contents("php://input"), true);
-        $success = $this->newsModel->updateNews($id, $data);
-        header('Content-Type: application/json');
+		$base64Image = isset($data['image']) ? $data['image'] : '';
+		$imageData = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $base64Image));
+		$data['image'] = $imageData;
+		$success = $this->newsModel->updateNews($id, $data);
+		header('Content-Type: application/json');
 		if ($success == true) {
 			echo json_encode(['success' => true]);
 		} else {
 			http_response_code(404);
 			echo json_encode(['success' => 'false']);
 		}
-    }
+	}
+	
 
 	public function destroy(int $id): void {
 		$errors = [];

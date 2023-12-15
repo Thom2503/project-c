@@ -2,7 +2,10 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { getCookie } from '../include/util_functions';
 import "../css/nieuws.css";
-import {addNotification} from '../include/notification_functions';
+import { addNotification } from '../include/notification_functions';
+import TextField from '@mui/material/TextField';
+import MenuItem from '@mui/material/MenuItem';
+import dayjs from "dayjs";
 
 export class NieuwsDetails extends Component {
     static displayName = NieuwsDetails.name;
@@ -13,13 +16,61 @@ export class NieuwsDetails extends Component {
             filteredData: null,
             title: ' ',
             description: ' ',
-            image: "nieuwsimage",
-            posttime: '2023-12-02 19:44',
+            image: '',
+            posttime: '',
             accountsid: Number.parseInt(getCookie("user")),
             NewsID: null,
             deleteNews: false,
+            accountName: '',
         };
     }
+
+    handleImageChange = (event) => {
+        const file = event.target.files[0];
+        if (file) {
+            const validImageTypes = ['image/jpeg', 'image/png'];
+            if (validImageTypes.includes(file.type)) {
+                const reader = new FileReader();
+                reader.onloadend = () => {
+                    this.setState({ image: reader.result });
+                };
+                reader.readAsDataURL(file);
+            } else {
+                console.error('Invalid image type. Please upload a JPEG or PNG image.');
+            }
+        }
+    };
+
+    getDateOptions = () => {
+        const currentDate = new Date();
+        const options = [];
+
+        const startHour = currentDate.getHours();
+        const startMinutes = currentDate.getMinutes();
+
+        for (let i = 0; i < 7; i++) {
+            const futureDate = new Date(currentDate);
+            futureDate.setDate(currentDate.getDate() + i);
+
+            let startJ = 0;
+
+            if (i === 0) {
+                startJ = startHour;
+                if (startMinutes > 0) {
+                    startJ--; // Allow going back just one hour
+                }
+            }
+
+            for (let j = startJ; j < 24; j++) {
+                const futureDateTime = new Date(futureDate);
+                futureDateTime.setHours(j);
+                futureDateTime.setMinutes(0); // Reset minutes to 0
+                options.push(futureDateTime.toISOString().replace('T', ' ').slice(0, -8));
+            }
+        }
+
+        return options;
+    };
 
     componentDidMount() {
         this.fetchNewsDetails();
@@ -42,7 +93,15 @@ export class NieuwsDetails extends Component {
         if (event.target.name === "deleteNews") {
             this.setState({ [event.target.name]: event.target.checked });
         } else {
-            this.setState({ [event.target.name]: event.target.value });
+            if (event.target.name === "posttime") {
+                const selectedDate = event.target.value;
+                const currentDate = new Date().toISOString().split('T')[0];
+                const isValidDate = selectedDate >= currentDate;
+
+                this.setState({ posttime: isValidDate ? selectedDate : currentDate });
+            } else {
+                this.setState({ [event.target.name]: event.target.value });
+            }
         }
     };
 
@@ -53,6 +112,7 @@ export class NieuwsDetails extends Component {
         console.log(this.state);
         try {
             console.log("DELETE request to:", fetchURL);
+            const formattedPostTime = dayjs(posttime).format('YYYY-MM-DD HH:mm');
             const response = await fetch(fetchURL, {
                 method: this.state.deleteNews === true ? "DELETE" : "POST",
                 headers: {
@@ -62,7 +122,7 @@ export class NieuwsDetails extends Component {
                     title,
                     description,
                     image,
-                    posttime,
+                    posttime: formattedPostTime,
                     accountsid
                 }),
             });
@@ -76,7 +136,7 @@ export class NieuwsDetails extends Component {
 
             if (data.id > 0 || data.success === true) {
                 console.log("Done");
-				await addNotification(2, title);
+                await addNotification(2, title);
                 window.location.replace("/Nieuws");
             } else {
                 console.log(data);
@@ -85,9 +145,11 @@ export class NieuwsDetails extends Component {
             console.error("Error: ", e.message);
         }
     };
+
     render() {
         const isAdmin = getCookie("isadmin") === "true";
         const fromAddNews = new URLSearchParams(window.location.search).get("fromAddNews");
+
         if (isAdmin) {
             if (fromAddNews) {
                 return (
@@ -118,7 +180,7 @@ export class NieuwsDetails extends Component {
                                 >
                                     Beschrijving:
                                 </label>
-                                <input
+                                <textarea
                                     type="text"
                                     id="description"
                                     name="description"
@@ -128,37 +190,49 @@ export class NieuwsDetails extends Component {
                                 />
                             </div>
 
-                            <div className="input-field-div" style={{ marginBottom: '2rem' }}>                            <label
+                            <div className="input-field-div" style={{ marginBottom: '2rem' }}><label
                                 htmlFor="note"
                                 className="input-field-label"
                             >
                                 Posttijd:
                             </label>
-                                <input
-                                    type="text"
+                                <TextField
                                     id="posttime"
                                     name="posttime"
+                                    type="datetime-local"
                                     className="input-field"
                                     value={this.state.posttime}
                                     onChange={this.handleInputChange}
-                                />
+                                    InputLabelProps={{
+                                        shrink: true,
+                                    }}
+                                    InputProps={{
+                                        inputProps: { min: new Date().toISOString().replace('T', ' ').slice(0, -8) }, // Set the minimum value to today's date without 'T'
+                                    }}
+                                >
+                                    {this.getDateOptions().map((dateTime) => (
+                                        <MenuItem key={dateTime} value={dateTime} disabled={dateTime < new Date().toISOString().replace('T', ' ').slice(0, -8)}>
+                                            {dateTime}
+                                        </MenuItem>
+                                    ))}
+                                </TextField>
                             </div>
                             {/* <div className="input-field-div" style={{ marginBottom: '2rem' }}>
-                            <p className="static-text">Huidige afbeelding:</p>
-                            <label
-                                htmlFor="note"
-                                className="input-field-label"
-                            >
-                                Afbeelding:
-                            </label>
-                            <input
-                                type="file"
-                                id="image"
-                                name="image"
-                                className="input-field"
-                                onChange={this.handleImageChange}
-                            />
-                        </div> */}
+                                <p className="static-text">Huidige afbeelding:</p>
+                                <label
+                                    htmlFor="note"
+                                    className="input-field-label"
+                                >
+                                    Afbeelding:
+                                </label>
+                                <input
+                                    type="file"
+                                    id="image"
+                                    name="image"
+                                    className="input-field"
+                                    onChange={this.handleImageChange}
+                                />
+                            </div> */}
                             <input
                                 className="save-button"
                                 type="submit"
@@ -199,7 +273,7 @@ export class NieuwsDetails extends Component {
                                 >
                                     Beschrijving:
                                 </label>
-                                <input
+                                <textarea
                                     type="text"
                                     id="description"
                                     name="description"
@@ -217,31 +291,43 @@ export class NieuwsDetails extends Component {
                                 >
                                     Posttijd:
                                 </label>
-                                <input
-                                    type="text"
+                                <TextField
                                     id="posttime"
                                     name="posttime"
+                                    type="datetime-local"
                                     className="input-field"
                                     value={this.state.posttime}
                                     onChange={this.handleInputChange}
-                                />
+                                    InputLabelProps={{
+                                        shrink: true,
+                                    }}
+                                    InputProps={{
+                                        inputProps: { min: new Date().toISOString().replace('T', ' ').slice(0, -8) }, // Set the minimum value to today's date without 'T'
+                                    }}
+                                >
+                                    {this.getDateOptions().map((dateTime) => (
+                                        <MenuItem key={dateTime} value={dateTime} disabled={dateTime < new Date().toISOString().replace('T', ' ').slice(0, -8)}>
+                                            {dateTime}
+                                        </MenuItem>
+                                    ))}
+                                </TextField>
                             </div>
                             {/* <div className="input-field-div" style={{ marginBottom: '2rem' }}>
-                            <p className="static-text">Huidige afbeelding:</p>
-                            <label
-                                htmlFor="note"
-                                className="input-field-label"
-                            >
-                                Afbeelding:
-                            </label>
-                            <input
-                                type="file"
-                                id="image"
-                                name="image"
-                                className="input-field"
-                                onChange={this.handleImageChange}
-                            />
-                        </div> */}
+                                <p className="static-text">Huidige afbeelding:</p>
+                                <label
+                                    htmlFor="note"
+                                    className="input-field-label"
+                                >
+                                    Afbeelding:
+                                </label>
+                                <input
+                                    type="file"
+                                    id="image"
+                                    name="image"
+                                    className="input-field"
+                                    onChange={this.handleImageChange}
+                                />
+                            </div> */}
                             <div className="input-field-div">
                                 <label htmlFor="deleteNews">Delete: </label>
                                 <input
@@ -271,7 +357,6 @@ export class NieuwsDetails extends Component {
                             <div className="max-w-[400px] sm:max-w-[600px] mx-auto">
                                 <h1 className="text-[#848484] font-bold text-[18px] mb-2">{this.state.filteredData.Title}</h1>
                                 <div className="text-[#848484] text-sm mb-4">
-                                    <p className="text-left">Gemaakt door:</p>
                                     <p className="text-left">{this.state.filteredData.PostTime}</p>
                                 </div>
                                 <p
