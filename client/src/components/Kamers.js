@@ -53,7 +53,7 @@ export class Kamers extends Component {
 											Klik voor meer informatie
 										</span>
                         			</div>
-									<Sidebar isOpen={room.isOpen ?? false} type="1" room={room} />
+									<Sidebar isOpen={room.isOpen ?? false} room={room} />
 								</div>
                             ))
                     ) :
