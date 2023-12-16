@@ -41,6 +41,17 @@ class RoomsController {
 		}
 	}
 
+	public function showEvents(string $name): void {
+		header('Content-Type: application/json');
+		$events = $this->roomsModel->getEventsInRoom($name);
+		if (count($events) > 0) {
+			echo json_encode($events);
+		} else {
+			http_response_code(404);
+			echo json_encode(['error' => 'Events not found in room']);
+		}
+	}
+
     public function store(): void {
 		$errors = [];
 		$data = json_decode(file_get_contents("php://input"), true);

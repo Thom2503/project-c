@@ -96,7 +96,7 @@ export class Evenementen extends Component {
                             <h1 className="text-[#792F82] font-bold text-[25px]">Evenementen</h1>
                         </div>
                         <div className='items-stretch flex gap-4 flex-row'>
-                            {getCookie("isadmin") !== "true" && (
+                            {getCookie("isadmin") === "true" && (
                                 <a href="?modal=5" className='h-full text-[23px] gap-2 text-[#8A8A8A] font-normal cursor-pointer flex justify-center items-center'
                                     onClick={this.toggleSidebar}
                                 >

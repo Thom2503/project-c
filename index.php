@@ -57,6 +57,7 @@ $router->post('/notifications', "NotificationController@storeNotification");
 $router->get('/rooms', 'RoomsController@index');
 $router->get('/room/{integer}', 'RoomsController@show');
 $router->get('/rooms/{integer}', 'RoomsController@showUsers');
+$router->get('/rooms/{string}', 'RoomsController@showEvents');
 $router->post('/rooms', 'RoomsController@store');
 $router->put('/rooms/{integer}', 'RoomsController@update');
 $router->delete('/rooms/{integer}', 'RoomsController@destroy');

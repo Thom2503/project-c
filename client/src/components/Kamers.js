@@ -39,7 +39,7 @@ export class Kamers extends Component {
                 <div>
                     <h2 className="text-[#792F82] font-bold text-[25px]">Kamers</h2>
                     {getCookie("isadmin") === "true" && (
-                        <a href='kamers?modal=6'>Voorziening Toevoegen</a>
+                        <a href='kamers?modal=6'>Kamer Toevoegen</a>
                     )}
                 </div>
                 <div className="gap-5 flex flex-col">

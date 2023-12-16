@@ -32,6 +32,18 @@ class Rooms extends Database {
 		return $stmt->fetchAll(PDO::FETCH_ASSOC);
 	}
 
+	public function getEventsInRoom(string $roomName): array {
+		// SElECT * FROM `Events` WHERE `Location` = "test" AND DATETIME(`Date` / 1000, 'unixepoch', 'localtime') BETWEEN DATETIME('now', 'start of day') AND DATETIME('now', 'start of day', '+1 day');
+		$query = "SELECT * FROM `Events`".
+		         "  WHERE `Location` = :rname".
+		         "    AND STRFTIME('%Y-%m-%d', SUBSTR(Date, 7, 4) || '-' || SUBSTR(Date, 4, 2) || '-' || SUBSTR(Date, 1, 2))".
+		         "      = STRFTIME('%Y-%m-%d', 'now', 'localtime')";
+		$stmt = $this->db->prepare($query);
+		$stmt->bindParam(":rname", $roomName, PDO::PARAM_STR);
+		$stmt->execute();
+		return $stmt->fetchAll(PDO::FETCH_ASSOC);
+	}
+
 	public function createRoom(array $data): int {
 		$query = "INSERT INTO `Rooms` (`Name`, `Capacity`)".
 		         "VALUES (:name, :capacity)";	

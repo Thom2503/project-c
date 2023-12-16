@@ -149,6 +149,15 @@ div.userlist {
 	margin: 0 auto;
 }
 
+div.eventlist {
+	width: 80%;
+	max-height: 60vh; /* zodat het er niet bovenheen gaat */
+	height: 60vh;
+	overflow-y: auto;
+	margin: 0 auto;
+	justify-content: center;
+}
+
 div.user {
 	width: 50%;
 }
