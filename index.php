@@ -70,6 +70,8 @@ $router->delete('/news/{integer}', 'NewsController@destroy');
 
 $router->get('/events', 'EventsController@index');
 $router->post('/events', 'EventsController@store');
+// voor dingen zoals events/1/leave oid
+$router->get('/events/{integer}/{string}', 'EventsController@showUsers');
 
 $router->dispatch(); // Handle the request
 
