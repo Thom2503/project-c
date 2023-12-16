@@ -117,7 +117,7 @@ export class Sidebar extends Component {
 				<div className='kamers name'>
 					<h3>{this.state.room.Name}</h3>
 				</div>
-				<div className="status-div">
+				<div className="status-div" style={{width: '60%'}}>
 					<input type="button"
 					       className={`status-field ${this.state.displayEvents === "none" && "selected"}`}
 					       value="Collega's"
@@ -147,7 +147,7 @@ export class Sidebar extends Component {
 					this.state.events.map((event) => (
 						<>
 							<br />
-							<div key={event.id} className="bg-[#F9F9F9] sm:mx-[20px] max-w-[1200px] w-[90%] h-[150px] p-4 flex flex-col justify-center rounded-xl border-[2px] duration-300 transition-all hover:bg-[#FEF3FF] hover:border-[#7100a640] hover:cursor-pointer">
+							<div key={event.id} className="m-auto bg-[#F9F9F9] sm:mx-[20px] max-w-[1200px] sm:w-[90%] h-[150px] p-4 flex flex-col justify-center rounded-xl border-[2px] duration-300 transition-all hover:bg-[#FEF3FF] hover:border-[#7100a640] hover:cursor-pointer">
 							    <div className="">
 							    <h1 className="text-[#792F82] font-medium text-[23px]">
 							    {event.Title}
