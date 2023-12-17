@@ -79,7 +79,9 @@ export class Login extends Component {
 
                         </div>
                         <div className="w-[362px] text-right">
-                            <a className="text-[#792F82] text-[13px]">Wachtwoord vergeten?</a>
+                            <a href='/forgotpassword'>
+                                <span className="text-[#792F82] text-[13px]">Wachtwoord vergeten?</span>    
+                            </a>
                         </div>
                         <div className="flex justify-center pt-[35px] flex-col items-center">
                             <input type="submit" className="w-[150px] bg-[#792F82] font-bold text-[20px] text-white h-[46px] rounded-[15px] flex justify-center items-center" value="Login" />

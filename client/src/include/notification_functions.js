@@ -82,6 +82,41 @@ export const sendMailNotification = async (userID) => {
 };
 
 /**
+ * Verstuur een mail om je wachtwoord te resetten
+ *
+ * @param {int} userID - de gebruiker die het mailtje moet ontvangen
+ *
+ * @returns
+ */
+export const sendForgotPasswordMail = async (userID) => {
+	try {
+		const response = await fetch("mailnotification", {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({user: userID, template: 3}),
+		});
+		const data = response.json();
+		if (data.success === true) {
+			console.log("Success de mail is verstuurd naar gebruiker met id: " + userID);
+			return;
+		} else if (data.mailerror.length > 0) {
+			console.log(data.mailerror);
+			// XXX: handle de errors
+			return;
+		} else {
+			console.log(data);
+			// XXX: handle de errors
+			return;
+		}
+	} catch {
+		// XXX: handle de errors
+		return;
+	}
+};
+
+/**
  * Update de gebruikers instellingen voor notifications, deze checked welk type het moet zijn,
  * of hij/zij het wilt. Dit word dynamisch aangemaakt voor als het niet bestaat of het word
  * geupdatet.

@@ -1,5 +1,5 @@
 <?php
-define("TEMPLATE_ASSOC", [1 => Templates::Event, 2 => Templates::News]);
+define("TEMPLATE_ASSOC", [1 => Templates::Event, 2 => Templates::News, 3 => Templates::ForgotPassword,]);
 define("SEND_MAIL", "socialekalenderteam4@gmail.com");
 define("SEND_PASSWORD", "hgev lxeu iqzg mibp");
 
@@ -15,6 +15,7 @@ require_once 'model/Account.php';
 abstract class Templates {
 	const Event = 1;
 	const News  = 2;
+	const ForgotPassword = 3;
 }
 
 class NotificationController {
@@ -139,6 +140,8 @@ class NotificationController {
 			                    "<p>Kijk bij <a href='localhost/evenementen'>de evenementen</a> voor meer informatie</p>",
 			Templates::News  => "<h2>Iets nieuws is er!<h2>\n".
 			                    "<p>Kijk bij <a href='localhost/nieuws'>het nieuws</a> overzicht voor het nieuwe nieuws bericht.</p>",
+			Templates::ForgotPassword  => "<h2>Wachtwoord reset<h2>\n".
+								"<p>klik de link om je wachtwoord te resetten <a href='localhost/resetwachtwoord'>http://localhost:3000/forgotpassword</a></p>",
 			default => false,
 		};
 		return $htOut;	
@@ -155,6 +158,7 @@ class NotificationController {
 		$htOut = match ($template) {
 			Templates::Event => "Updates over een evenement!",
 			Templates::News  => "Updates over een nieuws artikel",
+			Templates::ForgotPassword  => "Wachtwoord resetten",
 			default => false,
 		};
 		return $htOut;
