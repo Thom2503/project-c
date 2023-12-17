@@ -38,7 +38,8 @@ class Notification extends Database {
 
 	public function getUserNotification(): array {
 		$query = "SELECT * FROM `Notifications`".
-		         " WHERE `Timestamp` BETWEEN STRFTIME('%s', 'now', '-1 month') AND STRFTIME('%s', 'now')";
+		         " WHERE `Timestamp` BETWEEN STRFTIME('%s', 'now', '-1 month') AND STRFTIME('%s', 'now')".
+		         " ORDER BY `Timestamp` DESC";
 		return $this->db->query($query)->fetchAll(PDO::FETCH_ASSOC);
 	}
 

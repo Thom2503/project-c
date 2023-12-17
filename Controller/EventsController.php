@@ -36,5 +36,10 @@ class EventsController {
         header('Content-Type: application/json');
         echo json_encode(['id' => $eventId]);
     }
+
+	public function showUsers(int $id, string $str): void {
+		header('Content-Type: application/json');
+		echo json_encode(['een' => $id, 'twee' => $str]);
+	}
 }
 ?>

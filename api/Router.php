@@ -36,28 +36,26 @@ class Router {
         $uri = $_SERVER['REQUEST_URI'];
 		// maak onderdelen van de uri om te kijken of er gezocht wordt op ids
 		$uriParts = explode("/", $uri);
-		if (count($uriParts) > 2) {
-			// de parameter bijvoorbeeld een primary key
-			$parameter = $uriParts[2];
-			$paramType = getRealType($parameter);	
-			// de route voor de handler
-			$uriRoute = "/".$uriParts[1]."/{".$paramType."}";
-			$handler = $this->routes[$method][$uriRoute];
+		// slice de array op gedeeltes als je bijv. events/{integer}/leave hebt oid
+		$params = array_slice($uriParts, 2);
+		// maak de params en koppel die aan een type
+		$paramTypes = array_map('getRealType', $params);
+		// maak de route voor naar de handler
+		if (count($paramTypes) > 0) {
+			$uriRoute = "/".$uriParts[1]."/{".implode("}/{", $paramTypes)."}";
 		} else {
-        	$handler = $this->routes[$method][$uri] ?? null;
+			$uriRoute = "/".$uriParts[1];
 		}
 
-        if ($handler != null) {
-			if (isset($parameter) == true && $parameter >= 0) {
-				$this->callHandler($handler, $parameter);
-			} else {
-            	$this->callHandler($handler);
-			}
-        } else {
-            // Handle 404
-            http_response_code(404);
-            echo 'Not Found';
-        }
+		$handler = $this->routes[$method][$uriRoute] ?? null;
+
+		if ($handler != null) {
+			$this->callHandler($handler, ...$params);
+		} else {
+			// geef 404 terug
+			http_response_code(404);
+			echo htmlspecialchars($uri, ENT_QUOTES, 'UTF-8').": not found";
+		}
     }
 
 
@@ -65,17 +63,17 @@ class Router {
 	 * Method om de goede method van de controller aan te roepen die de router vind.
 	 *
 	 * @param string $handler - de method die aangeroepen moet worden
-	 * @param mixed  $param   - de extra parameter die meegegeven kan worden zoals een string of integer
+	 * @param mixed  $param   - de extra parameter(s) die meegegeven kan worden zoals een string of integer
 	 *
 	 * @return void
 	 */
-    private function callHandler(string $handler, mixed $param = null): void {
+    private function callHandler(string $handler, mixed ...$params): void {
         list($controller, $method) = explode('@', $handler);
 
         require_once "controller/$controller.php";
         $controllerInstance = new $controller();
-		if ($param != null) {
-			$controllerInstance->$method($param);
+		if ($params != []) {
+			call_user_func_array([$controllerInstance, $method], $params);
 		} else {
         	$controllerInstance->$method();
 		}

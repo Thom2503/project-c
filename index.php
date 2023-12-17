@@ -57,6 +57,7 @@ $router->post('/notifications', "NotificationController@storeNotification");
 $router->get('/rooms', 'RoomsController@index');
 $router->get('/room/{integer}', 'RoomsController@show');
 $router->get('/rooms/{integer}', 'RoomsController@showUsers');
+$router->get('/rooms/{string}', 'RoomsController@showEvents');
 $router->post('/rooms', 'RoomsController@store');
 $router->put('/rooms/{integer}', 'RoomsController@update');
 $router->delete('/rooms/{integer}', 'RoomsController@destroy');
@@ -69,6 +70,8 @@ $router->delete('/news/{integer}', 'NewsController@destroy');
 
 $router->get('/events', 'EventsController@index');
 $router->post('/events', 'EventsController@store');
+// voor dingen zoals events/1/leave oid
+$router->get('/events/{integer}/{string}', 'EventsController@showUsers');
 
 $router->dispatch(); // Handle the request
 
