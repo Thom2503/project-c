@@ -38,8 +38,8 @@ export class EventModal extends Component {
       date: null,
       starttime: null,
       endtime: null,
-      requestRating: false,
-      requestFeedback: false,
+      requestRating: 0,
+      requestFeedback: 0,
     };
 
     this.handleChange = this.handleChange.bind(this);
