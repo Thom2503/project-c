@@ -3,6 +3,7 @@ import { NavItem, NavLink } from 'reactstrap';
 import { Link, useLocation } from 'react-router-dom';
 import { getCookie, getFirstDayTimeStamp, getNextDay } from '../include/util_functions';
 import '../css/tailwind.css';
+import {NotificationTray} from './NotificationTray';
 
 export class Header extends Component {
     static displayName = Header.name;
@@ -15,6 +16,7 @@ export class Header extends Component {
 			isHere: false,
 			today: getNextDay(getFirstDayTimeStamp(), new Date().getDay()),
 			selectedTab: 'null',
+			openTray: "none",
 		};
     }
 
@@ -172,7 +174,11 @@ export class Header extends Component {
 						<span className='text-white font-medium text-[16px] sm:hidden'>Welkom {this.state.user.FirstName ?? ''}</span>
                     </div>
                     <div className="flex flex-col ml-auto pr-6">
-                        <span className="text-white font-medium text-[32px] text-white hidden sm:block">Welkom {this.state.user.FirstName ?? ''}</span>
+                        <span className="text-white font-medium text-[32px] text-white hidden sm:block">
+							Welkom {this.state.user.FirstName ?? ''}
+							&nbsp;&nbsp;
+							<NotificationTray />
+						</span>
                         <div className="flex flex-row">
               <span className="text-white font-medium text-[18px] ml-auto hidden sm:block">Momenteel</span>
               <a className="ml-1 shadow-lg rounded-sm font-normal px-2 py-1 text-white transition ease-in-out hover:filter hover:brightness-90 cursor-pointer"

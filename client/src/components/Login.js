@@ -56,7 +56,10 @@ export class Login extends Component {
 
             <div>
                 <div className="bg-white text-white p-3">
-                    <img className="w-[170px]" src="https://cdn.discordapp.com/attachments/826352506623361104/1158339204363853854/image.png?ex=651be2f3&is=651a9173&hm=a1017c97f67b0407a334b0d64790e135b67965bc7a335aaf54d8050e659e0e81&"/>
+                    <img className="w-[170px]"
+                         src="../static/logo.png"
+                        alt="grote banner logo van cavero"
+                    />
                 </div>
                 <div className="bg-[#792F82] h-[112px] w-100">
                     <span className="text-transparent">Login</span>

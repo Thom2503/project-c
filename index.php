@@ -19,7 +19,7 @@ require_once 'api/Router.php';
 // router class om de routing te regelen
 $router = new Router();
 
-/*{ Accoutns Routing }*/
+/*{ Accounts Routing }*/
 $router->get('/accounts', 'AccountsController@index');
 $router->get('/accounts/{integer}', 'AccountsController@show');
 $router->get('/accounts/{string}', 'AccountsController@showEmail');
@@ -46,16 +46,25 @@ $router->get('/usersupplies/{string}', 'SupplyController@showDay');
 $router->post('/usersupplies', 'SupplyController@setSupplies');
 $router->delete('/usersupplies', 'SupplyController@deleteUserSupplies');
 /*{ Notifications }*/
-$router->get('/notifications', 'NotificationController@index');
-$router->get('/notifications/{integer}', 'NotificationController@show');
+$router->get('/usernotifications', 'NotificationController@index');
+$router->get('/usernotifications/{integer}', 'NotificationController@show');
 $router->post('/mailnotification', "NotificationController@sendMailToUser");
-$router->post('/notifications', "NotificationController@store");
-
+$router->post('/usernotifications', "NotificationController@store");
+$router->put('/usernotifications/{integer}', "NotificationController@update");
+$router->get('/notifications', 'NotificationController@showNotifications');
+$router->post('/notifications', "NotificationController@storeNotification");
+/*{ Rooms }*/
+$router->get('/rooms', 'RoomsController@index');
+$router->get('/room/{integer}', 'RoomsController@show');
+$router->get('/rooms/{integer}', 'RoomsController@showUsers');
+$router->get('/rooms/{string}', 'RoomsController@showEvents');
+$router->post('/rooms', 'RoomsController@store');
+$router->put('/rooms/{integer}', 'RoomsController@update');
+$router->delete('/rooms/{integer}', 'RoomsController@destroy');
+/*{ News }*/
 $router->get('/news', 'NewsController@index');
 $router->get('/news/{integer}', 'NewsController@show');
-$router->get('/rooms', 'RoomsController@index');
 $router->post('/news', 'NewsController@store');
-$router->get('/rooms/{integer}', 'RoomsController@showUsers');
 $router->put('/news/{integer}', 'NewsController@update');
 $router->delete('/news/{integer}', 'NewsController@destroy');
 

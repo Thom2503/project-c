@@ -3,6 +3,7 @@ import { AgendaItemsModal } from "./AgendaItemsModal";
 import { SupplyModal } from "./SupplyModal";
 import { Nieuws } from "./Nieuws";
 import { AccountModal } from "./AccountModal";
+import { KamerModal } from "./KamerModal";
 
 import "../css/modal.css";
 import CloseIcon from "../static/close-icon.svg";
@@ -32,25 +33,28 @@ export class BaseModal extends Component {
 
     let modalSwitch;
     switch (this.state.modalType) {
-        case "1":
-            modalSwitch = <AgendaItemsModal onClose={this.props.onClose} />
-            break;
-        case "2":
-            modalSwitch = <SupplyModal onClose={this.props.onClose} />
-            break;
-        case "3":
-            modalSwitch = <Nieuws onClose={this.props.onClose} />
-            break;
-        case "4":
-            modalSwitch = <AccountModal onClose={this.props.onClose} />
-            break;
-        case "5":
-            modalSwitch = <EventModal onClose={this.props.onClose} eventid={eventid} />
-            break;
-        /* Error message if there is no corresponding Modal */
-        default:
-            modalSwitch = "The following modal type could not be loaded"
-            break;
+      case "1":
+        modalSwitch = < AgendaItemsModal onClose={this.props.onClose} />
+        break;
+      case "2":
+        modalSwitch = < SupplyModal onClose={this.props.onClose} />
+        break
+      case "3":
+        modalSwitch = < Nieuws onClose={this.props.onClose} />
+        break;
+      case "4":
+        modalSwitch = < AccountModal onClose={this.props.onClose} />
+        break
+      case "5":
+        modalSwitch = < EventModal onClose={this.props.onClose} />
+        break
+      case "6":
+        modalSwitch = < KamerModal onClose={this.props.onClose} />
+        break
+      /* Error message if there is no corresponding Modal */
+      default:
+        modalSwitch = "The following modal type could not be loaded"
+        break;
     }
     return (
       <div className="base-modal-container">

@@ -79,21 +79,21 @@ export class Evenementen extends Component {
                     eventid: event.EventsID,
                 }),
             });
-    
+
             if (!response.ok) {
                 throw new Error(`Failed to delete event: ${response.status} ${response.statusText}`);
             }
-    
+
             const data = await response.json();
             window.location.replace("evenementen");
             } catch (e) {
             }
-            
+
     }
-    
-    
-    
-    
+
+
+
+
 
     async getUsersInEvent(evenementid) {
         console.log('getUsersInEvent is called');
@@ -138,7 +138,7 @@ export class Evenementen extends Component {
 
 
     async handleLeaveEvent(event) {
-    
+
         try {
             const response = await fetch('/eventleave/' + parseInt(event.EventsID), {
                 method: 'DELETE',
@@ -279,6 +279,7 @@ export class Evenementen extends Component {
             ? data.slice(indexOfFirstEvent, indexOfLastEvent)
             : (Array.isArray(filteredData) ? filteredData.slice(indexOfFirstEvent, indexOfLastEvent) : []);
 
+        // Logic for displaying page numbers
         const pageNumbers = [];
         for (let i = 1; i <= Math.ceil(data.length / eventsPerPage); i++) {
             pageNumbers.push(i);

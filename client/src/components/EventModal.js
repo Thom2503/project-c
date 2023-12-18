@@ -14,6 +14,7 @@ import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import { getCookie } from '../include/util_functions';
 
+import {addNotification} from "../include/notification_functions";
 
 export class EventModal extends Component {
   static displayName = EventModal.name;
@@ -90,6 +91,7 @@ export class EventModal extends Component {
     const { name, value, type, checked } = event.target;
   
     if (type === "checkbox" && name === "showRooms") {
+      // If checkbox for showRooms is checked, update showRooms state
       this.setState({ showRooms: checked });
       this.setState({ isexternal: checked ? 0 : 1 });
     } else {
@@ -112,7 +114,6 @@ export class EventModal extends Component {
       this.setState({ declinetime: parseInt(value) });
     }
   }
-  
 
 
   async handleSubmit(event) {
@@ -133,12 +134,12 @@ export class EventModal extends Component {
     const starttime = dayjs(this.state.starttime, 'HH:mm').format('HH:mm');
     const endtime = dayjs(this.state.endtime, 'HH:mm').format('HH:mm');
     const unixTimestamp = dayjs(`${date} ${unixtime}`).unix();
-    
+
 
     try {
       console.log(unixTimestamp);
       if(this.state.updateEvent === true) {
-        
+
         const params = new URLSearchParams(window.location.search);
         const eventid = params.get('eventid');
         const response = await fetch(`/updateevent/` + parseInt(eventid), {
@@ -167,15 +168,16 @@ export class EventModal extends Component {
         const data = await response.json();
         console.log(date);
         window.location.replace("evenementen");
-  
+
         if (data.id > 0 || data.success === true) {
           console.log("Done");
+            await addNotification(1, title);
         } else {
           // Handle form validation errors or other issues
           console.log(data);
         }
-        
-      
+
+
       } else {
         const response = await fetch('/events', {
           method: 'POST',

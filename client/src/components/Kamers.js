@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Sidebar } from './Sidebar';
+import { getCookie } from '../include/util_functions';
 
 export class Kamers extends Component {
     static displayName = Kamers.name;
@@ -35,7 +36,12 @@ export class Kamers extends Component {
     render() {
         return (
             <div className="w-[95%] m-auto">
-                <h2 className="text-[#792F82] font-bold text-[25px]">Kamers</h2>
+                <div>
+                    <h2 className="text-[#792F82] font-bold text-[25px]">Kamers</h2>
+                    {getCookie("isadmin") === "true" && (
+                        <a href='kamers?modal=6'>Kamer Toevoegen</a>
+                    )}
+                </div>
                 <div className="gap-5 flex flex-col">
                     {this.state.data.length > 0 ? (
                             this.state.data.map((room, index) => (
@@ -47,7 +53,7 @@ export class Kamers extends Component {
 											Klik voor meer informatie
 										</span>
                         			</div>
-									<Sidebar isOpen={room.isOpen ?? false} type="1" room={room} />
+									<Sidebar isOpen={room.isOpen ?? false} room={room} />
 								</div>
                             ))
                     ) :

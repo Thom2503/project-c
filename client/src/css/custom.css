@@ -9,7 +9,7 @@
 .MuiDrawer-paper {
   border-top-left-radius: 10px;
   border-bottom-left-radius: 10px;
-  background-color: F9F9F9;
+  background-color: #F9F9F9;
 }
 
 /* elk kopje van pagina */
@@ -65,8 +65,14 @@ table.agenda td a {
   text-decoration: none;
 }
 
+table.agenda td:empty:hover {
+	-webkit-box-shadow: inset 0px 0px 0px 10px #792F82;
+	-moz-box-shadow: inset 0px 0px 0px 10px #792F82;
+	box-shadow: inset 0px 0px 0px 10px #792F82;
+}
+
 table.agenda td a:empty::after {
-  content: "new";
+  content: "In de loods";
 }
 
 table.agenda th {
@@ -183,6 +189,15 @@ div.userlist {
 	margin: 0 auto;
 }
 
+div.eventlist {
+	width: 80%;
+	max-height: 60vh; /* zodat het er niet bovenheen gaat */
+	height: 60vh;
+	overflow-y: auto;
+	margin: 0 auto;
+	justify-content: center;
+}
+
 div.user {
 	width: 50%;
 }
@@ -197,7 +212,7 @@ div.date {
 	text-align: center;
 }
 
-div.date a {
+div.date a, .notificationTrayContentItem a {
 	text-decoration: none;
 	color: rgba(132, 132, 132, 0.76);
 	font-size: 16px;
@@ -211,6 +226,50 @@ div.date .datestring {
 hr {
 	width: 70%;
 	margin: auto !important;
+}
+
+#notificationTrayIcon:hover {
+	--webkit-filter: invert(100%);
+	filter: invert(100%);
+	cursor: pointer;
+}
+
+.notificationTray {
+	position: relative;
+	display: inline-block;
+}
+
+.notificationTrayContent {
+	position: absolute;
+	background-color: #F9F9F9;
+	min-width: 12em;
+	max-height: 40vh;
+	height: 40vh;
+	overflow-y: auto;
+	box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+	padding: .75em 1em;
+	z-index: 1;
+	right: 50%;
+	color: black;
+	border-radius: 3px;
+}
+
+.notificationTrayContent h4 {
+	font-size: 24px;
+}
+
+.notificationTrayContent p, .notificationTrayContentItem h5 {
+	font-size: 20px;
+}
+
+.notificationTrayContentItem {
+	display: inline-block;
+	line-height: .9em;
+}
+
+.notificationTrayContentItem em {
+	font-size: 12px;
+	color: grey;
 }
 
 @media only screen and (max-width: 600px) {
@@ -260,3 +319,8 @@ hr {
   }
 }
 
+@keyframes bellshake {
+	0%, 100% { transform: rotate(0); }
+	10%, 30%, 50%, 70%, 90% { transform: rotate(12deg); }
+	20%, 40%, 60%, 80% { transform: rotate(-12deg); }
+}

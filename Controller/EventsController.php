@@ -77,7 +77,7 @@ class EventsController {
             echo json_encode(['error' => 'Voters not found in event room with id ' . $id]);
         }
     }
-    
+
 
     public function destroy(int $id): void {
         $this->eventsModel->deleteEvent($id);
@@ -116,7 +116,7 @@ class EventsController {
         if (isset($data['accountid']) && isset($data['eventid'])) {
             $accountid = $data['accountid'];
             $eventid = $data['eventid'];
-        
+
             // Nu kun je verdergaan met de rest van je logica
             $eventId = $this->eventsModel->unjoinEvent($accountid, $eventid);
             header('Content-Type: application/json');
@@ -125,7 +125,7 @@ class EventsController {
             http_response_code(400); // Bad Request
             echo json_encode(['error' => 'accountid and eventid are required']);
         }
-        
+
     }
 
     public function addComment(): void {
@@ -142,7 +142,7 @@ class EventsController {
         // let it return the array of objects where it is account_id and comment
         echo json_encode($eventId);
     }
-    
+
 
 }
 ?>

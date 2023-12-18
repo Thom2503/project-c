@@ -35,6 +35,32 @@ class Notification extends Database {
 		$stmt->execute();
 		return $this->db->lastInsertId();
 	}
+
+	public function getUserNotification(): array {
+		$query = "SELECT * FROM `Notifications`".
+		         " WHERE `Timestamp` BETWEEN STRFTIME('%s', 'now', '-1 month') AND STRFTIME('%s', 'now')".
+		         " ORDER BY `Timestamp` DESC";
+		return $this->db->query($query)->fetchAll(PDO::FETCH_ASSOC);
+	}
+
+	public function addNotificationContent(array $data): int {
+		// update alle subscribers dat ze hun notificaties niet hebben gelezen.
+		$this->db->query("UPDATE `Subscriptions` SET `HasRead` = 0")->execute();
+		$query = "INSERT INTO `Notifications` (`Content`, `Timestamp`) VALUES (:content, :ts)";
+		$stmt = $this->db->prepare($query);
+		$stmt->bindParam(":content", $data['content']);
+		$stmt->bindParam(":ts", time());
+		$stmt->execute();
+		return $this->db->lastInsertId();
+	}
+
+	public function updateUserNotification(int $id, array $data): bool {
+		$query = "UPDATE `Subscriptions` SET `HasRead` = :read WHERE `GebruikerID` = :uid";
+		$stmt = $this->db->prepare($query);
+		$stmt->bindParam(":read", $data['hasRead'], PDO::PARAM_BOOL);
+		$stmt->bindParam(":uid", $id, PDO::PARAM_INT);
+		return $stmt->execute();
+	}
 }
 
 ?>

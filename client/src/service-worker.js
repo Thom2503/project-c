@@ -12,6 +12,8 @@ import { ExpirationPlugin } from 'workbox-expiration';
 import { precacheAndRoute, createHandlerBoundToURL } from 'workbox-precaching';
 import { registerRoute } from 'workbox-routing';
 import { StaleWhileRevalidate } from 'workbox-strategies';
+import { sendNotification } from './include/notification_functions';
+import { getCookie } from './include/util_functions';
 
 clientsClaim();
 
@@ -69,4 +71,13 @@ self.addEventListener('message', (event) => {
   }
 });
 
-// Any other custom service worker logic can go here.
+self.addEventListener("message", (event) => {
+	console.log(event);
+	if (event.data && event.data.type === "PUSH_NOTIFICATION") {
+		const { title, content } = event.data.payload;
+		event.waitUntil(sendNotification(Number.parseInt(getCookie("user", title, content))));
+	}
+});
+
+self.addEventListener("push", (event) => {});
+
