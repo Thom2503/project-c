@@ -18,7 +18,6 @@ class FetchCommentDetails extends React.Component {
             <>
                 <div className='bg-[#f2f2f2] rounded-[4px] p-2 border-l-[4px] border-l-gray'>
                     <p className='font-[500]'>{this.props.comment}</p>
-                    <span className='text-[12px]'>{this.state.name} {this.state.lastname}</span>
                 </div>
             </>
         );

@@ -61,17 +61,17 @@ $router->delete('/news/{integer}', 'NewsController@destroy');
 
 $router->get('/events', 'EventsController@index');
 $router->post('/events', 'EventsController@store');
-$router->delete('/events/{integer}/delete', 'EventsController@destroy');
+$router->delete('/eventdelete/{integer}', 'EventsController@destroy');
 $router->get('/events/{integer}', 'EventsController@eventById');
-$router->put('/events/{integer}', 'EventsController@update');
-$router->get('/events/{integer}/users', 'EventsController@showUsers');
-$router->get('/events/{integer}/voters', 'EventsController@showVoters');
-$router->post('/events/{integer}/join', 'EventsController@joinEvent');
-$router->delete('/events/{integer}/leave', 'EventsController@unjoinEvent');
-$router->post('/events/{integer}/vote', 'EventsController@voteEvent');
-$router->put('/events/{integer}/resetvote', 'EventsController@resetVote');
-$router->get('/events/{integer}/comments', 'EventsController@getComments');
-$router->post('/events/{integer}/comments', 'EventsController@addComment');
+// $router->put('/events/{integer}', 'EventsController@update');
+$router->get('/eventsusers/{integer}', 'EventsController@showUsers');
+$router->get('/eventvoters/{integer}', 'EventsController@showVoters');
+$router->post('/eventjoin/{integer}', 'EventsController@joinEvent');
+$router->delete('/eventleave/{integer}', 'EventsController@unjoinEvent');
+$router->post('/eventvote/{integer}', 'EventsController@voteEvent');
+$router->get('/eventcomments/{integer}', 'EventsController@getComments');
+$router->post('/eventcomments/{integer}', 'EventsController@addComment');
+$router->put('/updateevent/{integer}', 'EventsController@update');
 $router->dispatch(); // Handle the request
 
 ?>

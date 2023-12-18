@@ -13,7 +13,8 @@ export class Header extends Component {
 			user: [],
 			item: false,
 			isHere: false,
-			today: getNextDay(getFirstDayTimeStamp(), new Date().getDay())
+			today: getNextDay(getFirstDayTimeStamp(), new Date().getDay()),
+			selectedTab: 'null',
 		};
     }
 
@@ -33,6 +34,11 @@ export class Header extends Component {
         const data = await response.json();
         this.setState({ user: data });
     }
+
+	async handleTabClick(tab) {
+		this.setState({selectedTab: tab});
+
+	}
 
 	/**
 	 * Haal de agenda item van vandaag op om te kijken of de gebruiker aanwezig is.
@@ -126,24 +132,35 @@ export class Header extends Component {
                             className="w-[170px]"
                             src='../static/logo.png'
                             alt="Logo"
+							onClick={() => this.handleTabClick('null')}
                         />
                     </NavLink>
                     <div className="flex-row ml-auto gap-4 hidden sm:flex">
-                            <NavLink tag={Link} className="text-black text-[20px]" to="/agenda">
+                            <NavLink tag={Link} className="text-black text-[20px]" to="/agenda"
+									 onClick={() => this.handleTabClick('null')}
+							>
                                 Agenda
                             </NavLink>
                         {isAdmin === 'true' && (
-                                <><NavLink tag={Link} className="text-black text-[20px]" to="/Voorzieningen">
+                                <><NavLink tag={Link} className="text-black text-[20px]" to="/Voorzieningen"
+										   onClick={() => this.handleTabClick('null')}
+								>
                                     Voorzieningen
                                 </NavLink>
-                                <NavLink tag={Link} className="text-black text-[20px]" to="/AccountsOverview">
+                                <NavLink tag={Link} className="text-black text-[20px]" to="/AccountsOverview"
+										 onClick={() => this.handleTabClick('null')}
+								>
                                     Accounts
                                 </NavLink></>
                         )}
-                            <NavLink tag={Link} className="text-black text-[20px]" to="/Nieuws">
+                            <NavLink tag={Link} className="text-black text-[20px]" to="/Nieuws"
+									 onClick={() => this.handleTabClick('null')}
+							>
                                 Nieuws
                             </NavLink>
-                            <NavLink tag={Link} className="text-black text-[20px]" to="/evenementen">
+                            <NavLink tag={Link} className="text-black text-[20px]" to="/evenementen"
+							onClick={() => this.handleTabClick('null')}
+							>
                                 Evenementen
                             </NavLink>
                     </div>
@@ -172,14 +189,16 @@ export class Header extends Component {
                         <NavLink
                             tag={Link}
                             to="/kamers"
-                            className="bg-[#9E9E9E54] p-1 pl-4 pr-4 font-light text-white"
+                            className={`bg-[#9E9E9E54] p-1 pl-4 pr-4 font-light text-white ${this.state.selectedTab === 'kamers' ? 'bg-[#252525] font-medium' : ''}`}
+							onClick={() => this.handleTabClick('kamers')}
                         >
                             Kamers
                         </NavLink>
                         <NavLink
                             tag={Link}
                             to="/evenementen"
-                            className="bg-[#9E9E9E54] p-1 pl-4 pr-4 font-light text-white"
+                            className={`bg-[#9E9E9E54] p-1 pl-4 pr-4 font-light text-white ${this.state.selectedTab === 'evenementen' ? 'bg-[#252525] font-medium' : ''}`}
+							onClick={() => this.handleTabClick('evenementen')}
                         >
                             Evenementen
                         </NavLink>

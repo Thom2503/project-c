@@ -11,7 +11,9 @@ import {
 import {DatePicker, LocalizationProvider, TimePicker} from "@mui/x-date-pickers";
 import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
 import { getCookie } from '../include/util_functions';
+
 
 export class EventModal extends Component {
   static displayName = EventModal.name;
@@ -27,10 +29,10 @@ export class EventModal extends Component {
       description: "",
       location: "",
       istentative: 0,
-      tentativetime: "null",
-      declinetime: "null",
+      tentativetime: 0,
+      declinetime: 0,
       isexternal: 0,
-      accountsid: getCookie('user'),
+      host: getCookie('user'),
       status: 'dd',
       date: null,
       starttime: null,
@@ -50,32 +52,33 @@ export class EventModal extends Component {
         this.setState({ updateEvent: true });
         this.fetchEventsData(paramID);
       }
-      this.fetchEventsData(paramID);
     }
 }
 
-async fetchEventsData(eventid) {
-  const response = await fetch(`/events/${eventid}`);
-  const eventData = await response.json();
-  console.log(eventData);
-  this.setState({ eventData });
-    fetch(`/events/${eventid}`)
-        .then(response => response.json())
-        .then(data => {
-            this.setState({
-                title: data.Title,
-                description: data.Description,
-                location: data.Location,
-                isexternal: data.IsExternal,
-                date: data.Date,
-                starttime: data.startTime,
-                endtime: data.endTime,
-            });
-        })
-        .catch(error => {
-            console.error('Error:', error);
-        });
-}
+  async fetchEventsData(eventid) {
+    try {
+      const response = await fetch(`/events/${eventid}`);
+      const data = await response.json();
+
+      const formattedDate = dayjs(data.Date).format('DD-MM-YYYY');
+
+      this.setState({
+        eventData: data,
+        title: data.Title,
+        description: data.Description,
+        location: data.Location,
+        isexternal: data.IsExternal,
+        date: formattedDate,
+        starttime: data.startTime,
+        endtime: data.endTime,
+      });
+      console.log(this.state.date + "<----");
+
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  }
+
 
   async getRooms() {
     const response = await fetch('/rooms');
@@ -97,11 +100,23 @@ async fetchEventsData(eventid) {
         this.setState({ [name]: value });
       }
     }
+
+    if(type === "checkbox" && name === "isTentative") {
+      this.setState({ istentative: checked ? 1 : 0 });
+    }
+    if (name === "tentativetime") {
+      this.setState({ tentativetime: value });
+    }
+
+    if(name === "declinetime") {
+      this.setState({ declinetime: parseInt(value) });
+    }
   }
   
 
 
   async handleSubmit(event) {
+    dayjs.extend(utc);
     event.preventDefault();
 
     const title = this.state.title;
@@ -111,24 +126,23 @@ async fetchEventsData(eventid) {
     const tentativetime = this.state.tentativetime;
     const declinetime = this.state.declinetime;
     const isexternal = this.state.isexternal;
-    const accountsid = this.state.accountsid;
+    const host = this.state.host;
     const status = this.state.status;
-    const date = dayjs(this.state.date).format('DD/MM/YYYY');
+    const date = dayjs(this.state.date, 'DD-MM-YYYY').format('YYYY-MM-DD');
+    const unixtime = '00:00';
     const starttime = dayjs(this.state.starttime, 'HH:mm').format('HH:mm');
     const endtime = dayjs(this.state.endtime, 'HH:mm').format('HH:mm');
+    const unixTimestamp = dayjs(`${date} ${unixtime}`).unix();
     
 
     try {
-      console.log(this.state.title);
-      console.log("DEBUG ------ ");
-      console.log(this.state.updateEvent);
-      console.log("DEBUG ------ ");
+      console.log(unixTimestamp);
       if(this.state.updateEvent === true) {
         
         const params = new URLSearchParams(window.location.search);
         const eventid = params.get('eventid');
-        const response = await fetch(`/events/` + parseInt(eventid), {
-          method: 'PUT',
+        const response = await fetch(`/updateevent/` + parseInt(eventid), {
+          method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
@@ -137,23 +151,25 @@ async fetchEventsData(eventid) {
             description: description,
             location: location,
             istentative: 0,
-            tentativetime: 'not set',
-            declinetime: 'not set',
+            tentativetime: 0,
+            declinetime: this.state.declinetime,
             isexternal: isexternal,
-            accountsid: 0,
+            host: getCookie('user'),
             status: 'not set',
             date: date,
             starttime: starttime,
             endtime: endtime,
             eventid: eventid,
+            epochint: unixTimestamp,
+
           }),
         });
         const data = await response.json();
+        console.log(date);
         window.location.replace("evenementen");
   
         if (data.id > 0 || data.success === true) {
           console.log("Done");
-          window.location.replace("evenementen");
         } else {
           // Handle form validation errors or other issues
           console.log(data);
@@ -171,18 +187,19 @@ async fetchEventsData(eventid) {
               description: description,
               location: location,
               istentative: 0,
-              tentativetime: 'not set',
-              declinetime: 'not set',
+              tentativetime: 0,
+              declinetime: this.state.declinetime,
               isexternal: isexternal,
-              accountsid: 0,
+              host: getCookie('user'),
               status: 'not set',
               date: date,
               starttime: starttime,
               endtime: endtime,
+              epochint: unixTimestamp,
           }),
         });
-        window.location.replace("evenementen");
         const data = await response.json();
+        window.location.replace("evenementen");
       }
     } catch (e) {
       console.error("Error: ", e.message);
@@ -213,9 +230,9 @@ async fetchEventsData(eventid) {
                 <LocalizationProvider dateAdapter={AdapterDayjs}
                 >
                   <DatePicker
-                      value={dayjs(this.state.date)}
+                      value={dayjs(this.state.date, 'DD-MM-YYYY')}
                       onChange={(newDate) => this.setState({ date: newDate })}
-                      format="DD/MM/YYYY"
+                      format="DD-MM-YYYY"
                       slotProps={{
                         textField: {
                           error: false,
@@ -262,16 +279,20 @@ async fetchEventsData(eventid) {
                   />
                 </LocalizationProvider>
               </div>
-              <FormControlLabel
-                  control={<Checkbox checked={this.state.showRooms} onChange={this.handleChange} />}
-                  label="Locatie De Loods"
-                  onChange={this.handleChange}
-                  name="showRooms"
-              />
-              {/* <FormControlLabel
-  control={<Checkbox checked={this.state.isexternal === 0} onChange={this.handleChange} name="isexternal" />}
-  label="Is External"
-/> */}
+              <div className={'flex flex-row justify-between'}>
+                <FormControlLabel
+                    control={<Checkbox checked={this.state.showRooms} onChange={this.handleChange} />}
+                    label="Locatie De Loods"
+                    onChange={this.handleChange}
+                    name="showRooms"
+                />
+                <FormControlLabel
+                    control={<Checkbox checked={this.state.istentative} onChange={this.handleChange} />}
+                    label="Is Tentative"
+                    onChange={this.handleChange}
+                    name="isTentative"
+                />
+              </div>
               {this.state.showRooms ? (
                   <FormControl fullWidth>
                     <InputLabel id="demo-simple-select-label">Kamer</InputLabel>
@@ -302,6 +323,34 @@ async fetchEventsData(eventid) {
                       onChange={this.handleChange}
                   />
               )}
+              {this.state.istentative ? (
+                  <>
+                    <TextField
+                        id="outlined-basic"
+                        placeholder="Tijd in uren (bijv. 1)"
+                        label="Tentative Tijd"
+                        variant="outlined"
+                        className={"w-[100%]"}
+                        name="tentativetime"
+                        value={this.state.tentativetime}
+                        onChange={this.handleChange}
+                    />
+                    <small>Hoeveel uur van te voren van het evenement moeten ze bevestigen dat ze er zeker zijn</small>
+                  </>
+                  ) : (
+                      <p className='hidden'></p>
+              )}
+              <TextField
+                  id="outlined-basic"
+                  placeholder="Aantal uren voor het evenement mogen ze wijzigen (bijv. 4)"
+                  label="Decline Tijd"
+                  variant="outlined"
+                  className={"w-[100%]"}
+                  name="declinetime"
+                  value={this.state.declinetime}
+                  onChange={this.handleChange}
+              />
+              <small>Hoeveel uur van te voren van het evenement mogen ze aanmelden / afmelden</small>
             </div>
             <div className={'m-auto w-full flex justify-center'}>
               <button

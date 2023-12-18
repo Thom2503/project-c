@@ -40,7 +40,7 @@ export class Kamers extends Component {
                     {this.state.data.length > 0 ? (
                             this.state.data.map((room, index) => (
 								<div key={index}>
-                        			<div className=" m-auto  sm:mx-[20px] kamerbg max-w-[1200px] w-[95%] h-[150px] p-6 flex flex-col justify-center rounded-xl mt-[25px] border-[2px]"
+                        			<div className=" m-auto  sm:mx-[20px] kamerbg w-[95%] h-[150px] p-6 flex flex-col justify-center rounded-xl mt-[25px] border-[2px]"
 								         onClick={() => this.setSidebarOpen(room.RoomsID, room.isOpen ?? false)}>
                         			    <h3 className="text-[#792F82] font-bold text-[23px]">{room.Name}</h3>
                         			    <span className="text-[#848484]">
