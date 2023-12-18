@@ -38,6 +38,8 @@ export class EventModal extends Component {
       date: null,
       starttime: null,
       endtime: null,
+      requestRating: false,
+      requestFeedback: false,
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -72,8 +74,14 @@ export class EventModal extends Component {
         date: formattedDate,
         starttime: data.startTime,
         endtime: data.endTime,
+        istentative: data.IsTentative,
+        tentativetime: data.TentativeTime,
+        declinetime: data.DeclineTime,
+        requestRating: data.requestRating,
+        requestFeedback: data.requestFeedback,
+
       });
-      console.log(this.state.date + "<----");
+      console.log(this.state.isexternal);
 
     } catch (error) {
       console.error('Error:', error);
@@ -90,9 +98,8 @@ export class EventModal extends Component {
   handleChange(event) {
     const { name, value, type, checked } = event.target;
   
-    if (type === "checkbox" && name === "showRooms") {
+    if (type === "checkbox" && name === "isExternal") {
       // If checkbox for showRooms is checked, update showRooms state
-      this.setState({ showRooms: checked });
       this.setState({ isexternal: checked ? 0 : 1 });
     } else {
       // Set raw time values without formatting
@@ -111,8 +118,16 @@ export class EventModal extends Component {
     }
 
     if(name === "declinetime") {
-      this.setState({ declinetime: parseInt(value) });
+      this.setState({ declinetime: value });
     }
+
+    if(type === "checkbox" && name === "requestRating") {
+      this.setState({ requestRating: checked ? 1 : 0 });
+    }
+    if(type === "checkbox" && name === "requestFeedback") {
+      this.setState({ requestFeedback: checked ? 1 : 0 });
+    }
+
   }
 
 
@@ -134,6 +149,8 @@ export class EventModal extends Component {
     const starttime = dayjs(this.state.starttime, 'HH:mm').format('HH:mm');
     const endtime = dayjs(this.state.endtime, 'HH:mm').format('HH:mm');
     const unixTimestamp = dayjs(`${date} ${unixtime}`).unix();
+    const requestFeedback = this.state.requestFeedback;
+    const requestRating = this.state.requestRating;
 
 
     try {
@@ -151,8 +168,8 @@ export class EventModal extends Component {
             title: title,
             description: description,
             location: location,
-            istentative: 0,
-            tentativetime: 0,
+            istentative: istentative,
+            tentativetime: tentativetime,
             declinetime: this.state.declinetime,
             isexternal: isexternal,
             host: getCookie('user'),
@@ -162,6 +179,8 @@ export class EventModal extends Component {
             endtime: endtime,
             eventid: eventid,
             epochint: unixTimestamp,
+            requestFeedback: requestFeedback,
+            requestRating: requestRating,
 
           }),
         });
@@ -188,7 +207,7 @@ export class EventModal extends Component {
               title: title,
               description: description,
               location: location,
-              istentative: 0,
+              istentative: istentative,
               tentativetime: 0,
               declinetime: this.state.declinetime,
               isexternal: isexternal,
@@ -198,6 +217,8 @@ export class EventModal extends Component {
               starttime: starttime,
               endtime: endtime,
               epochint: unixTimestamp,
+              requestFeedback: requestFeedback,
+              requestRating: requestRating,
           }),
         });
         const data = await response.json();
@@ -281,21 +302,37 @@ export class EventModal extends Component {
                   />
                 </LocalizationProvider>
               </div>
-              <div className={'flex flex-row justify-between'}>
-                <FormControlLabel
-                    control={<Checkbox checked={this.state.showRooms} onChange={this.handleChange} />}
-                    label="Locatie De Loods"
-                    onChange={this.handleChange}
-                    name="showRooms"
-                />
-                <FormControlLabel
-                    control={<Checkbox checked={this.state.istentative} onChange={this.handleChange} />}
-                    label="Is Tentative"
-                    onChange={this.handleChange}
-                    name="isTentative"
-                />
+              <div className={'flex flex-col justify-between'}>
+                <div className='flex flex-row justify-between'>
+                  <FormControlLabel
+                      control={<Checkbox checked={parseInt(this.state.isexternal) === 0} onChange={this.handleChange} />}
+                      label="Locatie De Loods"
+                      onChange={this.handleChange}
+                      name="isExternal"
+                  />
+                  <FormControlLabel
+                      control={<Checkbox checked={parseInt(this.state.istentative) === 1} onChange={this.handleChange} />}
+                      label="Is Tentative"
+                      onChange={this.handleChange}
+                      name="isTentative"
+                  />
+                </div>
+                <div className='flex flex-row justify-between'>
+                  <FormControlLabel
+                      control={<Checkbox checked={parseInt(this.state.requestRating) === 1} onChange={this.handleChange}/>}
+                      label="Rating vragen"
+                      onChange={this.handleChange}
+                      name="requestRating"
+                  />
+                  <FormControlLabel
+                      control={<Checkbox checked={parseInt(this.state.requestFeedback) === 1} onChange={this.handleChange}/>}
+                      label="Feedback vragen"
+                      onChange={this.handleChange}
+                      name="requestFeedback"
+                  />
+                </div>
               </div>
-              {this.state.showRooms ? (
+              {parseInt(this.state.isexternal) === 0 ? (
                   <FormControl fullWidth>
                     <InputLabel id="demo-simple-select-label">Kamer</InputLabel>
                     <Select
@@ -325,34 +362,38 @@ export class EventModal extends Component {
                       onChange={this.handleChange}
                   />
               )}
-              {this.state.istentative ? (
-                  <>
-                    <TextField
-                        id="outlined-basic"
-                        placeholder="Tijd in uren (bijv. 1)"
-                        label="Tentative Tijd"
-                        variant="outlined"
-                        className={"w-[100%]"}
-                        name="tentativetime"
-                        value={this.state.tentativetime}
-                        onChange={this.handleChange}
-                    />
-                    <small>Hoeveel uur van te voren van het evenement moeten ze bevestigen dat ze er zeker zijn</small>
-                  </>
-                  ) : (
-                      <p className='hidden'></p>
-              )}
-              <TextField
-                  id="outlined-basic"
-                  placeholder="Aantal uren voor het evenement mogen ze wijzigen (bijv. 4)"
-                  label="Decline Tijd"
-                  variant="outlined"
-                  className={"w-[100%]"}
-                  name="declinetime"
-                  value={this.state.declinetime}
-                  onChange={this.handleChange}
-              />
-              <small>Hoeveel uur van te voren van het evenement mogen ze aanmelden / afmelden</small>
+              <div className='flex flex-row-reverse gap-2'>
+                {this.state.istentative ? (
+                    <div className='flex flex-col'>
+                      <TextField
+                          id="outlined-basic"
+                          placeholder="Tijd in uren (bijv. 1)"
+                          label="Tentative Tijd"
+                          variant="outlined"
+                          className={"w-[100%]"}
+                          name="tentativetime"
+                          value={this.state.tentativetime}
+                          onChange={this.handleChange}
+                      />
+                      <small>Hoeveel uur van te voren van het evenement moeten ze bevestigen dat ze er zeker zijn</small>
+                    </div>
+                ) : (
+                    <p className='hidden'></p>
+                )}
+         <div className='flex flex-col'>
+           <TextField
+               id="outlined-basic"
+               placeholder="Aantal uren voor het evenement mogen ze wijzigen (bijv. 4)"
+               label="Decline Tijd"
+               variant="outlined"
+               className={"w-[100%]"}
+               name="declinetime"
+               value={this.state.declinetime}
+               onChange={this.handleChange}
+           />
+           <small>Hoeveel uur van te voren van het evenement mogen ze aanmelden / afmelden</small>
+         </div>
+              </div>
             </div>
             <div className={'m-auto w-full flex justify-center'}>
               <button

@@ -7,7 +7,7 @@ import {
     faClock, faThumbsDown, faThumbsUp,
     faUser,
     faXmark,
-    faPaperPlane, faPenToSquare, faTrash, faFileLines, faPeopleGroup, faMessage,
+    faPaperPlane, faPenToSquare, faTrash, faFileLines, faPeopleGroup, faMessage, faCheck,
 } from "@fortawesome/free-solid-svg-icons";
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
@@ -19,6 +19,7 @@ import { Tabs, Tab } from '@mui/material';
 import FetchUserDetails from './FetchUserDetails';
 import FetchCommentDetails from './FetchCommentDetails';
 import '../css/tab.css';
+import FetchTentative from "./FetchTentative";
 
 export class Evenementen extends Component {
     static displayName = Evenementen.name;
@@ -43,6 +44,7 @@ export class Evenementen extends Component {
             // voters: [],
             commentInput: '',
             comments: [],
+            confirmed: 0,
         };
         document.title = "Events";
         this.handleDateChange = this.handleDateChange.bind(this);
@@ -257,6 +259,33 @@ export class Evenementen extends Component {
             } catch (e) {
             }
     }
+    calculateRemainingTime(event) {
+        const eventDateTime = dayjs(`${event.Date} ${event.startTime}`);
+        const currentDateTime = dayjs();
+        const totalRemainingHours = Math.floor(eventDateTime.diff(currentDateTime) / (60 * 60 * 1000));
+
+        if (parseInt(event.DeclineTime) === 0 && totalRemainingHours > 0) {
+           return true;
+        } else if (totalRemainingHours >= parseInt(event.DeclineTime)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    calculateTentativeTime(event) {
+        const eventDateTime = dayjs(`${event.Date} ${event.startTime}`);
+        const currentDateTime = dayjs();
+        const totalRemainingHours = Math.floor(eventDateTime.diff(currentDateTime) / (60 * 60 * 1000));
+        if(totalRemainingHours <= parseInt(event.TentativeTime) && totalRemainingHours > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+
+
 
 
     paginate = (pageNumber) => {
@@ -284,27 +313,6 @@ export class Evenementen extends Component {
         for (let i = 1; i <= Math.ceil(data.length / eventsPerPage); i++) {
             pageNumbers.push(i);
         }
-
-         function calculateRemainingTime(event) {
-             const eventTime = dayjs(event.startTime, 'HH:mm');
-             const currentTime = dayjs();
-             const remainingTime = eventTime.diff(currentTime, 'hours');
-             return remainingTime;
-         }
-
-         function isCancellationAllowed(event) {
-             const remainingTime = calculateRemainingTime(event);
-             console.log(remainingTime);
-
-             if (event.declinetime === 0) {
-                 // If declinetime is 0, users can edit join or leave as long as it's not the same time as the event and same day
-                 return remainingTime > 0;
-             } else {
-                 // If declinetime is not 0, check the remaining time
-                 return remainingTime >= event.declinetime;
-             }
-         }
-
 
         const {selectedTab} = this.state.selectedTab;
         return (
@@ -341,56 +349,64 @@ export class Evenementen extends Component {
                             eventsToDisplay.map((event, index) => (
                                 <div
                                     key={index}
-                                    className={`${dayjs(event.Date).isBefore(dayjs()) ? "opacity-40" : "opacity-100"} sm:mx-[20px] max-w-[1200px] w-[100%] h-[150px] p-4 flex flex-col justify-center rounded-xl border-[2px] duration-300 transition-all hover:bg-[#FEF3FF] hover:border-[#7100a640] hover:cursor-pointer
+                                    className='flex flex-col gap-2'>
+                                    {this.calculateTentativeTime(event) && parseInt(event.IsTentative) === 1 && (
+                                        <FetchTentative eventId={event.EventsID}
+                                                        accountId={this.state.host}/>
+                                    )}
+
+                                    <div
+                                        className={`${dayjs(event.Date).isBefore(dayjs()) ? "opacity-40" : "opacity-100"} sm:mx-[20px] max-w-[1200px] w-[100%] h-[150px] p-4 flex flex-col justify-center rounded-xl border-[2px] duration-300 transition-all hover:bg-[#FEF3FF] hover:border-[#7100a640] hover:cursor-pointer
                                     ${dayjs(event.Date).isSame(dayjs(), 'day') ? '!opacity-100' : ''}
                                     
                                     `}
-                                    onClick={() => {
-                                        this.toggleDrawer(event);
-                                        // this.getVotersInEvent(event.EventsID);
-                                    }}
-                                >
-                                    <div className="">
-                                        <h1 className="text-[#792F82] font-medium text-[23px]">
-                                            {event.Title}
-                                            {event.IsExternal === "0" ? (
-                                                <span
-                                                    className="px-[9px] py-[3px] bg-[#BAFFA1] rounded-[100px] p-1 text-[#02BB15] text-[13px] ml-4">Internal</span>
-                                            ) : (
-                                                <span
-                                                    className="px-[9px] py-[3px] bg-[#FFCEA1] rounded-[100px] p-1 text-[#EE5600] text-[13px] ml-4">External</span>
-                                            )}
-                                        </h1>
-                                        <span className="text-[#848484] text-[14px]">Klik voor meer informatie</span>
-                                    </div>
-                                    <div className="mt-auto flex flex-row gap-8">
-                                        <div className="flex flex-row items-center gap-2">
-                                            <div>
-                                                <FontAwesomeIcon icon={faUser} className="text-[#D8D8D8]"/>
-                                            </div>
-                                            <div className="flex flex-col">
-                                                <span className="text-[#B0B0B0] text-[12px]">Host</span>
-                                                <span className="text-[#5F5F5F] text-[13px] font-bold">Name</span>
-                                            </div>
+                                        onClick={() => {
+                                            this.toggleDrawer(event);
+                                            // this.getVotersInEvent(event.EventsID);
+                                        }}
+                                    >
+                                        <div className="">
+                                            <h1 className="text-[#792F82] font-medium text-[23px]">
+                                                {event.Title}
+                                                {event.IsExternal === "0" ? (
+                                                    <span
+                                                        className="px-[9px] py-[3px] bg-[#BAFFA1] rounded-[100px] p-1 text-[#02BB15] text-[13px] ml-4">Internal</span>
+                                                ) : (
+                                                    <span
+                                                        className="px-[9px] py-[3px] bg-[#FFCEA1] rounded-[100px] p-1 text-[#EE5600] text-[13px] ml-4">External</span>
+                                                )}
+                                            </h1>
+                                            <span className="text-[#848484] text-[14px]">Klik voor meer informatie</span>
                                         </div>
-                                        <div className="flex flex-row items-center gap-2">
-                                            <div>
-                                                <FontAwesomeIcon icon={faCalendar} className="text-[#D8D8D8]"/>
+                                        <div className="mt-auto flex flex-row gap-8">
+                                            <div className="flex flex-row items-center gap-2">
+                                                <div>
+                                                    <FontAwesomeIcon icon={faUser} className="text-[#D8D8D8]"/>
+                                                </div>
+                                                <div className="flex flex-col">
+                                                    <span className="text-[#B0B0B0] text-[12px]">Host</span>
+                                                    <span className="text-[#5F5F5F] text-[13px] font-bold">Name</span>
+                                                </div>
                                             </div>
-                                            <div className="flex flex-col">
-                                                <span className="text-[#B0B0B0] text-[12px]">Time</span>
-                                                <span
-                                                    className="text-[#5F5F5F] text-[13px] font-bold ">{event.startTime} - {event.endTime}</span>
+                                            <div className="flex flex-row items-center gap-2">
+                                                <div>
+                                                    <FontAwesomeIcon icon={faCalendar} className="text-[#D8D8D8]"/>
+                                                </div>
+                                                <div className="flex flex-col">
+                                                    <span className="text-[#B0B0B0] text-[12px]">Time</span>
+                                                    <span
+                                                        className="text-[#5F5F5F] text-[13px] font-bold ">{event.startTime} - {event.endTime}</span>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div className="flex flex-row items-center gap-2">
-                                            <div>
-                                                <FontAwesomeIcon icon={faClock} className="text-[#D8D8D8]"/>
-                                            </div>
-                                            <div className="flex flex-col">
-                                                <span className="text-[#B0B0B0] text-[12px]">Date</span>
-                                                <span
-                                                    className="text-[#5F5F5F] text-[13px] font-bold">{event.Date.split('-').reverse().join('-')}</span>
+                                            <div className="flex flex-row items-center gap-2">
+                                                <div>
+                                                    <FontAwesomeIcon icon={faClock} className="text-[#D8D8D8]"/>
+                                                </div>
+                                                <div className="flex flex-col">
+                                                    <span className="text-[#B0B0B0] text-[12px]">Date</span>
+                                                    <span
+                                                        className="text-[#5F5F5F] text-[13px] font-bold">{event.Date.split('-').reverse().join('-')}</span>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -479,7 +495,11 @@ export class Evenementen extends Component {
                                 />
                                 <Tab
                                     label=<FontAwesomeIcon icon={faMessage} />
-                                    onClick={() => this.getComments(selectedEvent)}
+                                onClick={() => {
+                                    this.getComments(selectedEvent);
+                                 }}
+                                disabled={parseInt(selectedEvent.requestFeedback) === 0}
+
                                     className={
                                         this.state.selectedTab === 2
                                             ? 'active-tab !bg-[#FFFFFF] !rounded-l-[8px] tab-width font-bold'
@@ -499,42 +519,41 @@ export class Evenementen extends Component {
                                     </div>
                                     <div className='buttons flex flex-col gap-2'>
                                         {/*{!dayjs(selectedEvent.Date).isBefore(dayjs()) && ()}*/}
+                                        {this.calculateRemainingTime(selectedEvent) && (
                                             <button
                                                 onClick={() => {
-                                                    if (isCancellationAllowed(selectedEvent)) {
-                                                        if (this.state.deelnemers.includes(parseInt(this.state.host))) {
-                                                            this.handleLeaveEvent(selectedEvent);
-                                                        } else {
-                                                            this.handleJoinEvent(selectedEvent);
-                                                        }
+                                                    if (this.state.deelnemers.includes(parseInt(this.state.host))) {
+                                                        this.handleLeaveEvent(selectedEvent);
                                                     } else {
-                                                        alert("not allowed to change join / leave status");
+                                                        this.handleJoinEvent(selectedEvent);
                                                     }
+
 
                                                 }}
                                                 className='w-full bg-[#792F82] py-3 px-8 rounded-[10px] text-white font-bold text-[20px]'>
-                                                {this.state.deelnemers.includes(parseInt(this.state.host)) ? 'Afzeggen' : 'Aanmelden'}
+                                                        {this.state.deelnemers.includes(parseInt(this.state.host)) ? 'Afzeggen' : 'Aanmelden'}
 
                                             </button>
+                                        )}
 
                                     </div>
 
-                                        <>
-                                            {this.state.deelnemers.includes(parseInt(this.state.host)) && dayjs(selectedEvent.Date).isBefore(dayjs()) && (
-                                                <div className="pb-4">
-                                                    <h1 className='text-[#792F82] font-medium text-[18px] mt-4'>Vond het
-                                                        leuk:</h1>
+                                    <>
+                                        {this.state.deelnemers.includes(parseInt(this.state.host)) && selectedEvent.requestRating === "1" && dayjs(selectedEvent.Date).isBefore(dayjs()) && (
+                                            <div className="pb-4">
+                                                <h1 className='text-[#792F82] font-medium text-[18px] mt-4'>Vond het
+                                                    leuk:</h1>
 
-                                                    <div className='flex flex-col gap-2'>
-                                                        <div className='flex flex-row gap-2'>
-                                                            <button
-                                                                onClick={() => {
-                                                                    this.setState({
-                                                                        votedInt: 1
-                                                                    }, () => {
-                                                                        this.vote(selectedEvent);
-                                                                    });
-                                                                }}
+                                                <div className='flex flex-col gap-2'>
+                                                    <div className='flex flex-row gap-2'>
+                                                        <button
+                                                            onClick={() => {
+                                                                this.setState({
+                                                                    votedInt: 1
+                                                                }, () => {
+                                                                    this.vote(selectedEvent);
+                                                                });
+                                                            }}
                                                                 className='bg-[#09A719BD] w-[50%] h-[40px] text-[25px] rounded-[8px]'>
                                                                 <FontAwesomeIcon className='text-white'
                                                                                  icon={faThumbsUp}/>

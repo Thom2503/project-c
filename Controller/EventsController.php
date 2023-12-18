@@ -26,6 +26,13 @@ class EventsController {
         echo json_encode($this);
     }
 
+    public function updateAccountEvents(): void {
+        $data = json_decode(file_get_contents("php://input"), true);
+        $this->eventsModel->updateAccountEvents($data);
+        header('Content-Type: application/json');
+        echo json_encode($this);
+    }
+
     public function show(int $id): void {
         header('Content-Type: application/json');
         $event = $this->eventsModel->getEventByID($id);
@@ -75,6 +82,18 @@ class EventsController {
         } else {
             http_response_code(404);
             echo json_encode(['error' => 'Voters not found in event room with id ' . $id]);
+        }
+    }
+
+    public function getAccountEvents(int $id): void {
+        header('Content-Type: application/json');
+        $events = $this->eventsModel->getAccountEvents($id);
+        // Add debug output
+        if (count($events) > 0) {
+            echo json_encode($events);
+        } else {
+            http_response_code(404);
+            echo json_encode(['error' => 'Data not found in event room with id ' . $id]);
         }
     }
 

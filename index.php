@@ -81,6 +81,8 @@ $router->post('/eventvote/{integer}', 'EventsController@voteEvent');
 $router->get('/eventcomments/{integer}', 'EventsController@getComments');
 $router->post('/eventcomments/{integer}', 'EventsController@addComment');
 $router->put('/updateevent/{integer}', 'EventsController@update');
+$router->get('/accountevents/{integer}', 'EventsController@getAccountEvents');
+$router->put('/accountevents/{integer}', 'EventsController@updateAccountEvents');
 $router->dispatch(); // Handle the request
 
 ?>

@@ -20,6 +20,14 @@ class Events extends Database {
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
+    public function getAccountEvents(int $id): array {
+        $query = "SELECT account_id, confirmed FROM `AccountEvents` WHERE `event_id` = :eventid";
+        $stmt = $this->db->prepare($query);
+        $stmt->bindParam(":eventid", $id, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
     public function getEventByDate(string $date): array {
         $query = "SELECT * FROM `Events` WHERE `Date` = :date";
         $stmt = $this->db->prepare($query);
@@ -28,7 +36,6 @@ class Events extends Database {
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    // make it switch vote
     public function resetVote(array $data): array {
        
         $selectQuery = "SELECT `hasVoted` FROM `AccountEvents` WHERE `account_id` = :accountid AND `event_id` = :eventid";
@@ -40,14 +47,12 @@ class Events extends Database {
 
         $votedInt = $result['hasVoted'];
 
-        // Execute the update query
         $updateQuery = "UPDATE `AccountEvents` SET `hasVoted` = 0 WHERE `account_id` = :accountid AND `event_id` = :eventid";
         $stmt = $this->db->prepare($updateQuery);
         $stmt->bindParam(":eventid", $data['eventid']);
         $stmt->bindParam(":accountid", $data['accountid']);
         $stmt->execute();
 
-        // Update Events table based on votedInt value
         $eventID = $data['eventid'];
         if ($votedInt == 1) {
             $query = "UPDATE `Events` SET `like` = `like` - 1 WHERE `EventsID` = :eventid";
@@ -59,13 +64,12 @@ class Events extends Database {
         $stmt->bindParam(":eventid", $eventID);
         $stmt->execute();
 
-        return ['status' => 'success']; // Return a status or success message
+        return ['status' => 'success'];
     }
 
 
 
     public function getUsersInEvent(int $eventID): array {
-        // also select the hasVoted column so we can check if the user has voted`
         $query = "SELECT `account_id` FROM `AccountEvents` WHERE `event_id` = :eventid";
 
 
@@ -73,8 +77,7 @@ class Events extends Database {
         $stmt->bindParam(":eventid", $eventID);
         $stmt->execute();
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    
-        // Extract the account IDs from the result and return them as an array of integers.
+
         $accountIds = array_map(function($item) {
             return (int)$item['account_id'];
         }, $result);
@@ -83,7 +86,6 @@ class Events extends Database {
     }
 
     public function getVotersInEvent(int $eventID): array {
-        // also select the hasVoted column so we can check if the user has voted`
         $query = "SELECT `account_id` FROM `AccountEvents` WHERE `event_id` = :eventid AND `hasVoted` != 0";
 
 
@@ -92,7 +94,6 @@ class Events extends Database {
         $stmt->execute();
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        // Extract the account IDs from the result and return them as an array of integers.
         $accountIds = array_map(function($item) {
             return (int)$item['account_id'];
         }, $result);
@@ -104,8 +105,8 @@ class Events extends Database {
         $query = "INSERT INTO `AccountEvents` (`account_id`, `event_id`, `hasVoted`) VALUES (:accountid, :eventid, 0)";
 
         $stmt = $this->db->prepare($query);
-        $stmt->bindParam(":accountid", $accountid); // Use $eventID instead of $data['eventid']
-        $stmt->bindParam(":eventid", $eventid); // Use $eventID instead of $data['eventid']
+        $stmt->bindParam(":accountid", $accountid);
+        $stmt->bindParam(":eventid", $eventid);
         $stmt->execute();
         return $this->db->lastInsertId();
     }
@@ -114,8 +115,8 @@ class Events extends Database {
         $query = "DELETE FROM `AccountEvents` WHERE `account_id` = :accountid AND `event_id` = :eventid";
 
         $stmt = $this->db->prepare($query);
-        $stmt->bindParam(":accountid", $accountid); // Use $eventID instead of $data['eventid']
-        $stmt->bindParam(":eventid", $eventid); // Use $eventID instead of $data['eventid']
+        $stmt->bindParam(":accountid", $accountid);
+        $stmt->bindParam(":eventid", $eventid);
         $stmt->execute();
         return $this->db->lastInsertId();
     }
@@ -133,6 +134,16 @@ class Events extends Database {
         $stmtAccountEvents->bindParam(":id", $id, PDO::PARAM_INT);
         $stmtAccountEvents->execute();
     }
+
+    public function updateAccountEvents(array $data) {
+        $query = "UPDATE `AccountEvents` SET `confirmed` = :confirmed WHERE `account_id` = :accountid AND `event_id` = :eventid";
+        $stmt = $this->db->prepare($query);
+        $stmt->bindParam(":confirmed", $data['confirmed']);
+        $stmt->bindParam(":accountid", $data['accountid']);
+        $stmt->bindParam(":eventid", $data['eventid']);
+        $stmt->execute();
+    }
+
     public function updateEvent(array $data): bool {
 
         $query = "UPDATE `Events` SET 
@@ -148,24 +159,28 @@ class Events extends Database {
         `Date` = :date, 
         `startTime` = :startTime, 
         `endTime` = :endTime,
-        `Timestamp` = :unixTimestamp
+        `Timestamp` = :unixTimestamp,
+        `requestRating` = :requestRating,
+        `requestFeedback` = :requestFeedback
     WHERE `EventsID` = :eventId";
 
         $stmt = $this->db->prepare($query);
-        $stmt->bindParam(":title", $data['title']); // Use 'Title' instead of 'title'
-        $stmt->bindParam(":description", $data['description']); // Use 'Description' instead of 'description'
-        $stmt->bindParam(":location", $data['location']); // Use 'Location' instead of 'location'
-        $stmt->bindParam(":isTentative", $data['istentative']); // Use 'isTentative' instead of 'isTentative'
-        $stmt->bindParam(":tentativeTime", $data['tentativetime']); // Use 'TentativeTime' instead of 'tentativeTime'
-        $stmt->bindParam(":declineTime", $data['declinetime']); // Use 'DeclineTime' instead of 'declineTime'
-        $stmt->bindParam(":isExternal", $data['isexternal']); // Use 'IsExternal' instead of 'isExternal'
-        $stmt->bindParam(":host", $data['host']); // Use 'AccountsId' instead of 'accountsId'
-        $stmt->bindParam(":status", $data['status']); // Use 'Status' instead of 'status'
-        $stmt->bindParam(":date", $data['date']); // Use 'Date' instead of 'date'
-        $stmt->bindParam(":startTime", $data['starttime']); // Use 'Date' instead of 'date'
-        $stmt->bindParam(":endTime", $data['endtime']); // Use 'Date' instead of 'date'
+        $stmt->bindParam(":title", $data['title']);
+        $stmt->bindParam(":description", $data['description']);
+        $stmt->bindParam(":location", $data['location']);
+        $stmt->bindParam(":isTentative", $data['istentative']);
+        $stmt->bindParam(":tentativeTime", $data['tentativetime']);
+        $stmt->bindParam(":declineTime", $data['declinetime']);
+        $stmt->bindParam(":isExternal", $data['isexternal']);
+        $stmt->bindParam(":host", $data['host']);
+        $stmt->bindParam(":status", $data['status']);
+        $stmt->bindParam(":date", $data['date']);
+        $stmt->bindParam(":startTime", $data['starttime']);
+        $stmt->bindParam(":endTime", $data['endtime']);
         $stmt->bindParam(":eventId", $data['eventid']);
         $stmt->bindParam(":unixTimestamp", $data['epochint']);
+                $stmt->bindParam(":requestRating", $data['requestRating']);
+                $stmt->bindParam(":requestFeedback", $data['requestFeedback']);
 
         return $stmt->execute();
 
@@ -176,26 +191,29 @@ class Events extends Database {
         $query = "INSERT INTO `Events` 
           (`Title`, `Description`, `Location`, `IsTentative`, 
            `TentativeTime`, `DeclineTime`, `IsExternal`, `Host`,
-           `Status`, `Date`, `startTime`, `endTime`, `Timestamp`)
+           `Status`, `Date`, `startTime`, `endTime`, `Timestamp`, `requestRating`, `requestFeedback`)
           VALUES 
             (:title, :description, :location, :isTentative, 
              :tentativeTime, :declineTime, :isExternal, :accountsId, 
-             :status, :date, :startTime, :endTime, :unixTimestamp)";
+             :status, :date, :startTime, :endTime, :unixTimestamp, :requestRating, :requestFeedback)";
 
         $stmt = $this->db->prepare($query);
-        $stmt->bindParam(":title", $data['title']); // Use 'Title' instead of 'title'
-        $stmt->bindParam(":description", $data['description']); // Use 'Description' instead of 'description'
-        $stmt->bindParam(":location", $data['location']); // Use 'Location' instead of 'location'
-        $stmt->bindParam(":isTentative", $data['istentative']); // Use 'isTentative' instead of 'isTentative'
-        $stmt->bindParam(":tentativeTime", $data['tentativetime']); // Use 'TentativeTime' instead of 'tentativeTime'
-        $stmt->bindParam(":declineTime", $data['declinetime']); // Use 'DeclineTime' instead of 'declineTime'
-        $stmt->bindParam(":isExternal", $data['isexternal']); // Use 'IsExternal' instead of 'isExternal'
-        $stmt->bindParam(":accountsId", $data['host']); // Use 'AccountsId' instead of 'accountsId'
-        $stmt->bindParam(":status", $data['status']); // Use 'Status' instead of 'status'
-        $stmt->bindParam(":date", $data['date']); // Use 'Date' instead of 'date'
-        $stmt->bindParam(":startTime", $data['starttime']); // Use 'Date' instead of 'date'
-        $stmt->bindParam(":endTime", $data['endtime']); // Use 'Date' instead of 'date'
+        $stmt->bindParam(":title", $data['title']);
+        $stmt->bindParam(":description", $data['description']);
+        $stmt->bindParam(":location", $data['location']);
+        $stmt->bindParam(":isTentative", $data['istentative']);
+        $stmt->bindParam(":tentativeTime", $data['tentativetime']);
+        $stmt->bindParam(":declineTime", $data['declinetime']);
+        $stmt->bindParam(":isExternal", $data['isexternal']);
+        $stmt->bindParam(":accountsId", $data['host']);
+        $stmt->bindParam(":status", $data['status']);
+        $stmt->bindParam(":date", $data['date']);
+        $stmt->bindParam(":startTime", $data['starttime']);
+        $stmt->bindParam(":endTime", $data['endtime']);
         $stmt->bindParam(":unixTimestamp", $data['epochint']);
+        $stmt->bindParam(":requestRating", $data['requestRating']);
+        $stmt->bindParam(":requestFeedback", $data['requestFeedback']);
+
 
 
 
@@ -271,8 +289,6 @@ class Events extends Database {
                 $stmtAccountEvents->execute();
             }
         }
-
-        // Execute the queries
     }
 
 
@@ -289,12 +305,14 @@ class Events extends Database {
         $query = "INSERT INTO `Comments` (`account_id`, `event_id`, `comment`) VALUES (:accountid, :eventid, :comment)";
 
         $stmt = $this->db->prepare($query);
-        $stmt->bindParam(":accountid", $data['accountid']); // Use $eventID instead of $data['eventid']
-        $stmt->bindParam(":eventid", $data['eventid']); // Use $eventID instead of $data['eventid']
-        $stmt->bindParam(":comment", $data['comment']); // Use $eventID instead of $data['eventid']
+        $stmt->bindParam(":accountid", $data['accountid']);
+        $stmt->bindParam(":eventid", $data['eventid']);
+        $stmt->bindParam(":comment", $data['comment']);
         $stmt->execute();
         return $this->db->lastInsertId();
     }
+
+
 
 }
 
