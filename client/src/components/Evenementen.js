@@ -293,6 +293,7 @@ export class Evenementen extends Component {
 
          function isCancellationAllowed(event) {
              const remainingTime = calculateRemainingTime(event);
+             console.log(remainingTime);
 
              if (event.declinetime === 0) {
                  // If declinetime is 0, users can edit join or leave as long as it's not the same time as the event and same day
