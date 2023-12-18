@@ -99,7 +99,7 @@ export class AccountModal extends Component {
     // change url for updating or deleting
     const fetchURL =
       !Number.isNaN(this.state.account) || this.state.deleteAccount === true
-        ? `accounts/${this.state.account}`
+        ? `accounts/${this.state.account}/exists`
         : "accounts";
 
     try {

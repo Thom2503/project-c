@@ -141,7 +141,7 @@ class NotificationController {
 			Templates::News  => "<h2>Iets nieuws is er!<h2>\n".
 			                    "<p>Kijk bij <a href='localhost/nieuws'>het nieuws</a> overzicht voor het nieuwe nieuws bericht.</p>",
 			Templates::ForgotPassword  => "<h2>Wachtwoord reset<h2>\n".
-								"<p>klik de link om je wachtwoord te resetten <a href='localhost/resetwachtwoord'>http://localhost:3000/forgotpassword</a></p>",
+								"<p>klik de link om je wachtwoord te resetten http://localhost:3000/forgotpassword?key=wdnawodaiowdoawdaw&id=8</p>",
 			default => false,
 		};
 		return $htOut;	
