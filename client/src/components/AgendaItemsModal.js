@@ -121,7 +121,7 @@ export class AgendaItemsModal extends Component {
       }
 
       const data = await response.json();
-	  const d = await this.postUserSupplies();
+	    const d = await this.postUserSupplies(data.id);
 
       // Continue with your success handling
       if (data.id > 0 || data.success === true || d.success === true) {
@@ -144,9 +144,14 @@ export class AgendaItemsModal extends Component {
       this.setState({
         title: data.Title,
         note: data.Note,
-        roomID: data.RoomID,
         status: data.Status,
       });
+
+      if (data.RoomID > 0) {
+        this.setState({
+          roomID: data.RoomID,
+        });
+      }
     }
   }
 
@@ -159,7 +164,7 @@ export class AgendaItemsModal extends Component {
 	}
   }
 
-	async postUserSupplies() {
+	async postUserSupplies(id) {
 		const response = await fetch("usersupplies", {
 			method: 'POST',
 			headers: {
@@ -167,7 +172,7 @@ export class AgendaItemsModal extends Component {
 			},
 			body: JSON.stringify({
 				supplies: this.state.userSupplies,
-				itemid: this.state.agenda,
+				itemid: !Number.isNaN(this.state.agenda)? this.state.agenda : id ,
 				date: this.state.date
 			}),
 		});
