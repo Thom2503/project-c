@@ -80,13 +80,23 @@ export class NieuwsDetails extends Component {
         const urlParams = new URLSearchParams(window.location.search);
         const urlId = Number.parseInt(urlParams.get('ID'));
 
-        const response = await fetch(`../news/${urlId}`);
-        const data = await response.json();
+        if (isNaN(urlId) || urlId <= 0) {
+            console.error('Invalid or missing ID');
+            return;
+        }
 
-        this.setState({ data: data });
+        try {
+            const response = await fetch(`../news/${urlId}`);
 
-        this.setState({ filteredData: data, NewsID: urlId });
+            const data = await response.json();
 
+            this.setState({ data: data });
+
+            this.setState({ filteredData: data, NewsID: urlId });
+        }
+        catch (error) {
+            console.error('Error fetching news details:', error);
+        }
     }
 
     handleInputChange = (event) => {
