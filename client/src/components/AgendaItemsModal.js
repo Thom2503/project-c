@@ -296,6 +296,8 @@ export class AgendaItemsModal extends Component {
                         name="usersupplies"
                         className="input-field"
                         isMulti
+                        menuPortalTarget={document.body}
+                        styles={{ menuPortal: base => ({ ...base, zIndex: 9999 }) }}
                         options={selectOptions}
                         onChange={this.handleSupplyChange}
                         value={selectOptions.filter((opt) => userSupplies.includes(opt.value))} />
@@ -396,6 +398,9 @@ export class AgendaItemsModal extends Component {
 			          name="usersupplies"
 			          className="input-field"
 			          isMulti
+			          disabled
+			          menuPortalTarget={document.body}
+			          styles={{ menuPortal: base => ({ ...base, zIndex: 9999 }) }}
 			          options={selectOptions}
 			          onChange={this.handleSupplyChange}
 			          value={selectOptions.filter((opt) => userSupplies.includes(opt.value))} />
