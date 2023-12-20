@@ -70,6 +70,10 @@ export class AgendaRow extends Component {
 				returnArr.push(obj);
 			}
 		}
+		const endOfWeek = getNextDay(this.state.begin, 6);
+		const res = await fetch(`useritems/${this.state.user}/${this.state.begin}/${endOfWeek}`);
+		const d = await res.json().then(res => { return typeof(res.error) == "string" ? false : res; });
+		console.log(d);
 		this.setState({cells: returnArr});
 	}
 
