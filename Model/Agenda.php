@@ -20,10 +20,18 @@ class Agenda extends Database {
 		return $stmt->fetch(PDO::FETCH_ASSOC);
 	}
 
-	public function getAgendaItemByUserID(int $accountsid): array|bool {
-		$query = "SELECT * FROM `AgendaItems` WHERE `AccountsId` = :accountsid";
-		$stmt = $this->db->prepare($query);
-		$stmt->bindParam(":accountsid", $accountsid, PDO::PARAM_STR);
+	public function getAgendaItemByUserID(int $accountsid, ?int $begin = null, ?int $end = null): array|bool {
+		if ((isset($begin) && $begin != null) && (isset($end) && $end != null)) {
+			$query = "SELECT * FROM `AgendaItems` WHERE `AccountsId` = :accountsid AND `Date` BETWEEN :begin AND :end";
+			$stmt = $this->db->prepare($query);
+			$stmt->bindParam(":accountsid", $accountsid, PDO::PARAM_STR);
+			$stmt->bindParam(":begin", $begin, PDO::PARAM_INT);
+			$stmt->bindParam(":end", $end, PDO::PARAM_INT);
+		} else {
+			$query = "SELECT * FROM `AgendaItems` WHERE `AccountsId` = :accountsid";
+			$stmt = $this->db->prepare($query);
+			$stmt->bindParam(":accountsid", $accountsid, PDO::PARAM_STR);
+		}
 		$stmt->execute();
 		return $stmt->fetchAll(PDO::FETCH_ASSOC);
 	}

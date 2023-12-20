@@ -32,7 +32,7 @@ export default function App() {
 
   // als je niet bent ingelog, dus geen user cookie hebt moet je geredirect worden naar de login pagina
   useEffect(() => {
-    if (!getCookie("user") && location.pathname.indexOf("login") === -1) {
+    if (!getCookie("user") && ["/login", "/create"].indexOf(location.pathname) === -1) {
         navigate("/login");
     } else {
         setIsPageLoading(false);

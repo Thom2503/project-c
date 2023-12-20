@@ -32,6 +32,7 @@ $router->delete('/accounts/{integer}', 'AccountsController@destroy');
 $router->get('/agendaitems', 'AgendaController@index');
 $router->get('/agendaitems/{integer}', 'AgendaController@show');
 $router->get('/useritems/{integer}', 'AgendaController@showUser');
+$router->get('/useritems/{integer}/{integer}/{integer}', 'AgendaController@showUserBeginEnd');
 $router->post('/agendaitems', 'AgendaController@store');
 $router->put('/agendaitems/{integer}', 'AgendaController@update');
 $router->delete('/agendaitems/{integer}', 'AgendaController@destroy');

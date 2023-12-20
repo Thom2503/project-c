@@ -20,7 +20,10 @@ export class AgendaRow extends Component {
 	 */
 	async getUserData() {
 		let returnArr = []
-		const response = await fetch(`useritems/${this.state.user}`);
+		// pak de timestamp van het einde van de week, weken beginnen bij 0 vandaar de 6 en niet 7
+		// om de range te bepalen om op te filteren
+		const endOfWeek = getNextDay(this.state.begin, 6);
+		const response = await fetch(`useritems/${this.state.user}/${this.state.begin}/${endOfWeek}`);
 		const data = await response.json().then(res => { return typeof(res.error) == "string" ? false : res; });
 		// als er geen data is gevonden van de gebruiker moet er een standaard lege agenda zijn
 		if (data === false) {
@@ -30,43 +33,17 @@ export class AgendaRow extends Component {
 				returnArr.push(obj);
 			}
 		} else {
-			// de agenda items die uiteindelijk getoont worden
-			let items = [];
-			// om bij te houden dat je maar zeven dagen krijgt
-			let count = 0;
-			for (let item of data) {
-				// stop bij 7 dagen
-				if (count === 6) break;
-				// als de item waar de date hoger is dan de start date dan kan je beginnen met
-				// tellen en toevoegen voor deze week
-				if (Number.parseInt(item.Date) >= this.state.begin) {
-					items.push(item);
-					count++;
-				}
-			}
 			// maak de items van de week door 7 keer te loopen
 			for (let i = 0; i < 7; i++) {
 				// zoek de volgende dag om te vergelijken met de datum die staat in de database
-				let newDateTS = getNextDay(this.state.begin, i);
-				// standaard waardes
-				let status = "";
-				let isOut = false;
-				let id = "";
-				// zoek een item in items, als die er is return dan de eerste item van de lijst zodat die gebruikt
-				// kan worden voor cell data
-				let item = items.filter(it => {
-					return Number.parseInt(it.Date) === newDateTS;
-				})[0];
-				// als er een item is gevonden schrijf dan de standaard data over met de nieuwe data
-				if (item) {
-					// de status is de title
-					status = item.Title;
-					// of je eruit met dus niet in de loods is de status niet "in"
-					isOut = item.Status !== "in";
-					// de id die wordt gebruikt in de href
-					id = item.ID;
-				}
-				let obj = {status: status, isOut: isOut, ts: newDateTS, id: id };
+				const newDateTS = getNextDay(this.state.begin, i);
+				// bepaal de default waardes om in een cel te doen
+				const defaultVals = { Title: "", isOut: false, ID: "" };;
+				// zoek een agenda item op basis van de datum om in de cel te stoppen, als undefined kan je de default
+				// waardes pakken
+				const item = data.find((d) => d.Date == newDateTS) || defaultVals;
+				// maak de object die uiteindelijk in de cel komt te staan
+				const obj = { status: item.Title, isOut: item.Status !== "in" && item.isOut, ts: newDateTS, id: item.ID };
 				returnArr.push(obj);
 			}
 		}
