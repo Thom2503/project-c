@@ -38,12 +38,12 @@ export class AgendaRow extends Component {
 				// zoek de volgende dag om te vergelijken met de datum die staat in de database
 				const newDateTS = getNextDay(this.state.begin, i);
 				// bepaal de default waardes om in een cel te doen
-				const defaultVals = { Title: "", isOut: false, ID: "" };;
+				const defaultVals = { Title: "", isOut: false, Status: "out", ID: "" };;
 				// zoek een agenda item op basis van de datum om in de cel te stoppen, als undefined kan je de default
 				// waardes pakken
 				const item = data.find((d) => d.Date == newDateTS) || defaultVals;
 				// maak de object die uiteindelijk in de cel komt te staan
-				const obj = { status: item.Title, isOut: item.Status !== "in" && item.isOut, ts: newDateTS, id: item.ID };
+				const obj = { status: item.Title, isOut: item.Status !== "in" && item.Title !== "", ts: newDateTS, id: item.ID };
 				returnArr.push(obj);
 			}
 		}
