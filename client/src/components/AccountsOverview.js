@@ -62,7 +62,7 @@ export class AccountsOverview extends Component {
 									</td>
 									<td>{account.FirstName} {account.LastName}</td>
 									<td>{account.Function}</td>
-									<td>{account.IsAdmin === "1" ? "Ja" : "Nee"}</td>
+									<td>{Number.parseInt(account.IsAdmin) === 1 ? "Ja" : "Nee"}</td>
 									<td>{account.Email}</td>
 								</tr>
 							)}

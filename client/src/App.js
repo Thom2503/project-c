@@ -4,11 +4,13 @@ import AppRoutes from "./AppRoutes";
 import Layout from "./components/Layout";
 import "./css/custom.css";
 import { BaseModal } from "./components/BaseModal";
+import { getCookie } from "./include/util_functions";
 
 export default function App() {
   const location = useLocation();
   const ignoredLocations = ["/voorzieningen", "/agenda"];
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isPageLoading, setIsPageLoading] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -28,6 +30,15 @@ export default function App() {
     }
   }, [location.pathname]);
 
+  // als je niet bent ingelog, dus geen user cookie hebt moet je geredirect worden naar de login pagina
+  useEffect(() => {
+    if (!getCookie("user") && ["/login", "/create"].indexOf(location.pathname) === -1) {
+        navigate("/login");
+    } else {
+        setIsPageLoading(false);
+    }
+  }, [location.pathname]);
+
   const closeModal = () => {
     const currentURL = window.location.href;
     const URLWithoutParams = currentURL.split("?")[0];
@@ -43,6 +54,12 @@ export default function App() {
       navigate(`/nieuws/read/${newsId}`);
     }
   };
+
+  // als je niet bent ingelogd moet de pagina aan het "laden" zijn
+  if (isPageLoading === true) {
+    return <div>Loading...</div>
+  }
+
   return (
     <Layout>
       <BaseModal isOpen={isModalOpen} onClose={closeModal}></BaseModal>

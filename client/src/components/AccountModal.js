@@ -146,7 +146,7 @@ export class AccountModal extends Component {
         firstName: data.FirstName,
         lastName: data.LastName,
         compentancy: data.Function,
-        isAdmin: data.IsAdmin === "1",
+        isAdmin: Number.parseInt(data.IsAdmin) === 1,
         email: data.Email,
       });
     }
