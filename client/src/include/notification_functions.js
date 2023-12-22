@@ -82,6 +82,19 @@ export const sendMailNotification = async (userID) => {
 };
 
 /**
+ * data van de key op te halen
+ *
+ * @param {string} keyName - de key die opgehaald moet worden
+ *
+ * @returns {string} - de keycode 
+ */
+export const getKeyCode = async (keyName) => {
+	let response = await fetch(`/keys/${keyName}`);
+	let data = await response.json();
+	return data;
+}
+
+/**
  * Verstuur een mail om je wachtwoord te resetten
  *
  * @param {int} userID - de gebruiker die het mailtje moet ontvangen
@@ -89,13 +102,52 @@ export const sendMailNotification = async (userID) => {
  * @returns
  */
 export const sendForgotPasswordMail = async (userID) => {
+	let data = await getKeyCode("ForgotPassword");
+	let keyLink = `http://localhost:3000/forgotpassword?key=${data}&id=${userID}`;
 	try {
 		const response = await fetch("mailnotification", {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',
 			},
-			body: JSON.stringify({user: userID, template: 3}),
+			body: JSON.stringify({user: userID, template: 3, keyLink: keyLink}),
+		});
+		const data = response.json();
+		if (data.success === true) {
+			console.log("Success de mail is verstuurd naar gebruiker met id: " + userID);
+			return;
+		} else if (data.mailerror.length > 0) {
+			console.log(data.mailerror);
+			// XXX: handle de errors
+			return;
+		} else {
+			console.log(data);
+			// XXX: handle de errors
+			return;
+		}
+	} catch {
+		// XXX: handle de errors
+		return;
+	}
+};
+
+
+/**
+ * Verstuur een mail om je wachtwoord te resetten
+ *
+ * @param {int} userID - de gebruiker die het mailtje moet ontvangen
+ *
+ * @returns
+ */
+export const send2FAMail = async (userID) => {
+	let Key = await getKeyCode("2FA");
+	try {
+		const response = await fetch("mailnotification", {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({user: userID, template: 4, keyLink: Key}),
 		});
 		const data = response.json();
 		if (data.success === true) {

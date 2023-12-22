@@ -1,5 +1,5 @@
 <?php
-define("TEMPLATE_ASSOC", [1 => Templates::Event, 2 => Templates::News, 3 => Templates::ForgotPassword,]);
+define("TEMPLATE_ASSOC", [1 => Templates::Event, 2 => Templates::News, 3 => Templates::ForgotPassword, 4 => Templates::TwoFactor,]);
 define("SEND_MAIL", "socialekalenderteam4@gmail.com");
 define("SEND_PASSWORD", "hgev lxeu iqzg mibp");
 
@@ -16,6 +16,7 @@ abstract class Templates {
 	const Event = 1;
 	const News  = 2;
 	const ForgotPassword = 3;
+	const TwoFactor = 4;
 }
 
 class NotificationController {
@@ -60,6 +61,7 @@ class NotificationController {
 		$data = json_decode(file_get_contents("php://input"), true);
 		$userID = (int)$data['user'];
 		$templateID = (int)$data['template'];
+		$keyLink = (string)$data['keyLink'] ? (string)$data['keyLink'] : null;
 		// check of de template voor komt in de defined array met templates
 		if (!in_array($templateID, array_keys(TEMPLATE_ASSOC))) {
 			$errors['template'] = "Template id not found in TEMPLATE_ASSOC";
@@ -77,6 +79,7 @@ class NotificationController {
 		$htMailOut .= "</body>";
 		$htMailOut .= "<p>Beste ".$userData['FirstName'].",</p>";
 		$htMailOut .= $mailContent;
+		if($keyLink !== null) $htMailOut .= "<p>".$keyLink."</p>";
 		$htMailOut .= "</body>";
 		$htMailOut .= "</html>";
 
@@ -141,7 +144,9 @@ class NotificationController {
 			Templates::News  => "<h2>Iets nieuws is er!<h2>\n".
 			                    "<p>Kijk bij <a href='localhost/nieuws'>het nieuws</a> overzicht voor het nieuwe nieuws bericht.</p>",
 			Templates::ForgotPassword  => "<h2>Wachtwoord reset<h2>\n".
-								"<p>klik de link om je wachtwoord te resetten http://localhost:3000/forgotpassword?key=wdnawodaiowdoawdaw&id=8</p>",
+								"<p>klik de link hieronder om je wachtwoord te resetten:</p>",
+			Templates::TwoFactor  => "<h2>Two factor Authentication<h2>\n".
+								"<p>Vul de code hieronder in op de website</p>",
 			default => false,
 		};
 		return $htOut;	
@@ -159,6 +164,7 @@ class NotificationController {
 			Templates::Event => "Updates over een evenement!",
 			Templates::News  => "Updates over een nieuws artikel",
 			Templates::ForgotPassword  => "Wachtwoord resetten",
+			Templates::TwoFactor  => "Two Factor Authentication",
 			default => false,
 		};
 		return $htOut;

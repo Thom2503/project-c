@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { setCookie } from "../include/util_functions.js";
 import {sendForgotPasswordMail} from "../include/notification_functions";
 
 export class ForgotPassword extends Component {
@@ -11,6 +10,7 @@ export class ForgotPassword extends Component {
 			email: "",
 			submitted: false,
 			keyViaURL: "",
+			keyViaDB: "",
 			accountsid: "",
 			password: "",
             confirmPassword: "",
@@ -30,6 +30,15 @@ export class ForgotPassword extends Component {
 		this.setState({
 			accountsid: accountidParam,
 			keyViaURL: keyParam,
+		});
+		this.getKeyDB();
+	}
+
+	async getKeyDB() {
+		let response = await fetch(`/keys/ForgotPassword`);
+		let data = await response.json();
+		this.setState({
+			keyViaDB : data,
 		});
 	}
 
@@ -155,7 +164,7 @@ export class ForgotPassword extends Component {
 					</form>
 				</div>
 			);
-    	} else if(this.state.submitted === false && this.state.keyViaURL !== null) {
+    	} else if(this.state.submitted === false && this.state.keyViaURL === this.state.keyViaDB && this.state.accountsid !== null) {
 			return (
 				<div>
 					<div className="bg-white text-white p-3">
@@ -196,7 +205,7 @@ export class ForgotPassword extends Component {
 					</form>
 				</div>
 			);
-		} else {
+		} else if (this.state.submitted === true) {
 			return (
 				<div>
 					<div className="bg-white text-white p-3">
@@ -214,6 +223,24 @@ export class ForgotPassword extends Component {
 							<span className='mb-[15px] justify-center items-center flex text-center'>Is de mail na 30 seconden niet verzonden?<br/>Druk hieronder op de knop</span>
 							<input type="submit" onClick={() => this.resendMail()} className="w-[250px] bg-[#792F82] font-bold text-[20px] text-white h-[46px] rounded-[15px] flex justify-center items-center cursor-pointer" value="Verstuur opnieuw" />
 						</div>
+					</div>
+				</div>
+			);
+		} else {
+			return (
+				<div>
+					<div className="bg-white text-white p-3">
+						<img className="w-[170px]"
+							src="../static/logo.png"
+							alt="grote banner logo van cavero"
+						/>
+					</div>
+					<div className="bg-[#792F82] h-[112px] w-100">
+						<span className="text-transparent">Reset wachtwoord</span>
+					</div>
+					<div className="w-[500px] flex m-auto justify-center flex-col items-center">
+					<h1 className="text-[#792F82] text-[40px] font-bold mb-[15px] justify-center items-center flex">Een foute key</h1>
+						<span className='mb-[15px] justify-center items-center flex text-center'>Sorry er is iets fout gegaan met de Key</span>
 					</div>
 				</div>
 			);

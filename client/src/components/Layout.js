@@ -9,7 +9,7 @@ const Layout = ({ children }) => {
 
     // check of de path login is of het maken van een account zodat er bepaald kan worden
 	// welke header getoond moet worden
-	const isLoginOrCreatePage = ['/login', '/create', '/forgotpassword'].includes(location.pathname.toLowerCase());
+	const isLoginOrCreatePage = ['/login', '/create', '/forgotpassword', '/twofactor'].includes(location.pathname.toLowerCase());
 
     return (
         <div>
