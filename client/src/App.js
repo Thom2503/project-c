@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
+import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer } from 'react-toastify';
 import AppRoutes from "./AppRoutes";
 import Layout from "./components/Layout";
 import "./css/custom.css";
@@ -63,6 +65,7 @@ export default function App() {
   return (
     <Layout>
       <BaseModal isOpen={isModalOpen} onClose={closeModal}></BaseModal>
+	  <ToastContainer />
       <Routes>
         {AppRoutes.map((route, index) => {
           const { element, ...rest } = route;
