@@ -6,6 +6,7 @@ import { addNotification } from '../include/notification_functions';
 import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
 import dayjs from "dayjs";
+import { toast } from 'react-toastify';
 
 export class NieuwsDetails extends Component {
     static displayName = NieuwsDetails.name;
@@ -36,7 +37,7 @@ export class NieuwsDetails extends Component {
                 };
                 reader.readAsDataURL(file);
             } else {
-                console.error('Invalid image type. Please upload a JPEG or PNG image.');
+                toast.error("Geen goed formaat foto geupload, moet JPEG of PNG zijn");
             }
         }
     };
@@ -79,9 +80,11 @@ export class NieuwsDetails extends Component {
     async fetchNewsDetails() {
         const urlParams = new URLSearchParams(window.location.search);
         const urlId = Number.parseInt(urlParams.get('ID'));
+		const isAdd = urlParams.get("fromAddNews");
+		if (isAdd === "true") return;
 
         if (isNaN(urlId) || urlId <= 0) {
-            console.error('Invalid or missing ID');
+            toast.error("Geen geldige ID");
             return;
         }
 
@@ -96,6 +99,7 @@ export class NieuwsDetails extends Component {
         }
         catch (error) {
             console.error('Error fetching news details:', error);
+            toast.error("Kan niet de details ophalen");
         }
     }
 
@@ -119,9 +123,7 @@ export class NieuwsDetails extends Component {
         event.preventDefault();
         const { title, description, posttime, image, accountsid, NewsID } = this.state;
         const fetchURL = NewsID ? `/news/${NewsID}` : '/news';
-        console.log(this.state);
         try {
-            console.log("DELETE request to:", fetchURL);
             const formattedPostTime = dayjs(posttime).format('YYYY-MM-DD HH:mm');
             const response = await fetch(fetchURL, {
                 method: this.state.deleteNews === true ? "DELETE" : "POST",
@@ -136,7 +138,6 @@ export class NieuwsDetails extends Component {
                     accountsid
                 }),
             });
-            console.log(this.state.deleteNews);
 
             if (!response.ok) {
                 throw new Error(`HTTP error! Status: ${response.status}`);
@@ -145,14 +146,16 @@ export class NieuwsDetails extends Component {
             const data = await response.json();
 
             if (data.id > 0 || data.success === true) {
-                console.log("Done");
+                toast.success("Nieuws successvol veranderd");
                 await addNotification(2, title);
                 window.location.replace("/Nieuws");
             } else {
                 console.log(data);
+                toast.error("Kan nieuws niet updaten");
             }
         } catch (e) {
             console.error("Error: ", e.message);
+            toast.error("Onverwachtte fout gevonden");
         }
     };
 
@@ -227,22 +230,6 @@ export class NieuwsDetails extends Component {
                                     ))}
                                 </TextField>
                             </div>
-                            {/* <div className="input-field-div" style={{ marginBottom: '2rem' }}>
-                                <p className="static-text">Huidige afbeelding:</p>
-                                <label
-                                    htmlFor="note"
-                                    className="input-field-label"
-                                >
-                                    Afbeelding:
-                                </label>
-                                <input
-                                    type="file"
-                                    id="image"
-                                    name="image"
-                                    className="input-field"
-                                    onChange={this.handleImageChange}
-                                />
-                            </div> */}
                             <input
                                 className="save-button"
                                 type="submit"
@@ -322,22 +309,6 @@ export class NieuwsDetails extends Component {
                                     ))}
                                 </TextField>
                             </div>
-                            {/* <div className="input-field-div" style={{ marginBottom: '2rem' }}>
-                                <p className="static-text">Huidige afbeelding:</p>
-                                <label
-                                    htmlFor="note"
-                                    className="input-field-label"
-                                >
-                                    Afbeelding:
-                                </label>
-                                <input
-                                    type="file"
-                                    id="image"
-                                    name="image"
-                                    className="input-field"
-                                    onChange={this.handleImageChange}
-                                />
-                            </div> */}
                             <div className="input-field-div">
                                 <label htmlFor="deleteNews">Delete: </label>
                                 <input
