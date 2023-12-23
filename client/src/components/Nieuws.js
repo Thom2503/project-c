@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import { useNavigate } from "react-router-dom";
 import { Link } from 'react-router-dom';
 import "../css/nieuws.css";
 import { getCookie } from '../include/util_functions';
+import { toast } from 'react-toastify';
 
 export class Nieuws extends Component {
   static displayName = Nieuws.name;
@@ -15,7 +15,6 @@ export class Nieuws extends Component {
   }
 
   componentDidMount() {
-    console.log("Component did mount");
     this.fetchNewsData();
   }
 
@@ -23,7 +22,6 @@ export class Nieuws extends Component {
     try {
       const response = await fetch("/news");
       const data = await response.json();
-      console.log("Fetched news:", data);
       const updatedData = await Promise.all(
         data.map(async (newsItem) => {
           const accountName = await this.getAccountName(newsItem.AccountsId);
@@ -33,6 +31,7 @@ export class Nieuws extends Component {
       this.setState({ data: updatedData });
     } catch (error) {
       console.error("Error fetching news:", error);
+      toast.error("Er is een onverwachtte fout gevonden.");
     }
 
   }
@@ -44,6 +43,7 @@ export class Nieuws extends Component {
       return `${accountData.FirstName} ${accountData.LastName}`;
     } catch (error) {
       console.error("Error fetching account data:", error);
+      toast.warning("Er zijn geen gebruikers gevonden");
       return "Onbekende gebruiker";
     }
   }
@@ -62,17 +62,9 @@ export class Nieuws extends Component {
     });
   };
 
-  toggleSidebar = () => {
-    console.log("Toggle Sidebar");
-  };
-
-  decodeBase64Image = (base64String) => {
-    return `data:image/png;base64,${base64String}`;
-  };
   render() {
     if (getCookie("isadmin") === "true") {
-      return (
-        <div className="w-[100%] sm:w-[95%] m-auto">
+      return ( <div className="w-[100%] sm:w-[95%] m-auto">
           <h1 className="text-[#848484] mb-4 flex justify-start items-center  ml-2">{this.state.currentDate} </h1>
           <Link
             to={{ pathname: "/nieuws/details", search: "fromAddNews=true" }}

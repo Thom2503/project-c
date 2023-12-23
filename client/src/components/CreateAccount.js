@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { setCookie } from "../include/util_functions.js";
+import { toast } from 'react-toastify';
 
 const functies = [
 	{name: '.NET Developer'},
@@ -88,10 +89,11 @@ export class CreateAccount extends Component {
 				setCookie("isadmin", false, 7);
 				window.location.replace("agenda");
 			} else {
-				console.log("user not created!");
+				toast.error("Account is niet aangemaakt.");
 			}
 		} catch (error) {
 			console.error('Error:', error);
+			toast.error("Er is een onverwachtte fout gevonden.");
 		}
 	}
 

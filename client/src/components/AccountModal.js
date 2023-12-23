@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { toast } from "react-toastify";
 import "../css/modal.css";
 
 const functies = [
@@ -126,14 +127,16 @@ export class AccountModal extends Component {
 
       // Continue with your success handling
       if (data.id > 0 || data.success === true) {
-        console.log("Done");
+        toast.success("Account successvol veranderd");
         this.props.onClose();
       } else {
         // Handle form validation errors or other issues
+        toast.error("Account kon niet veranderd worden");
         console.log(data);
       }
     } catch (e) {
       console.error("Error: ", e.message);
+      toast.error("Er is iets onverwacht fout gegaan");
     }
   };
 
