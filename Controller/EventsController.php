@@ -26,6 +26,18 @@ class EventsController {
         echo json_encode($this);
     }
 
+    public function getConfirmedEvents(): void {
+    
+        header('Content-Type: application/json');
+        $events = $this->eventsModel->getConfirmedEvents();
+        if (count($events) > 0) {
+            echo json_encode($events);
+        } else {
+            http_response_code(404);
+            echo json_encode(['error' => 'There were no events found']);
+        }
+    }
+
     public function updateAccountEvents(): void {
         $data = json_decode(file_get_contents("php://input"), true);
         $this->eventsModel->updateAccountEvents($data);
@@ -64,7 +76,6 @@ class EventsController {
     public function showUsers(int $id): void {
         header('Content-Type: application/json');
         $users = $this->eventsModel->getUsersInEvent($id);
-        // Add debug output
         if (count($users) > 0) {
             echo json_encode($users);
         } else {
@@ -76,7 +87,6 @@ class EventsController {
     public function showVoters(int $id): void {
         header('Content-Type: application/json');
         $users = $this->eventsModel->getVotersInEvent($id);
-        // Add debug output
         if (count($users) > 0) {
             echo json_encode($users);
         } else {
@@ -88,7 +98,7 @@ class EventsController {
     public function getAccountEvents(int $id): void {
         header('Content-Type: application/json');
         $events = $this->eventsModel->getAccountEvents($id);
-        // Add debug output
+
         if (count($events) > 0) {
             echo json_encode($events);
         } else {
@@ -135,13 +145,11 @@ class EventsController {
         if (isset($data['accountid']) && isset($data['eventid'])) {
             $accountid = $data['accountid'];
             $eventid = $data['eventid'];
-
-            // Nu kun je verdergaan met de rest van je logica
             $eventId = $this->eventsModel->unjoinEvent($accountid, $eventid);
             header('Content-Type: application/json');
             echo json_encode(['id' => $eventId]);
         } else {
-            http_response_code(400); // Bad Request
+            http_response_code(400);
             echo json_encode(['error' => 'accountid and eventid are required']);
         }
 
@@ -158,7 +166,6 @@ class EventsController {
         $data = json_decode(file_get_contents("php://input"), true);
         $eventId = $this->eventsModel->returnComments($id);
         header('Content-Type: application/json');
-        // let it return the array of objects where it is account_id and comment
         echo json_encode($eventId);
     }
 

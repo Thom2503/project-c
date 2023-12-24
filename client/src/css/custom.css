@@ -52,8 +52,9 @@ table.agenda {
 table.agenda td {
   border: 2px solid #D7D7D7;
   text-align: center;
-  padding: 0.5em;
   position: inherit;
+	width: 100%;
+	transition: all 0.2s;
 }
 
 table.agenda td a {
@@ -63,11 +64,16 @@ table.agenda td a {
   color: white;
   text-decoration: none;
 }
+.hoverTd {
+	transition: all 0.2s;
+}
 
-table.agenda td:empty:hover {
-	-webkit-box-shadow: inset 0px 0px 0px 10px #792F82;
-	-moz-box-shadow: inset 0px 0px 0px 10px #792F82;
-	box-shadow: inset 0px 0px 0px 10px #792F82;
+.hoverTd:hover {
+	-webkit-box-shadow: inset 0px 0px 0px 5px #792F82;
+	-moz-box-shadow: inset 0px 0px 0px 5px #792F82;
+	box-shadow: inset 0px 0px 0px 5px #792F82;
+	cursor: pointer;
+	transition: all 0.2s;
 }
 
 table.agenda td a:empty::after {
@@ -76,7 +82,6 @@ table.agenda td a:empty::after {
 
 table.agenda th {
   text-align: center;
-  padding: 0.5em;
 }
 
 footer {
@@ -97,7 +102,7 @@ footer {
 	flex-shrink: 0;
 	color: white;
 	float: right;
-	margin-right: 50px;
+	margin-right: 20px;
 	margin-top: 15px;
 	margin-bottom: 15px;
 	text-align: center;
@@ -228,9 +233,9 @@ hr {
 }
 
 #notificationTrayIcon:hover {
-	--webkit-filter: invert(100%);
-	filter: invert(100%);
 	cursor: pointer;
+	color: #f5c7ff;
+	transition: all 0.3s;
 }
 
 .notificationTray {
@@ -278,7 +283,6 @@ hr {
 
     .agenda {
         max-width: 100%;
-        overflow-y: scroll;
     }
 
   table.agenda {
@@ -293,7 +297,6 @@ hr {
   table.agenda td a, table.agenda th a {
     display: block;
     text-align: center;
-    width: 60vw;
   }
 
   table.agenda .fixed {
@@ -322,4 +325,33 @@ hr {
 	0%, 100% { transform: rotate(0); }
 	10%, 30%, 50%, 70%, 90% { transform: rotate(12deg); }
 	20%, 40%, 60%, 80% { transform: rotate(-12deg); }
+}
+
+.table-wrapper {
+	width: 100%;
+	max-width: 100px;
+	overflow-x: auto;
+}
+
+td {
+	padding: 2px;
+	text-align: left;
+	border: 1px solid #ddd;
+	text-align: center;
+	color: white;
+	font-weight: bold;
+	min-width: 100px;
+	max-width: 100px;
+}
+td:first-child {
+	min-width: 150px;
+	max-width: 120px;
+}
+td:last-child {
+	word-break: break-all;
+}
+
+th {
+	color: #8A8A8A;
+	font-weight: lighter;
 }

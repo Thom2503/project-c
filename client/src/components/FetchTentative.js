@@ -28,8 +28,6 @@ class FetchTentative extends React.Component {
                     foundHit: 1,
                 });
             }
-            console.log(this.state.foundHit);
-            console.log(this.state.confirmed);
         } catch (error) {
             console.error('Error fetching account events:', error);
         }
@@ -54,7 +52,6 @@ class FetchTentative extends React.Component {
             }
 
             const data = await response.json();
-            console.log(data);
         } catch (e) {
             console.error('Error updating account events:', e);
         }

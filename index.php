@@ -83,6 +83,7 @@ $router->post('/eventcomments/{integer}', 'EventsController@addComment');
 $router->put('/updateevent/{integer}', 'EventsController@update');
 $router->get('/accountevents/{integer}', 'EventsController@getAccountEvents');
 $router->put('/accountevents/{integer}', 'EventsController@updateAccountEvents');
+$router->get('/confirmed/{integer}', 'EventsController@getConfirmedEvents');
 $router->dispatch(); // Handle the request
 
 ?>

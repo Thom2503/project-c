@@ -19,8 +19,8 @@ import {addNotification} from "../include/notification_functions";
 export class EventModal extends Component {
   static displayName = EventModal.name;
 
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       updateEvent: false,
       showRooms: false,
@@ -134,6 +134,11 @@ export class EventModal extends Component {
   async handleSubmit(event) {
     dayjs.extend(utc);
     event.preventDefault();
+
+    if (this.state.istentative && this.state.tentativetime <= 0) {
+      alert("Tentative time must be greater than 0");
+      return;
+    }
 
     const title = this.state.title;
     const description = this.state.description;

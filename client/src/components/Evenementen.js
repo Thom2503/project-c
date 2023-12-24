@@ -45,6 +45,8 @@ export class Evenementen extends Component {
             commentInput: '',
             comments: [],
             confirmed: 0,
+            confirmedPeople: 0,
+            tentative: 0,
         };
         document.title = "Events";
         this.handleDateChange = this.handleDateChange.bind(this);
@@ -61,7 +63,6 @@ export class Evenementen extends Component {
             const response = await fetch('/eventcomments/' + parseInt(event.EventsID));
             const data = await response.json();
             this.setState({ comments: data }, () => {
-                console.log(this.state.comments);
             });
         } catch (error) {
             console.error(error);
@@ -98,16 +99,13 @@ export class Evenementen extends Component {
 
 
     async getUsersInEvent(evenementid) {
-        console.log('getUsersInEvent is called');
         try {
-            console.log(evenementid);
             const response = await fetch('/eventsusers/' + evenementid);
             if (!response.ok) {
                 throw new Error('No users found for this event');
             }
             const data = await response.json();
             this.setState({ deelnemers: data }, () => {
-                console.log(this.state.deelnemers);
             });
         } catch (error) {
             console.error(error);
@@ -116,7 +114,6 @@ export class Evenementen extends Component {
     }
  // Join event voor als je op de knop aanmelden drukt
     async handleJoinEvent(event) {
-        console.log(event.EventsID); // Add this line
 
         try {
             const response = await fetch('/eventjoin/' + parseInt(event.EventsID), {
@@ -174,27 +171,70 @@ export class Evenementen extends Component {
         }
     }
 
+    async getConfirmedPeople(event) {
+        const response = await fetch('/accountevents/' + parseInt(event.EventsID));
+        const data = await response.json();
+
+        if(data.length != null) {
+            const filteredData = data.filter(entry => parseInt(entry.confirmed) === 1);
+            const int = filteredData.length;
+
+
+        if (data.length > 0) {
+            this.setState(
+                {
+                    confirmedPeople: int,
+                },
+                () => {
+                }
+            );
+        } else {
+            this.setState({
+                confirmedPeople: 0,
+            });
+        }
+        } else {
+            this.setState({
+                confirmedPeople: 0,
+            });
+        }
+    }
+
+
     componentDidMount() {
         this.getEvents();
         this.getRooms();
     }
 
-    async getVotersInEvent(evenementid) {
+    async istenantive(event) {
         try {
-            console.log(evenementid);
-            const response = await fetch('/eventvoters/' + evenementid);
+            const response = await fetch('/events/' + parseInt(event.EventsID));
+
             if (!response.ok) {
-                throw new Error('No voters found for this event');
+                throw new Error('Network response was not ok');
             }
+
             const data = await response.json();
-            this.setState({ voters: data }, () => {
-                console.log(this.state.voters);
-            });
+            console.log('Received data:', data);
+
+            const isTentativeValue = parseInt(data.IsTentative);
+            console.log('Parsed IsTentative value:', isTentativeValue);
+
+            // Update state with the parsed value
+            this.setState(
+                {
+                    tentative: isTentativeValue,
+                },
+                () => {
+                    console.log('Updated state - tentative:', this.state.tentative);
+                }
+            );
+
         } catch (error) {
-            console.error(error);
-            this.setState({ voters: [] });
+            console.error('Error fetching or parsing data:', error);
         }
     }
+
 
     async getEvents() {
         const response = await fetch('events');
@@ -228,7 +268,6 @@ export class Evenementen extends Component {
 
 
             const data = await response.json();
-            console.log(data);
             window.location.replace("evenementen");
             } catch (e) {
             }
@@ -254,7 +293,6 @@ export class Evenementen extends Component {
 
             const data = await response.json();
             window.location.reload();
-            console.log(data);
             // window.location.replace("evenementen");
             } catch (e) {
             }
@@ -294,6 +332,7 @@ export class Evenementen extends Component {
 
     handleTabChange = (event, newValue) => {
         this.setState({selectedTab: newValue});
+        console.log(this.state.istentative);
       };
 
 
@@ -318,14 +357,14 @@ export class Evenementen extends Component {
         return (
             <>
                 <div className='w-[95%] m-auto pb-[80px]'>
-                    <div className="flex flex-row justify-between items-stretch mb-4 items-center">
+                    <div className="flex flex-col sm:flex-row justify-between items-stretch mb-4 items-center">
                         <div className='flex items-center'>
                             <h1 className="text-[#792F82] font-bold text-[25px]">Evenementen</h1>
                         </div>
-                        <div className='items-stretch flex gap-4 flex-row'>
+                        <div className='items-stretch flex gap-4 flex-col sm:flex-row'>
                             {getCookie("isadmin") !== "true" && (
                                 <a href="?modal=5"
-                                   className='h-full text-[23px] gap-2 text-[#8A8A8A] font-normal cursor-pointer flex justify-center items-center'
+                                   className='h-full text-[23px] gap-2 text-[#8A8A8A] font-normal cursor-pointer flex sm:justify-center sm:items-center'
                                 >
                                     Evenement Toevoegen <FontAwesomeIcon icon={faCirclePlus}/>
                                 </a>
@@ -362,7 +401,8 @@ export class Evenementen extends Component {
                                     `}
                                         onClick={() => {
                                             this.toggleDrawer(event);
-                                            // this.getVotersInEvent(event.EventsID);
+                                            this.getConfirmedPeople(event);
+                                            this.istenantive(event);
                                         }}
                                     >
                                         <div className="">
@@ -474,10 +514,10 @@ export class Evenementen extends Component {
                                 className="mt-4 mb-4"
                                 onChange={this.handleTabChange}
                                 aria-label="Event Details"
-                                style={{ display: 'flex', justifyContent: 'space-between' }}
+                                style={{display: 'flex', justifyContent: 'space-between'}}
                             >
                                 <Tab
-                                    label={<FontAwesomeIcon icon={faFileLines} />}
+                                    label={<FontAwesomeIcon icon={faFileLines}/>}
                                     className={
                                         this.state.selectedTab === 0
                                             ? 'active-tab !bg-[#FFFFFF] !rounded-r-[8px] tab-width text-black font-bold'
@@ -485,29 +525,28 @@ export class Evenementen extends Component {
                                     }
                                 />
                                 <Tab
-                                    label=<FontAwesomeIcon icon={faPeopleGroup} />
-                                    onClick={() => this.getUsersInEvent(selectedEvent.EventsID)}
-                                    className={
-                                        this.state.selectedTab === 1
-                                            ? 'active-tab !bg-[#FFFFFF] !rounded-l-[8px] tab-width font-bold'
-                                            : '!bg-[#F6F8FC] !rounded-r-[8px] tab-width'
-                                    }
+                                    label=<FontAwesomeIcon icon={faPeopleGroup}/>
+                                onClick={() => this.getUsersInEvent(selectedEvent.EventsID)}
+                                className={
+                                this.state.selectedTab === 1
+                                    ? 'active-tab !bg-[#FFFFFF] !rounded-l-[8px] tab-width font-bold'
+                                    : '!bg-[#F6F8FC] !rounded-r-[8px] tab-width'
+                            }
                                 />
                                 <Tab
-                                    label=<FontAwesomeIcon icon={faMessage} />
+                                    label=<FontAwesomeIcon icon={faMessage}/>
                                 onClick={() => {
-                                    this.getComments(selectedEvent);
-                                 }}
+                                this.getComments(selectedEvent);
+                            }}
                                 disabled={parseInt(selectedEvent.requestFeedback) === 0}
 
-                                    className={
-                                        this.state.selectedTab === 2
-                                            ? 'active-tab !bg-[#FFFFFF] !rounded-l-[8px] tab-width font-bold'
-                                            : '!bg-[#F6F8FC] !rounded-r-[8px] tab-width'
-                                    }
+                                className={
+                                this.state.selectedTab === 2
+                                    ? 'active-tab !bg-[#FFFFFF] !rounded-l-[8px] tab-width font-bold'
+                                    : '!bg-[#F6F8FC] !rounded-r-[8px] tab-width'
+                            }
                                 />
                             </Tabs>
-
 
 
                             {this.state.selectedTab === 0 && (
@@ -531,7 +570,7 @@ export class Evenementen extends Component {
 
                                                 }}
                                                 className='w-full bg-[#792F82] py-3 px-8 rounded-[10px] text-white font-bold text-[20px]'>
-                                                        {this.state.deelnemers.includes(parseInt(this.state.host)) ? 'Afzeggen' : 'Aanmelden'}
+                                                {this.state.deelnemers.includes(parseInt(this.state.host)) ? 'Afzeggen' : 'Aanmelden'}
 
                                             </button>
                                         )}
@@ -554,49 +593,56 @@ export class Evenementen extends Component {
                                                                     this.vote(selectedEvent);
                                                                 });
                                                             }}
-                                                                className='bg-[#09A719BD] w-[50%] h-[40px] text-[25px] rounded-[8px]'>
-                                                                <FontAwesomeIcon className='text-white'
-                                                                                 icon={faThumbsUp}/>
-                                                            </button>
+                                                            className='bg-[#09A719BD] w-[50%] h-[40px] text-[25px] rounded-[8px]'>
+                                                            <FontAwesomeIcon className='text-white'
+                                                                             icon={faThumbsUp}/>
+                                                        </button>
 
-                                                            <button
-                                                                onClick={() => {
-                                                                    this.setState({
-                                                                        votedInt: 2
-                                                                    }, () => {
-                                                                        this.vote(selectedEvent);
-                                                                        // window.location.reload();
-                                                                    });
-                                                                }}
-                                                                className='bg-[#DB3131] text-white w-[50%] h-[40px] text-[25px] rounded-[8px]'>
-                                                                <FontAwesomeIcon icon={faThumbsDown}/>
-                                                            </button>
-                                                        </div>
-                                                        <div className='w-full justify-between flex-row flex'>
-                                                            <p className='text-[#5F5F5F]'>{selectedEvent.like} Likes</p>
-                                                            <p className='text-[#5F5F5F]'>{selectedEvent.dislike} Likes</p>
-                                                        </div>
+                                                        <button
+                                                            onClick={() => {
+                                                                this.setState({
+                                                                    votedInt: 2
+                                                                }, () => {
+                                                                    this.vote(selectedEvent);
+                                                                    // window.location.reload();
+                                                                });
+                                                            }}
+                                                            className='bg-[#DB3131] text-white w-[50%] h-[40px] text-[25px] rounded-[8px]'>
+                                                            <FontAwesomeIcon icon={faThumbsDown}/>
+                                                        </button>
+                                                    </div>
+                                                    <div className='w-full justify-between flex-row flex'>
+                                                        <p className='text-[#5F5F5F]'>{selectedEvent.like} Likes</p>
+                                                        <p className='text-[#5F5F5F]'>{selectedEvent.dislike} Likes</p>
                                                     </div>
                                                 </div>
-                                            )}
-                                        </>
+                                            </div>
+                                        )}
+                                    </>
                                 </>
                             )}
 
                             {this.state.selectedTab === 1 && (
-                                <div className='grid grid-cols-2 gap-2 max-w-[100%] break-words'>
+                                <div className='flex flex-col justify-between h-full'>
+                                    <div className='grid grid-cols-2 gap-2 max-w-[100%] break-words'>
 
-                                    {this.state.deelnemers && this.state.deelnemers.length > 0 ? (
-                                        this.state.deelnemers.map((user, index) => (
+                                        {this.state.deelnemers && this.state.deelnemers.length > 0 ? (
+                                            this.state.deelnemers.map((user, index) => (
 
-                                            <div key={index} className='flex flex-col'>
-                                                <FetchUserDetails userId={user}/>
-                                            </div>
-                                        ))
-                                    ) : (
-                                        <p>Geen deelnemers in deze kamer</p>
+                                                <div key={index} className='flex flex-col'>
+                                                    <FetchUserDetails userId={user}/>
+                                                </div>
+                                            ))
+                                        ) : (
+                                            <p>Geen deelnemers in deze kamer</p>
+                                        )}
+
+
+                                    </div>
+                                    {parseInt(this.state.tentative) === 1 && (
+                                        <p className='text-[#6f6f6f6b] '>Confirmed
+                                            Deelnemers: {this.state.confirmedPeople}</p>
                                     )}
-
                                 </div>
                             )}
 

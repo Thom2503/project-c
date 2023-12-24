@@ -6,6 +6,8 @@ import { addNotification } from '../include/notification_functions';
 import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
 import dayjs from "dayjs";
+import {faArrowLeft} from "@fortawesome/free-solid-svg-icons";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 
 export class NieuwsDetails extends Component {
     static displayName = NieuwsDetails.name;
@@ -154,7 +156,7 @@ export class NieuwsDetails extends Component {
             if (fromAddNews) {
                 return (
                     <>
-                        <Link to="/Nieuws" className="text-[#848484] mb-4" style={{ marginLeft: '30px' }}>&lt; Terug</Link>
+                        <Link to="/Nieuws" className="text-[#848484] mb-4 hover:bg-[#00000021] transition-all duration-300 border-[#00000021] border-[1px] rounded-[4px] px-4 py-2" style={{ marginLeft: '30px' }}><FontAwesomeIcon icon={faArrowLeft} /> Terug</Link>
                         <form onSubmit={this.handleSubmit} className="max-w-[400px] sm:max-w-[600px] mx-auto" style={{ marginTop: '50px' }}>
                             <div className="input-field-div" style={{ marginBottom: '2rem' }}>
                                 <label
@@ -245,7 +247,7 @@ export class NieuwsDetails extends Component {
             else {
                 return (
                     <>
-                        <Link to="/Nieuws" className="text-[#848484] mb-4" style={{ marginLeft: '30px' }}>&lt; Terug</Link>
+                        <Link to="/Nieuws" className="text-[#848484] hover:bg-[#00000021] transition-all duration-300 mb-4 border-[#00000021] border-[1px] rounded-[4px] px-4 py-2" style={{ marginLeft: '30px' }}><FontAwesomeIcon icon={faArrowLeft} /> Terug</Link>
                         <form onSubmit={this.handleSubmit} className="max-w-[400px] sm:max-w-[600px] mx-auto" style={{ marginTop: '50px' }}>
                             <div className="input-field-div" style={{ marginBottom: '2rem' }}>
                                 <p className="static-text">Huidige titel: {this.state.filteredData?.Title}</p>
@@ -351,7 +353,7 @@ export class NieuwsDetails extends Component {
         else {
             return (
                 <>
-                    <Link to="/Nieuws" className="text-[#848484] mb-4" style={{ marginLeft: '30px' }}>&lt; Terug</Link>
+                    <Link to="/Nieuws" className="text-[#848484] hover:bg-[#00000021] transition-all duration-300 mb-4 border-[#00000021] border-[1px] rounded-[4px] px-4 py-2" style={{ marginLeft: '30px' }}><FontAwesomeIcon icon={faArrowLeft} /> Terug</Link>
                     {this.state.filteredData ? (
                         <div className="custom-centered-container text-center p-4">
                             <div className="max-w-[400px] sm:max-w-[600px] mx-auto">
