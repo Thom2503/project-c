@@ -36,37 +36,6 @@ class Events extends Database {
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    public function resetVote(array $data): array {
-       
-        $selectQuery = "SELECT `hasVoted` FROM `AccountEvents` WHERE `account_id` = :accountid AND `event_id` = :eventid";
-        $stmt = $this->db->prepare($selectQuery);
-        $stmt->bindParam(":accountid", $data['accountid']);
-        $stmt->bindParam(":eventid", $data['eventid']);
-        $stmt->execute();
-        $result = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        $votedInt = $result['hasVoted'];
-
-        $updateQuery = "UPDATE `AccountEvents` SET `hasVoted` = 0 WHERE `account_id` = :accountid AND `event_id` = :eventid";
-        $stmt = $this->db->prepare($updateQuery);
-        $stmt->bindParam(":eventid", $data['eventid']);
-        $stmt->bindParam(":accountid", $data['accountid']);
-        $stmt->execute();
-
-        $eventID = $data['eventid'];
-        if ($votedInt == 1) {
-            $query = "UPDATE `Events` SET `like` = `like` - 1 WHERE `EventsID` = :eventid";
-        } else {
-            $query = "UPDATE `Events` SET `dislike` = `dislike` - 1 WHERE `EventsID` = :eventid";
-        }
-
-        $stmt = $this->db->prepare($query);
-        $stmt->bindParam(":eventid", $eventID);
-        $stmt->execute();
-
-        return ['status' => 'success'];
-    }
-
 
 
     public function getUsersInEvent(int $eventID): array {

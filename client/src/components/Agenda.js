@@ -55,8 +55,8 @@ export class Agenda extends Component {
 	render() {
 		return (
 			<>
-				<div className="overflow-x-auto px-4">
-					<table className='border-collapse w-full'>
+				<div className="tableDiv">
+					<table className='tableCss'>
 						<tbody>
 						<tr>
 							<th>&nbsp;</th>

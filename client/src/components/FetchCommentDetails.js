@@ -2,10 +2,13 @@
 import React from 'react';
 
 class FetchCommentDetails extends React.Component {
-    state = {
-        name: '',
-        lastname: '',
-    };
+    constructor(props) {
+        super(props);
+        this.state = {
+            name: '',
+            lastname: '',
+        };
+    }
 
     async componentDidMount() {
         const response = await fetch('/accounts/' + this.props.userId);

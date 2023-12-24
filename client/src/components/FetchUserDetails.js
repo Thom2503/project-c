@@ -1,12 +1,16 @@
 
 import React from 'react';
+import {getCookie} from "../include/util_functions";
 
 class FetchUserDetails extends React.Component {
-    state = {
-        name: '',
-        function: '',
-        showNameOnly: 'false'
-    };
+    constructor(props) {
+        super(props);
+        this.state = {
+            name: '',
+            function: '',
+            showNameOnly: 'false'
+        };
+    }
 
     async componentDidMount() {
         const response = await fetch('/accounts/' + this.props.userId);

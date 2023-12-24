@@ -132,13 +132,6 @@ class EventsController {
         echo json_encode(['id' => $eventId]);
     }
 
-    public function resetVote(): void {
-        $data = json_decode(file_get_contents("php://input"), true);
-        $eventId = $this->eventsModel->resetVote($data);
-        header('Content-Type: application/json');
-        echo json_encode(['id' => $eventId]);
-    }
-
     public function unjoinEvent(): void {
         $data = json_decode(file_get_contents("php://input"), true);
 

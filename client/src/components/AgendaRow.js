@@ -78,7 +78,7 @@ export class AgendaRow extends Component {
 	render() {
 		return (
 			<tr>
-				<td className={'text-[#8A8A8A] font-medium overflow-x-scroll'}><span>{this.state.name}</span></td>
+				<td className={'accountName'}><span>{this.state.name}</span></td>
 				{this.state.cells.map(cell =>
 					<td className={'hoverTd'} onClick={() => this.onClickHref(cell)} key={cell.ts} style={{backgroundColor: this.getCellColour(cell), cursor: "pointer"}}>
 						{cell.status ?? "&nbsp;"}

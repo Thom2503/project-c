@@ -5,10 +5,13 @@ import {faCheck} from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 
 class FetchTentative extends React.Component {
-    state = {
-        confirmed: 0,
-        foundHit: 0,
-    };
+    constructor(props) {
+        super(props);
+        this.state = {
+            confirmed: 0,
+            foundHit: 0,
+        };
+    }
 
     async componentDidMount() {
         this.fetchAccountEvents();

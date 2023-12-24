@@ -368,3 +368,20 @@ th {
 	color: #8A8A8A;
 	font-weight: lighter;
 }
+
+.accountName {
+	color:#8A8A8A;
+	font-weight: normal;
+	overflow-x: scroll;
+}
+
+.tableCss {
+	border-collapse: collapse;
+	width: 100%;
+}
+
+.tableDiv {
+	overflow-x: auto;
+	padding-right: 16px;
+	padding-left: 16px;
+}
