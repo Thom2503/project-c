@@ -425,7 +425,9 @@ export class Evenementen extends Component {
                                                 </div>
                                                 <div className="flex flex-col">
                                                     <span className="text-[#B0B0B0] text-[12px]">Host</span>
-                                                    <span className="text-[#5F5F5F] text-[13px] font-bold">Name</span>
+                                                    <span className="text-[#5F5F5F] text-[13px] font-bold">
+                                                        <FetchUserDetails userId={event.Host} showNameOnly='true'/>
+                                                    </span>
                                                 </div>
                                             </div>
                                             <div className="flex flex-row items-center gap-2">
@@ -506,7 +508,7 @@ export class Evenementen extends Component {
                                 )}
                             </h1>
                             <div className="mt-4 flex flex-col">
-                                <FetchUserDetails userId={selectedEvent.Host}/>
+                                <FetchUserDetails userId={selectedEvent.Host} showNameOnly='false'/>
                             </div>
 
                             <Tabs
@@ -630,7 +632,7 @@ export class Evenementen extends Component {
                                             this.state.deelnemers.map((user, index) => (
 
                                                 <div key={index} className='flex flex-col'>
-                                                    <FetchUserDetails userId={user}/>
+                                                    <FetchUserDetails userId={user} showNameOnly='false'/>
                                                 </div>
                                             ))
                                         ) : (
