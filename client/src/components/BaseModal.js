@@ -25,9 +25,13 @@ export class BaseModal extends Component {
   }
 
   render() {
-    if (!this.props.isOpen) return null;
+  if (!this.props.isOpen) return null;
 
-    let modalSwitch
+    // Get the eventid from the query parameters
+    const params = new URLSearchParams(window.location.search);
+    const eventid = params.get('eventid');
+
+    let modalSwitch;
     switch (this.state.modalType) {
       case "1":
         modalSwitch = < AgendaItemsModal onClose={this.props.onClose} />
@@ -52,7 +56,6 @@ export class BaseModal extends Component {
         modalSwitch = "The following modal type could not be loaded"
         break;
     }
-
     return (
       <div className="base-modal-container">
         <div className="base-modal-content">

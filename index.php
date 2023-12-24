@@ -73,9 +73,20 @@ $router->delete('/news/{integer}', 'NewsController@destroy');
 
 $router->get('/events', 'EventsController@index');
 $router->post('/events', 'EventsController@store');
-// voor dingen zoals events/1/leave oid
-$router->get('/events/{integer}/{string}', 'EventsController@showUsers');
-
+$router->delete('/eventdelete/{integer}', 'EventsController@destroy');
+$router->get('/events/{integer}', 'EventsController@eventById');
+// $router->put('/events/{integer}', 'EventsController@update');
+$router->get('/eventsusers/{integer}', 'EventsController@showUsers');
+$router->get('/eventvoters/{integer}', 'EventsController@showVoters');
+$router->post('/eventjoin/{integer}', 'EventsController@joinEvent');
+$router->delete('/eventleave/{integer}', 'EventsController@unjoinEvent');
+$router->post('/eventvote/{integer}', 'EventsController@voteEvent');
+$router->get('/eventcomments/{integer}', 'EventsController@getComments');
+$router->post('/eventcomments/{integer}', 'EventsController@addComment');
+$router->put('/updateevent/{integer}', 'EventsController@update');
+$router->get('/accountevents/{integer}', 'EventsController@getAccountEvents');
+$router->put('/accountevents/{integer}', 'EventsController@updateAccountEvents');
+$router->get('/confirmed/{integer}', 'EventsController@getConfirmedEvents');
 $router->dispatch(); // Handle the request
 
 ?>

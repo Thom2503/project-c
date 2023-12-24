@@ -54,33 +54,32 @@ export class Agenda extends Component {
 
 	render() {
 		return (
-			<div className="agenda table-wrapper">
-				<table className='agenda'>
-					<thead>
+			<>
+				<div className="tableDiv">
+					<table className='tableCss'>
+						<tbody>
 						<tr>
-							<th className="fixed">&nbsp;</th>
-							{this.state.weekDays.map((day, index) => 
-								// de <a> tag om {day} is heel hacky maar het zorgt er voor
-								// dat het op mobile er goed uit ziet dus moet het er helaas
-								// staan, het feit dat er geen href in staat is niet erg geeft wel een
-								// warning maar die moet voor nu genegeerd worden
+							<th>&nbsp;</th>
+							{this.state.weekDays.map((day, index) =>
 								<th key={index}>
-									<a style={{color: "#8A8A8A"}}>{day}</a>
+									{day}
 								</th>
 							)}
 						</tr>
-					</thead>
-					<tbody>
+						</tbody>
+						<tbody>
 						{this.state.users.map(user =>
 							<AgendaRow key={user.AccountsID}
-							           name={`${user.FirstName} ${user.LastName}`}
-							           beginTS={getFirstDayTimeStamp()}
-							           user={user.AccountsID} 
+									   name={`${user.FirstName} ${user.LastName}`}
+									   beginTS={getFirstDayTimeStamp()}
+									   user={user.AccountsID}
 							/>
 						)}
-					</tbody>
-				</table>
-			</div>
+						</tbody>
+					</table>
+				</div>
+			</>
 		);
 	}
+
 }

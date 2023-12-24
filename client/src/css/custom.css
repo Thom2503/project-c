@@ -1,7 +1,14 @@
+
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700;800&display=swap');
 
 * {
   font-family: 'Open Sans';
+}
+
+.MuiDrawer-root,
+.MuiDrawer-paper {
+  border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
 }
 
 /* elk kopje van pagina */
@@ -45,8 +52,9 @@ table.agenda {
 table.agenda td {
   border: 2px solid #D7D7D7;
   text-align: center;
-  padding: 0.5em;
   position: inherit;
+	width: 100%;
+	transition: all 0.2s;
 }
 
 table.agenda td a {
@@ -56,11 +64,16 @@ table.agenda td a {
   color: white;
   text-decoration: none;
 }
+.hoverTd {
+	transition: all 0.2s;
+}
 
-table.agenda td:empty:hover {
-	-webkit-box-shadow: inset 0px 0px 0px 10px #792F82;
-	-moz-box-shadow: inset 0px 0px 0px 10px #792F82;
-	box-shadow: inset 0px 0px 0px 10px #792F82;
+.hoverTd:hover {
+	-webkit-box-shadow: inset 0px 0px 0px 5px #792F82;
+	-moz-box-shadow: inset 0px 0px 0px 5px #792F82;
+	box-shadow: inset 0px 0px 0px 5px #792F82;
+	cursor: pointer;
+	transition: all 0.2s;
 }
 
 table.agenda td a:empty::after {
@@ -69,7 +82,6 @@ table.agenda td a:empty::after {
 
 table.agenda th {
   text-align: center;
-  padding: 0.5em;
 }
 
 footer {
@@ -90,7 +102,7 @@ footer {
 	flex-shrink: 0;
 	color: white;
 	float: right;
-	margin-right: 50px;
+	margin-right: 20px;
 	margin-top: 15px;
 	margin-bottom: 15px;
 	text-align: center;
@@ -115,6 +127,38 @@ footer {
     background: linear-gradient(90deg, rgb(254, 243, 255) 50.01%, rgba(255, 217, 253, 0.45) 87.01%), url("../../public/static/kantoor.jpg"), lightgray 50% / cover no-repeat;
     transition: all 0.3s;
     cursor: pointer;
+}
+
+.MuiTabs-root {
+    border: 2px solid #E2E2E2;
+    border-radius: 8px;
+    text-transform: capitalize;
+}
+
+.MuiTab-root {
+    text-transform: capitalize !important;
+}
+
+.MuiTabs-scroller {
+    background: #f6f8fc !important;
+}
+
+.Mui-selected {
+    color: #a200b0 !important;
+}
+/*.MuiTabs-indicator {*/
+/*    display: none !important;*/
+/*}*/
+.MuiTabs-indicator {
+    transition: none;
+    display: none;
+}
+.MuiTabs-scroller {
+    border: none !important;
+}
+
+.Mui-selected {
+    outline: none;
 }
 
 div.kamers.sidebar {
@@ -189,9 +233,9 @@ hr {
 }
 
 #notificationTrayIcon:hover {
-	--webkit-filter: invert(100%);
-	filter: invert(100%);
 	cursor: pointer;
+	color: #f5c7ff;
+	transition: all 0.3s;
 }
 
 .notificationTray {
@@ -237,6 +281,10 @@ hr {
     overflow-x: auto;
   }
 
+    .agenda {
+        max-width: 100%;
+    }
+
   table.agenda {
     width: 100%;
   }
@@ -249,7 +297,6 @@ hr {
   table.agenda td a, table.agenda th a {
     display: block;
     text-align: center;
-    width: 60vw;
   }
 
   table.agenda .fixed {
@@ -278,4 +325,63 @@ hr {
 	0%, 100% { transform: rotate(0); }
 	10%, 30%, 50%, 70%, 90% { transform: rotate(12deg); }
 	20%, 40%, 60%, 80% { transform: rotate(-12deg); }
+}
+
+.table-wrapper {
+	width: 100%;
+	max-width: 100px;
+	overflow-x: auto;
+}
+
+td {
+	padding: 2px;
+	text-align: left;
+	border: 1px solid #ddd;
+	text-align: center;
+	color: white;
+	font-weight: bold;
+	min-width: 100px;
+	max-width: 100px;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+
+@media only screen and (max-width: 900px) {
+	td {
+		min-width: 12.5rem;
+		max-width: 12.5rem;
+		padding: 0.5rem;
+	}
+}
+
+td:first-child {
+	min-width: 10rem;
+	max-width: 10rem;
+}
+td:last-child {
+	word-break: break-all;
+}
+
+th {
+	color: #8A8A8A;
+	font-weight: lighter;
+}
+
+.accountName {
+	color:#8A8A8A;
+	font-weight: normal;
+	overflow-x: scroll;
+}
+
+.tableCss {
+	border-collapse: collapse;
+	width: 100%;
+}
+
+.tableDiv {
+	overflow-x: auto;
+	padding-right: 16px;
+	padding-left: 16px;
 }

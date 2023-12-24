@@ -38,8 +38,6 @@ export class Login extends Component {
 				if (data.verified === true)
                 {
                     send2FAMail(data.AccountsID)
-					//setCookie("user", data.AccountsID, 7);
-					//setCookie("isadmin", Number.parseInt(data.IsAdmin) === 1 ? "true" : "false", 7);
                     window.location.replace(`twofactor?id=${data.AccountsID}`);
 
                 } else {
@@ -68,7 +66,7 @@ export class Login extends Component {
                 </div>
 
                 <form onSubmit={this.handleSubmit}>
-                    <div className="w-[400px] flex m-auto justify-center flex-col h-[45vh] pt-[15vh]">
+                    <div className="px-4 sm:px-0 max-w-full w-[400px] flex m-auto justify-center flex-col h-[45vh] pt-[15vh]">
                         <h1 className="text-[#792F82] text-[40px] font-bold mb-[30px]">Login</h1>
                         <div className="mb-[30px]">
                             <label htmlFor="first_name" className="block mb-2 text-sm font-small text-[#9E9E9E]">Email Address</label>
@@ -80,7 +78,7 @@ export class Login extends Component {
                             <input type="password" value={this.state.password} onChange={this.handleChange} id="first_name" name="password" className="bg-[#FFFFFF] w-[362px] border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" defaultValue="" required/>
 
                         </div>
-                        <div className="w-[362px] text-right">
+                        <div className="max-w-full w-[362px] text-right">
                             <a href='/forgotpassword'>
                                 <span className="text-[#792F82] text-[13px]">Wachtwoord vergeten?</span>    
                             </a>
