@@ -36,6 +36,17 @@ class AgendaController {
 		}
     }
 
+    public function showUserBeginEnd(int $id, int $beginTS, int $endTS): void {
+		header('Content-Type: application/json');
+		$agendaItem = $this->agendaModel->getAgendaItemByUserID($id, $beginTS, $endTS);
+		if ($agendaItem != false && count($agendaItem) > 0) {
+			echo json_encode($agendaItem);
+		} else {
+			http_response_code(404);
+			echo json_encode(['error' => 'agenda item not found']);
+		}
+    }
+
     public function store(): void {
 		$errors = [];
 		$data = json_decode(file_get_contents("php://input"), true);
