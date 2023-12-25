@@ -57,6 +57,16 @@ class Account extends Database {
 		return $stmt->execute();
 	}
 
+	public function updateAccountPassword(int $id, array $data): bool {
+		$query = "UPDATE `Accounts`".
+		         " SET `Password` = :password".
+		         " WHERE `AccountsId` = :sid ";
+		$stmt = $this->db->prepare($query);
+		$stmt->bindParam(":password", $data['secure_pass'], PDO::PARAM_STR);
+		$stmt->bindParam(":sid", $id, PDO::PARAM_INT);
+		return $stmt->execute();
+	}
+
 	public function deleteAccount(int $id): bool {
 		$query = "DELETE FROM `Accounts` WHERE `AccountsID` = :sid";
 		$stmt = $this->db->prepare($query);

@@ -14,7 +14,7 @@ const context = [
     "/mailnotification", "/news", "/usersupplies", "/NieuwsDetails", "/events", "/eventdelete",
     "/eventsusers", "/eventvoters", "/eventjoin", "/eventleave", "/eventvote", "/eventresetvote",
     "/eventcomments", "/updateevent", "/news", "/usersupplies", "/NieuwsDetails", "/events",
-    "/usernotifications", "/room", "/accountevents"
+    "/usernotifications", "/room", "/accountevents", "/keys"
 ];
 
 

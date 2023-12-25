@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { setCookie } from "../include/util_functions.js";
+import {send2FAMail} from "../include/notification_functions";
 
 export class Login extends Component {
     static displayName = Login.name;
@@ -36,9 +37,8 @@ export class Login extends Component {
                 const data = await response.json();
 				if (data.verified === true)
                 {
-					setCookie("user", data.AccountsID, 7);
-					setCookie("isadmin", Number.parseInt(data.IsAdmin) === 1 ? "true" : "false", 7);
-                    window.location.replace('agenda');
+                    send2FAMail(data.AccountsID)
+                    window.location.replace(`twofactor?id=${data.AccountsID}`);
 
                 } else {
                     alert('Account not verified');
@@ -79,7 +79,9 @@ export class Login extends Component {
 
                         </div>
                         <div className="max-w-full w-[362px] text-right">
-                            <a className="text-[#792F82] text-[13px]">Wachtwoord vergeten?</a>
+                            <a href='/forgotpassword'>
+                                <span className="text-[#792F82] text-[13px]">Wachtwoord vergeten?</span>    
+                            </a>
                         </div>
                         <div className="flex justify-center pt-[35px] flex-col items-center">
                             <input type="submit" className="w-[150px] bg-[#792F82] font-bold text-[20px] text-white h-[46px] rounded-[15px] flex justify-center items-center" value="Login" />

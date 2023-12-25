@@ -25,8 +25,8 @@ $router->get('/accounts/{integer}', 'AccountsController@show');
 $router->get('/accounts/{string}', 'AccountsController@showEmail');
 $router->post('/accounts', 'AccountsController@store');
 $router->post('/accounts/{string}', 'AccountsController@verify');
-$router->put('/accounts/{integer}', 'AccountsController@update');
-$router->delete('/accounts/{integer}', 'AccountsController@destroy');
+$router->put('/accounts/{integer}/{string}', 'AccountsController@update');
+$router->delete('/accounts/{integer}/{string}', 'AccountsController@destroy');
 
 /*{ Agenda Routing }*/
 $router->get('/agendaitems', 'AgendaController@index');
@@ -54,6 +54,8 @@ $router->post('/usernotifications', "NotificationController@store");
 $router->put('/usernotifications/{integer}', "NotificationController@update");
 $router->get('/notifications', 'NotificationController@showNotifications');
 $router->post('/notifications', "NotificationController@storeNotification");
+/*{ Key routing }*/
+$router->get('/keys/{string}', 'KeyController@showKeyCode');
 /*{ Rooms }*/
 $router->get('/rooms', 'RoomsController@index');
 $router->get('/room/{integer}', 'RoomsController@show');

@@ -8,6 +8,8 @@ import {CreateAccount} from "./components/CreateAccount";
 import {NieuwsDetails} from "./components/NieuwsDetails";
 import { AccountsOverview } from "./components/AccountsOverview";
 import { Evenementen } from "./components/Evenementen";
+import { ForgotPassword } from "./components/ForgotPassword";
+import { TwoFactor } from "./components/2FA";
 
 
 const AppRoutes = [
@@ -38,6 +40,14 @@ const AppRoutes = [
   {
 	path: '/create',
 	element: <CreateAccount />
+  },
+  {
+    path: '/forgotpassword',
+    element: <ForgotPassword/>
+  },
+  {
+    path: '/twofactor',
+    element: <TwoFactor/>
   },
   {
     path: 'nieuws/details',
