@@ -31,14 +31,18 @@ class KeyController {
 			} else {
 				// new data for the update
 				$updateData = [];
+				// length of the keycode
+				$length = 15;
 
 				// length of keycode depands on the type of validation needed
-				$length = $name == "2FA" ? $length = 6 : $length = 15;
+				if ( $name == "2FA" ) {
+					$length = 6;
+				}
 				$keyCode = $this->generateValidationCode($length);
 
-				$insertData['keyname'] = $name;
-				$insertData['keycode'] = $keyCode;
-				$insertData['keydate'] = $startOfDayTimestamp;
+				$updateData['keyname'] = $name;
+				$updateData['keycode'] = $keyCode;
+				$updateData['keydate'] = $startOfDayTimestamp;
 
 				//check if the result is true
 				$success = $this->keyModel->updateKey($currentKey['KeyID'], $updateData);

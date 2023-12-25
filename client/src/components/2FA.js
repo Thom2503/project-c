@@ -73,6 +73,7 @@ export class TwoFactor extends Component {
 
 	async resendMail() {
 		send2FAMail(this.state.accountsid);
+        window.location.replace(`twofactor?id=${this.state.accountsid}`);
 	}
 
     render() {
@@ -109,9 +110,8 @@ export class TwoFactor extends Component {
                     </div>
                 </form>
                 <div className="flex justify-center flex-col items-center pt-[20px]">
-					<span className='mb-[15px] justify-center items-center flex text-center'>Is de mail na 30 seconden niet verzonden?<br/>Druk hieronder op de knop</span>
-					<input type="submit" onClick={() => this.resendMail()} className="w-[250px] bg-[#792F82] font-bold text-[20px] text-white h-[46px] rounded-[15px] flex justify-center items-center cursor-pointer" value="Mail opnieuw" />
-				</div>
+                    <span className="text-sm font-small text-[#9E9E9E] ">Is de mail na 30 seconden niet verzonden? <span onClick={() => this.resendMail()} className="text-[#792F82] cursor-pointer">Klik hier</span></span>
+                </div>
             </div>
         );
 	}
