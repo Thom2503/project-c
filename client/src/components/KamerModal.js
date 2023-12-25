@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { toast } from "react-toastify";
 import "../css/voorzieningen.css";
 
 export class KamerModal extends Component {
@@ -72,9 +73,11 @@ export class KamerModal extends Component {
         this.props.onClose();
       } else {
         console.log(data);
+        toast.error("Er is iets fout gegaan waardoor er niets veranderd is.");
       }
     } catch (e) {
       console.error("Error: ", e.message);
+      toast.error("Er is een onverwachtte fout gevonden.");
     }
   }
 

@@ -1,3 +1,5 @@
+import { toast } from "react-toastify";
+
 /**
  * Zoek naar een gebruiker of alle gebruikers om te kunnen gebruiken voor het bepalen
  * of hij/zij/zij een mailtje/push notification moeten krijgen.
@@ -9,14 +11,18 @@
  */
 export const getSubscriber = async (all = true, userid = 0) => {
 	let response, data;
-	if (all === false && userid === 0) {
-		response = await fetch("usernotifications");
-		data = await response.json();
-	} else {
-		response = await fetch(`usernotifications/${userid}`);
-		data = await response.json();
+	try {
+		if (all === false && userid === 0) {
+			response = await fetch("usernotifications");
+			data = await response.json();
+		} else {
+			response = await fetch(`usernotifications/${userid}`);
+			data = await response.json();
+		}
+		return data;
+	} catch (err) {
+		toast.error("Er is een onverwacht probleem gevonden.");
 	}
-	return data;
 };
 
 /**
@@ -27,7 +33,7 @@ export const getSubscriber = async (all = true, userid = 0) => {
  * @returns {bool} - of de gebruiker een mailtje wilt
  */
 export const userWantsMail = async (userID) => {
-	let data = await getSubscriber(true, userID);
+	let data = await getSubscriber(true, userID) ?? false;
 	if (data.WantsMail === "1") return true;
 	return false;
 };
@@ -40,7 +46,7 @@ export const userWantsMail = async (userID) => {
  * @returns {bool} - of de gebruiker een push notification wilt
  */
 export const userWantsPushNotification = async (userID) => {
-	let data = await getSubscriber(true, userID);
+	let data = await getSubscriber(true, userID) ?? false;
 	if (data.WantsPush === "1") return true;
 	return false;
 };
@@ -64,19 +70,18 @@ export const sendMailNotification = async (userID) => {
 		});
 		const data = response.json();
 		if (data.success === true) {
-			console.log("Success de mail is verstuurd naar gebruiker met id: " + userID);
+			toast.success("De mail is met success verzonden");
 			return;
 		} else if (data.mailerror.length > 0) {
-			console.log(data.mailerror);
-			// XXX: handle de errors
+			toast.error(data.mailerror);
 			return;
 		} else {
 			console.log(data);
-			// XXX: handle de errors
+			toast.error("Er is iets fout gegaan met het versturen van de mail");
 			return;
 		}
 	} catch {
-		// XXX: handle de errors
+		toast.error("Er is een onverwacht probleem gevonden.");
 		return;
 	}
 };
@@ -191,12 +196,13 @@ export const changeUserSubscription = async (userID, wantsNotification, type = "
 		});
 		const data = response.json();
 		if (data.id > 0 || data.id == null) {
-			console.log("Success!");
+			toast.success("Notificatie successvol veranderd");
 		} else {
-			console.log("Not updated!");
+			toast.error("Notificatie niet veranderd");
 		}
 	} catch(e) {
 		console.error("Error: " + e);
+		toast.error("Er is een onverwacht probleem gevonden");
 	}
 };
 
@@ -256,6 +262,7 @@ export const sendNotification = async (userID, contentType, content = "") => {
 		new Notification(title, options);
 	} catch (error) {
 		console.error("error occured! " , error);
+		toast.error("Er is een probleem met de notificatie gevonden.");
 	}
 };
 
@@ -295,12 +302,13 @@ export const addNotification = async (type, titel) => {
 		});
 		const data = await response.json();
 		if (data.id > 0) {
-			console.log("Success!");
+			toast.success("Notificatie toegevoegd!");
 		} else {
-			console.log("Niet genotified.");
+			toast.error("Notificatie niet toegevoegd.");
 		}
 	} catch (e) {
 		console.error(e);
+		toast.error("Er is een onverwacht probleem gevonden.");
 	}
 };
 
@@ -323,10 +331,11 @@ export const readNotification = async (userid) => {
 		if (data.success === true) {
 			console.log("Success!");
 		} else {
-			console.log("Not updated!");
+			toast.error("Kon de gebruikers notificatie niet veranderen");
 		}
 	} catch(e) {
 		console.error("Error: " + e);
+		toast.error("Er is een onverwacht probleem gevonden.");
 	}
 };
 
@@ -349,9 +358,10 @@ export const hasUserReadNotifications = async (userid) => {
 		if (data.SubscriptionsID > 0) {
 			return data.HasRead === "1";
 		} else {
-			console.log("No subscription found!");
+			toast.error("Kan geen subscription vinden van deze gebruiker");
 		}
 	} catch(e) {
 		console.error("Error: " + e);
+		toast.error("Er is een onverwacht probleem gevonden.");
 	}
 };

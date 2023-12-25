@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import "../css/voorzieningen.css";
+import { toast } from 'react-toastify';
 
 export class SupplyModal extends Component {
   static displayName = SupplyModal.name;
@@ -50,11 +51,6 @@ export class SupplyModal extends Component {
         ? `supplies/${this.state.supply}`
         : "supplies";
 
-    // name en total mogen niet leeg zijn
-    // TODO: form validatie toevoegen voor als het fout gaat
-    if (name.trim() === "") return;
-    if (total <= 0) return;
-
     try {
       const response = await fetch(fetchURL, {
         method: this.state.deleteSupply === true ? "DELETE" : "POST",
@@ -68,11 +64,12 @@ export class SupplyModal extends Component {
       if (data.id > 0 || data.success === true) {
         window.location.replace("voorzieningen");
       } else {
-        // TODO: form validatie toevoegen voor als het fout gaat.
         console.log(data);
+        toast.error("Er was wat fout er is niks veranderd.");
       }
     } catch (e) {
       console.error("Error: ", e.message);
+      toast.error("Er is een onverwachtte fout gevonden.");
     }
   }
 
@@ -80,7 +77,6 @@ export class SupplyModal extends Component {
     try {
       const response = await fetch(`supplies/${supplyID}`);
       const data = await response.json();
-      console.log(data);
 
       if (data)
         this.setState({
@@ -90,6 +86,7 @@ export class SupplyModal extends Component {
         });
     } catch (e) {
       console.error("Error: ", e.message);
+      toast.error("Data van de voorzieningen kan niet gevonden worden.");
     }
   }
 

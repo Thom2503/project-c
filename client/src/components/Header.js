@@ -4,6 +4,7 @@ import { Link, RouterProvider, useLocation } from 'react-router-dom';
 import { getCookie, getFirstDayTimeStamp, getNextDay } from '../include/util_functions';
 import '../css/tailwind.css';
 import {NotificationTray} from './NotificationTray';
+import { toast } from 'react-toastify';
 import {faArrowLeft, faBars, faGear, faXmark} from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import Drawer from "@mui/material/Drawer";
@@ -127,14 +128,16 @@ export class Header extends Component {
 			const data = await response.json();
 			// als er een id is of de data is successvol geupload ga weer naar de agenda
       		if (data.id > 0 || data.success === true) {
-      		  console.log("Done");
+              toast.success("Status successvol gewijzigd.");
 	  		  window.location.replace("agenda");
       		} else {
       		  // Handle form validation errors or other issues
       		  console.log(data);
+              toast.error("Kon de status niet successvol veranderen");
       		}
 		} catch (e) {
       		console.error("Error: ", e.message);
+			toast.error("Er is een onverwachtte fout gevonden.");
 		}
 	}
 

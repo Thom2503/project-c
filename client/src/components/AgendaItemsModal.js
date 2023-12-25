@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { toast } from 'react-toastify';
 import Select from 'react-select';
 import { getCookie } from "../include/util_functions";
 import "../css/modal.css";
@@ -47,7 +48,7 @@ export class AgendaItemsModal extends Component {
       const rooms = await response.json();
       this.setState({ rooms: rooms });
     } catch (error) {
-      console.error("Error fetching rooms:", error);
+      toast.error("Kan de kamers niet inladen, probeer later opnieuw");
     }
 
 	this.getAllSupplies();
@@ -125,14 +126,14 @@ export class AgendaItemsModal extends Component {
 
       // Continue with your success handling
       if (data.id > 0 || data.success === true || d.success === true) {
-        console.log("Done");
+        toast.success("Agenda item successvol veranderd!");
         this.props.onClose();
       } else {
         // Handle form validation errors or other issues
-        console.log(data);
+        toast.warning(data);
       }
     } catch (e) {
-      console.error("Error: ", e.message);
+        toast.error('Verbinding kon niet gemaakt worden');
     }
   };
 
