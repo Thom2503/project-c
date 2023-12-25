@@ -144,8 +144,8 @@ export class CreateAccount extends Component {
                 </div>
 
                 <form onSubmit={this.handleSubmit}>
-                    <div className="w-[400px] flex m-auto justify-center flex-col">
-                        <h1 className="text-[#792F82] text-[40px] font-bold mb-[15px]">Maak een account</h1>
+                    <div className="px-2 py-6 sm:px-0 max-w-full w-[400px] flex m-auto justify-center flex-col">
+                        <h1 className="text-[#792F82] text-[25px] sm:text-[40px] font-bold mb-[15px]">Maak een account</h1>
                         <div className="mb-[15px]">
                             <label htmlFor="first_name" className="block mb-2 text-sm font-small text-[#9E9E9E]">Voornaam</label>
                             <input type="text" value={this.state.firstName} onChange={this.handleChange} id="first_name" name="firstName" className="bg-[#FFFFFF] w-[362px] border border-gray-300 text-black text-sm rounded-lg block w-full p-2.5" defaultValue="" required/>

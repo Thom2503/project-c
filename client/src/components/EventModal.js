@@ -11,6 +11,9 @@ import {
 import {DatePicker, LocalizationProvider, TimePicker} from "@mui/x-date-pickers";
 import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+import { getCookie } from '../include/util_functions';
+
 import {addNotification} from "../include/notification_functions";
 
 export class EventModal extends Component {
@@ -19,6 +22,7 @@ export class EventModal extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      updateEvent: false,
       showRooms: false,
       selectedRoom: "",
       rooms: [],
@@ -26,20 +30,64 @@ export class EventModal extends Component {
       description: "",
       location: "",
       istentative: 0,
-      tentativetime: "null",
-      declinetime: "null",
-      isexternal: 1,
-      accountsid: 1,
+      tentativetime: 0,
+      declinetime: 0,
+      isexternal: 0,
+      host: getCookie('user'),
       status: 'dd',
-      date: "null",
-      starttime: "null",
-      endtime: "null",
+      date: null,
+      starttime: null,
+      endtime: null,
+      requestRating: 0,
+      requestFeedback: 0,
     };
 
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.getRooms();
   }
+
+  componentDidMount() {
+    const params = new URLSearchParams(window.location.search);
+    if (params.size >= 1) {
+      const paramID = params.get("eventid");
+      if (paramID !== null) {
+        this.setState({ updateEvent: true });
+        this.fetchEventsData(paramID);
+      }
+    }
+}
+
+  async fetchEventsData(eventid) {
+    try {
+      const response = await fetch(`/events/${eventid}`);
+      const data = await response.json();
+
+      const formattedDate = dayjs(data.Date).format('DD-MM-YYYY');
+
+      this.setState({
+        eventData: data,
+        title: data.Title,
+        description: data.Description,
+        location: data.Location,
+        isexternal: data.IsExternal,
+        date: formattedDate,
+        starttime: data.startTime,
+        endtime: data.endTime,
+        istentative: data.IsTentative,
+        tentativetime: data.TentativeTime,
+        declinetime: data.DeclineTime,
+        requestRating: data.requestRating,
+        requestFeedback: data.requestFeedback,
+
+      });
+      console.log(this.state.isexternal);
+
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  }
+
 
   async getRooms() {
     const response = await fetch('/rooms');
@@ -50,18 +98,47 @@ export class EventModal extends Component {
   handleChange(event) {
     const { name, value, type, checked } = event.target;
   
-    if (type === "checkbox" && name === "showRooms") {
+    if (type === "checkbox" && name === "isExternal") {
       // If checkbox for showRooms is checked, update showRooms state
-      this.setState({ showRooms: checked });
       this.setState({ isexternal: checked ? 0 : 1 });
-    }  else {
-      this.setState({ [name]: value });
+    } else {
+      // Set raw time values without formatting
+      if (name === "starttime" || name === "endtime") {
+        this.setState({ [name]: value });
+      } else {
+        this.setState({ [name]: value });
+      }
     }
+
+    if(type === "checkbox" && name === "isTentative") {
+      this.setState({ istentative: checked ? 1 : 0 });
+    }
+    if (name === "tentativetime") {
+      this.setState({ tentativetime: value });
+    }
+
+    if(name === "declinetime") {
+      this.setState({ declinetime: value });
+    }
+
+    if(type === "checkbox" && name === "requestRating") {
+      this.setState({ requestRating: checked ? 1 : 0 });
+    }
+    if(type === "checkbox" && name === "requestFeedback") {
+      this.setState({ requestFeedback: checked ? 1 : 0 });
+    }
+
   }
 
 
   async handleSubmit(event) {
+    dayjs.extend(utc);
     event.preventDefault();
+
+    if (this.state.istentative && this.state.tentativetime <= 0) {
+      alert("Tentative time must be greater than 0");
+      return;
+    }
 
     const title = this.state.title;
     const description = this.state.description;
@@ -70,42 +147,87 @@ export class EventModal extends Component {
     const tentativetime = this.state.tentativetime;
     const declinetime = this.state.declinetime;
     const isexternal = this.state.isexternal;
-    const accountsid = this.state.accountsid;
+    const host = this.state.host;
     const status = this.state.status;
-    const date = dayjs(this.state.date).format('DD/MM/YYYY');
-    const starttime = dayjs(this.state.starttime).format('HH:mm');
-    const endtime = dayjs(this.state.endtime).format('HH:mm');
+    const date = dayjs(this.state.date, 'DD-MM-YYYY').format('YYYY-MM-DD');
+    const unixtime = '00:00';
+    const starttime = dayjs(this.state.starttime, 'HH:mm').format('HH:mm');
+    const endtime = dayjs(this.state.endtime, 'HH:mm').format('HH:mm');
+    const unixTimestamp = dayjs(`${date} ${unixtime}`).unix();
+    const requestFeedback = this.state.requestFeedback;
+    const requestRating = this.state.requestRating;
+
 
     try {
-      const response = await fetch('/events', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
+      console.log(unixTimestamp);
+      if(this.state.updateEvent === true) {
+
+        const params = new URLSearchParams(window.location.search);
+        const eventid = params.get('eventid');
+        const response = await fetch(`/updateevent/` + parseInt(eventid), {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
             title: title,
             description: description,
             location: location,
-            istentative: 0,
-            tentativetime: 'not set',
-            declinetime: 'not set',
+            istentative: istentative,
+            tentativetime: tentativetime,
+            declinetime: this.state.declinetime,
             isexternal: isexternal,
-            accountsid: 0,
+            host: getCookie('user'),
             status: 'not set',
             date: date,
             starttime: starttime,
             endtime: endtime,
-        }),
-      });
-      const data = await response.json();
+            eventid: eventid,
+            epochint: unixTimestamp,
+            requestFeedback: requestFeedback,
+            requestRating: requestRating,
 
-      if (data.id > 0 || data.success === true) {
-        console.log("Done");
-		await addNotification(1, title);
+          }),
+        });
+        const data = await response.json();
+        console.log(date);
         window.location.replace("evenementen");
+
+        if (data.id > 0 || data.success === true) {
+          console.log("Done");
+            await addNotification(1, title);
+        } else {
+          // Handle form validation errors or other issues
+          console.log(data);
+        }
+
+
       } else {
-        // Handle form validation errors or other issues
-        console.log(data);
+        const response = await fetch('/events', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+              title: title,
+              description: description,
+              location: location,
+              istentative: istentative,
+              tentativetime: 0,
+              declinetime: this.state.declinetime,
+              isexternal: isexternal,
+              host: getCookie('user'),
+              status: 'not set',
+              date: date,
+              starttime: starttime,
+              endtime: endtime,
+              epochint: unixTimestamp,
+              requestFeedback: requestFeedback,
+              requestRating: requestRating,
+          }),
+        });
+        const data = await response.json();
+        window.location.replace("evenementen");
       }
     } catch (e) {
       console.error("Error: ", e.message);
@@ -136,9 +258,9 @@ export class EventModal extends Component {
                 <LocalizationProvider dateAdapter={AdapterDayjs}
                 >
                   <DatePicker
-                      value={this.state.date}
+                      value={dayjs(this.state.date, 'DD-MM-YYYY')}
                       onChange={(newDate) => this.setState({ date: newDate })}
-                      format="DD/MM/YYYY"
+                      format="DD-MM-YYYY"
                       slotProps={{
                         textField: {
                           error: false,
@@ -162,7 +284,7 @@ export class EventModal extends Component {
                     dateAdapter={AdapterDayjs}>
                   <TimePicker
                       ampm={false} label="Start Tijd"
-                      value={this.state.starttime}
+                      value={dayjs(this.state.starttime, 'HH:mm')}
                       onChange={(startTime) => this.setState({ starttime: startTime })}
                       slotProps={{
                         textField: {
@@ -175,7 +297,7 @@ export class EventModal extends Component {
                     dateAdapter={AdapterDayjs}>
                   <TimePicker
                       ampm={false} label="Eind Tijd"
-                      value={this.state.endtime}
+                      value={dayjs(this.state.endtime, 'HH:mm')}
                       onChange={(endTime) => this.setState({ endtime: endTime })}
                       slotProps={{
                         textField: {
@@ -185,17 +307,37 @@ export class EventModal extends Component {
                   />
                 </LocalizationProvider>
               </div>
-              <FormControlLabel
-                  control={<Checkbox checked={this.state.showRooms} onChange={this.handleChange} />}
-                  label="Locatie De Loods"
-                  onChange={this.handleChange}
-                  name="showRooms"
-              />
-              {/* <FormControlLabel
-  control={<Checkbox checked={this.state.isexternal === 0} onChange={this.handleChange} name="isexternal" />}
-  label="Is External"
-/> */}
-              {this.state.showRooms ? (
+              <div className={'flex flex-col justify-between'}>
+                <div className='flex flex-row justify-between'>
+                  <FormControlLabel
+                      control={<Checkbox checked={parseInt(this.state.isexternal) === 0} onChange={this.handleChange} />}
+                      label="Locatie De Loods"
+                      onChange={this.handleChange}
+                      name="isExternal"
+                  />
+                  <FormControlLabel
+                      control={<Checkbox checked={parseInt(this.state.istentative) === 1} onChange={this.handleChange} />}
+                      label="Is Tentative"
+                      onChange={this.handleChange}
+                      name="isTentative"
+                  />
+                </div>
+                <div className='flex flex-row justify-between'>
+                  <FormControlLabel
+                      control={<Checkbox checked={parseInt(this.state.requestRating) === 1} onChange={this.handleChange}/>}
+                      label="Rating vragen"
+                      onChange={this.handleChange}
+                      name="requestRating"
+                  />
+                  <FormControlLabel
+                      control={<Checkbox checked={parseInt(this.state.requestFeedback) === 1} onChange={this.handleChange}/>}
+                      label="Feedback vragen"
+                      onChange={this.handleChange}
+                      name="requestFeedback"
+                  />
+                </div>
+              </div>
+              {parseInt(this.state.isexternal) === 0 ? (
                   <FormControl fullWidth>
                     <InputLabel id="demo-simple-select-label">Kamer</InputLabel>
                     <Select
@@ -225,6 +367,38 @@ export class EventModal extends Component {
                       onChange={this.handleChange}
                   />
               )}
+              <div className='flex flex-row-reverse gap-2'>
+                {this.state.istentative ? (
+                    <div className='flex flex-col'>
+                      <TextField
+                          id="outlined-basic"
+                          placeholder="Tijd in uren (bijv. 1)"
+                          label="Tentative Tijd"
+                          variant="outlined"
+                          className={"w-[100%]"}
+                          name="tentativetime"
+                          value={this.state.tentativetime}
+                          onChange={this.handleChange}
+                      />
+                      <small>Hoeveel uur van te voren van het evenement moeten ze bevestigen dat ze er zeker zijn</small>
+                    </div>
+                ) : (
+                    <p className='hidden'></p>
+                )}
+         <div className='flex flex-col'>
+           <TextField
+               id="outlined-basic"
+               placeholder="Aantal uren voor het evenement mogen ze wijzigen (bijv. 4)"
+               label="Decline Tijd"
+               variant="outlined"
+               className={"w-[100%]"}
+               name="declinetime"
+               value={this.state.declinetime}
+               onChange={this.handleChange}
+           />
+           <small>Hoeveel uur van te voren van het evenement mogen ze aanmelden / afmelden</small>
+         </div>
+              </div>
             </div>
             <div className={'m-auto w-full flex justify-center'}>
               <button

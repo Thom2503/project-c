@@ -78,9 +78,9 @@ export class AgendaRow extends Component {
 	render() {
 		return (
 			<tr>
-				<td className="fixed">{this.state.name}</td>
+				<td className={'accountName'}><span>{this.state.name}</span></td>
 				{this.state.cells.map(cell =>
-					<td onClick={() => this.onClickHref(cell)} key={cell.ts} style={{backgroundColor: this.getCellColour(cell), cursor: "pointer"}}>
+					<td className={'hoverTd'} onClick={() => this.onClickHref(cell)} key={cell.ts} style={{backgroundColor: this.getCellColour(cell), cursor: "pointer"}}>
 						{cell.status ?? "&nbsp;"}
 					</td>
 				)}

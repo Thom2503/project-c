@@ -68,7 +68,7 @@ export class NotificationTray extends Component {
 					                 onClick={() => this.openTray()}
 					/>
 				</span>
-				<div ref={this.wrapperRef} className='notificationTrayContent' style={{display: display}}>
+				<div ref={this.wrapperRef} className='notificationTrayContent !min-w-[8em] sm:min-w-[12em]' style={{display: display}}>
 					<h4>Notificaties</h4>
 					<hr />
 					<h4>Notificatie Opties</h4>
