@@ -7,8 +7,8 @@ import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
 import dayjs from "dayjs";
 import { toast } from 'react-toastify';
-import {faArrowLeft} from "@fortawesome/free-solid-svg-icons";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export class NieuwsDetails extends Component {
     static displayName = NieuwsDetails.name;
@@ -82,8 +82,8 @@ export class NieuwsDetails extends Component {
     async fetchNewsDetails() {
         const urlParams = new URLSearchParams(window.location.search);
         const urlId = Number.parseInt(urlParams.get('ID'));
-		const isAdd = urlParams.get("fromAddNews");
-		if (isAdd === "true") return;
+        const isAdd = urlParams.get("fromAddNews");
+        if (isAdd === "true") return;
 
         if (isNaN(urlId) || urlId <= 0) {
             toast.error("Geen geldige ID");
