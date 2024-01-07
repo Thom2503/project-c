@@ -50,7 +50,7 @@ const AppRoutes = [
     element: <TwoFactor />
   },
   {
-    path: 'nieuwsDetails',
+    path: 'Artikel',
     element: <NieuwsDetails />
   },
   {

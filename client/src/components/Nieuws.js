@@ -67,7 +67,7 @@ export class Nieuws extends Component {
       return (<div className="w-[100%] sm:w-[95%] m-auto">
         <h1 className="text-[#848484] mb-4 flex justify-start items-center  ml-2">{this.state.currentDate} </h1>
         <Link
-          to={{ pathname: "/nieuwsDetails", search: "fromAddNews=true" }}
+          to={{ pathname: "/Artikel", search: "fromAddNews=true" }}
           className="h-full text-[17px] gap-2 text-[#792F82] font-normal cursor-pointer flex justify-start items-center  ml-2"
           onClick={this.toggleSidebar}
         >
@@ -87,7 +87,7 @@ export class Nieuws extends Component {
                   backgroundSize: 'cover',
                 }}
                 onClick={() =>
-                  this.routechange(`nieuwsDetails?ID=${newsItem.NewsID}`)
+                  this.routechange(`Artikel?ID=${newsItem.NewsID}`)
                 }
               >
                 <p className="text-[#792F82] mt-2 text-right">Gemaakt door: {newsItem.accountName}</p>
@@ -123,7 +123,7 @@ export class Nieuws extends Component {
                     backgroundSize: 'cover',
                   }}
                   onClick={() =>
-                    this.routechange(`nieuwsDetails?ID=${newsItem.NewsID}`)
+                    this.routechange(`Artikel?ID=${newsItem.NewsID}`)
                   }
                 >
                   <p className="text-[#792F82] mt-2 text-right">Gemaakt door: {newsItem.accountName}</p>
