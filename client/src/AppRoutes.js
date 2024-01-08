@@ -2,10 +2,10 @@ import { Home } from "./components/Home";
 import { Login } from "./components/Login";
 import { Agenda } from "./components/Agenda";
 import { Kamers } from "./components/Kamers";
-import {Supplies} from "./components/Supplies";
+import { Supplies } from "./components/Supplies";
 import { Nieuws } from './components/Nieuws'
-import {CreateAccount} from "./components/CreateAccount";
-import {NieuwsDetails} from "./components/NieuwsDetails";
+import { CreateAccount } from "./components/CreateAccount";
+import { NieuwsDetails } from "./components/NieuwsDetails";
 import { AccountsOverview } from "./components/AccountsOverview";
 import { Evenementen } from "./components/Evenementen";
 import { ForgotPassword } from "./components/ForgotPassword";
@@ -38,19 +38,19 @@ const AppRoutes = [
     element: <Nieuws />
   },
   {
-	path: '/create',
-	element: <CreateAccount />
+    path: '/create',
+    element: <CreateAccount />
   },
   {
     path: '/forgotpassword',
-    element: <ForgotPassword/>
+    element: <ForgotPassword />
   },
   {
     path: '/twofactor',
-    element: <TwoFactor/>
+    element: <TwoFactor />
   },
   {
-    path: 'nieuws/details',
+    path: 'Artikel',
     element: <NieuwsDetails />
   },
   {
