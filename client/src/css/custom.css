@@ -372,7 +372,7 @@ th {
 .accountName {
 	color:#8A8A8A;
 	font-weight: normal;
-	overflow-x: scroll;
+	overflow-x: auto;
 }
 
 .tableCss {

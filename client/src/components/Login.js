@@ -78,13 +78,13 @@ export class Login extends Component {
                             <input type="password" value={this.state.password} onChange={this.handleChange} id="first_name" name="password" className="bg-[#FFFFFF] w-[362px] border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" defaultValue="" required/>
 
                         </div>
-                        <div className="max-w-full w-[362px] text-right">
+                        <div className="max-w-full w-full text-right">
                             <a href='/forgotpassword'>
                                 <span className="text-[#792F82] text-[13px]">Wachtwoord vergeten?</span>    
                             </a>
                         </div>
                         <div className="flex justify-center pt-[35px] flex-col items-center">
-                            <input type="submit" className="w-[150px] bg-[#792F82] font-bold text-[20px] text-white h-[46px] rounded-[15px] flex justify-center items-center" value="Login" />
+                            <input type="submit" className="w-[150px] bg-[#792F82] font-bold text-[20px] text-white h-[46px] rounded-[15px] flex justify-center items-center transition-all duration-300 hover:cursor-pointer hover:bg-[#5c2363]" value="Login" />
 							<a href='/create'>
                             	<span className="text-sm font-small text-[#9E9E9E] mt-[3vh]">Geen account? <a className="text-[#792F82]">Registreer hier</a></span>
 							</a>
