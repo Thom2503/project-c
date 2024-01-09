@@ -20,8 +20,10 @@ import FetchUserDetails from './FetchUserDetails';
 import FetchCommentDetails from './FetchCommentDetails';
 import '../css/tab.css';
 import FetchTentative from "./FetchTentative";
+import isoWeek from 'iso-week';
 
 export class Evenementen extends Component {
+
     static displayName = Evenementen.name;
 
     constructor(props) {
@@ -215,10 +217,8 @@ export class Evenementen extends Component {
             }
 
             const data = await response.json();
-            console.log('Received data:', data);
 
             const isTentativeValue = parseInt(data.IsTentative);
-            console.log('Parsed IsTentative value:', isTentativeValue);
 
             // Update state with the parsed value
             this.setState(
@@ -226,7 +226,6 @@ export class Evenementen extends Component {
                     tentative: isTentativeValue,
                 },
                 () => {
-                    console.log('Updated state - tentative:', this.state.tentative);
                 }
             );
 
@@ -332,7 +331,6 @@ export class Evenementen extends Component {
 
     handleTabChange = (event, newValue) => {
         this.setState({selectedTab: newValue});
-        console.log(this.state.istentative);
       };
 
 
@@ -343,13 +341,20 @@ export class Evenementen extends Component {
 
         const indexOfLastEvent = currentPage * eventsPerPage;
         const indexOfFirstEvent = indexOfLastEvent - eventsPerPage;
-        const eventsToDisplay = this.state.date === null && filteredData
-            ? data.slice(indexOfFirstEvent, indexOfLastEvent)
-            : (Array.isArray(filteredData) ? filteredData.slice(indexOfFirstEvent, indexOfLastEvent) : []);
+        const eventsToDisplay =
+        (filteredData.length === data.length)
+          ? data.filter(event => {
+              // Convert the event date string to a Date object
+              const eventDate = dayjs(event.Date, { format: 'YYYY-MM-DD' }).toDate();
 
+              // Check if the event date is within the current week
+              return dayjs(eventDate).isAfter(dayjs().startOf('week')) && dayjs(eventDate).isBefore(dayjs().endOf('week'));
+            }).slice(indexOfFirstEvent, indexOfLastEvent)
+          : (Array.isArray(filteredData) ? filteredData.slice(indexOfFirstEvent, indexOfLastEvent) : data.slice(indexOfFirstEvent, indexOfLastEvent));
+          
         // Logic for displaying page numbers
         const pageNumbers = [];
-        for (let i = 1; i <= Math.ceil(data.length / eventsPerPage); i++) {
+        for (let i = 1; i <= Math.ceil(filteredData.length / eventsPerPage); i++) {
             pageNumbers.push(i);
         }
 
@@ -362,7 +367,7 @@ export class Evenementen extends Component {
                             <h1 className="text-[#792F82] font-bold text-[25px]">Evenementen</h1>
                         </div>
                         <div className='items-stretch flex gap-4 flex-col sm:flex-row'>
-                            {getCookie("isadmin") !== "true" && (
+                            {getCookie("isadmin") === "true" && (
                                 <a href="?modal=5"
                                    className='h-full text-[23px] gap-2 text-[#8A8A8A] font-normal cursor-pointer flex sm:justify-center sm:items-center'
                                 >
@@ -484,7 +489,7 @@ export class Evenementen extends Component {
                     <button onClick={() => this.setState({drawerOpen: false})} className='mr-auto px-10 pt-10'>
                         <FontAwesomeIcon className='text-[#E1E1E1] text-[20px]' icon={faXmark}/></button>
                     {selectedEvent && (
-                        <div className="px-10 w-[40vw] mb-[10%]">
+                        <div className="px-10 w-[360px] mb-[10%]">
                             <h1 className="mt-[10%] text-[#792F82] font-bold text-[23px] flex flex-row justify-between items-center border-b-[1px] border-[#E8E8E8] pb-5">
                                 {selectedEvent.Title}
                                 <button
