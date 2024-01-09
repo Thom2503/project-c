@@ -484,7 +484,7 @@ export class Evenementen extends Component {
                     <button onClick={() => this.setState({drawerOpen: false})} className='mr-auto px-10 pt-10'>
                         <FontAwesomeIcon className='text-[#E1E1E1] text-[20px]' icon={faXmark}/></button>
                     {selectedEvent && (
-                        <div className="px-10 w-[360px] mb-[10%]">
+                        <div className="px-10 w-[40vw] mb-[10%]">
                             <h1 className="mt-[10%] text-[#792F82] font-bold text-[23px] flex flex-row justify-between items-center border-b-[1px] border-[#E8E8E8] pb-5">
                                 {selectedEvent.Title}
                                 <button

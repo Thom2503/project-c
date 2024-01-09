@@ -8,8 +8,8 @@ import { toast } from 'react-toastify';
 import {faArrowLeft, faBars, faGear, faXmark} from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import Drawer from "@mui/material/Drawer";
-
 export class Header extends Component {
+
     static displayName = Header.name;
 
     constructor(props) {
@@ -88,6 +88,7 @@ export class Header extends Component {
 		let status = "in";
 		let title = "In de loods";
 		let ts = this.state.today;
+
 		let item = this.state.item;
 		let roomid = 0;
 		let note = "";
@@ -129,6 +130,7 @@ export class Header extends Component {
 			// als er een id is of de data is successvol geupload ga weer naar de agenda
       		if (data.id > 0 || data.success === true) {
               toast.success("Status successvol gewijzigd.");
+				console.log(this.state.today);
 	  		  window.location.replace("agenda");
       		} else {
       		  // Handle form validation errors or other issues
