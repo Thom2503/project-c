@@ -20,6 +20,8 @@ import FetchUserDetails from './FetchUserDetails';
 import FetchCommentDetails from './FetchCommentDetails';
 import '../css/tab.css';
 import FetchTentative from "./FetchTentative";
+import {addNotification, sendMailNotification} from '../include/notification_functions';
+import { toast } from 'react-toastify';
 
 export class Evenementen extends Component {
 
@@ -83,10 +85,12 @@ export class Evenementen extends Component {
             });
 
             if (!response.ok) {
-                throw new Error(`Failed to delete event: ${response.status} ${response.statusText}`);
+				console.error(`Failed to delete event: ${response.status} ${response.statusText}`);
+				toast.error("Kan evenement niet verwijderen");
             }
 
-            const data = await response.json();
+			await addNotification(1, `Gaat niet door: ${event.Title}`);
+			await sendMailNotification(1, `Gaat niet door: ${event.Title}`, "Dit evenement gaat helaas niet meer door");
             window.location.replace("evenementen");
         } catch (e) {}
     }
@@ -95,11 +99,15 @@ export class Evenementen extends Component {
         try {
             const response = await fetch('/eventsusers/' + evenementid);
             if (!response.ok) {
-                throw new Error('No users found for this event');
+				console.error('No users found for this event');
             }
             const data = await response.json();
-            this.setState({ deelnemers: data }, () => {
-            });
+            if (data.error) {
+                this.setState({deelnemers: []});
+            } else {
+                this.setState({ deelnemers: data }, () => {
+                });
+            }
         } catch (error) {
             console.error(error);
             this.setState({ deelnemers: [] });
@@ -119,10 +127,12 @@ export class Evenementen extends Component {
                 }),
             });
             const data = await response.json();
+			toast.success("Je zit nu bij het evenement");
 
             window.location.replace("evenementen");
         } catch (e) {
             console.error("Error: ", e.message);
+			toast.warning("Kan helaas niet meedoen aan het evenement");
         }
     }
 
@@ -141,9 +151,11 @@ export class Evenementen extends Component {
                 }),
             });
             const data = await response.json();
+			toast.success("Je doet nu niet meer mee met het evenement");
             window.location.replace("evenementen");
         } catch (e) {
             console.error("Error: ", e.message);
+			toast.warning("Je kan helaas niet meer verwijderd worden van het evenement");
         }
     }
 

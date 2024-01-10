@@ -141,7 +141,7 @@ class NotificationController {
 	 */
 	private function getTemplateBody(int $template, string $title = "", string $content = ""): string|bool {
 		$htOut = match ($template) {
-			Templates::Event => "<h2>Leuk er is een update bij evenementen!<h2>\n".
+			Templates::Event => "<h2>Er is een update bij evenementen!<h2>\n".
 			                    "<h3>".$title."</h3>".
 			                    "<p>".$content."</p>".
 			                    "<p>Kijk bij <a href='localhost/evenementen'>de evenementen</a> voor meer informatie</p>",
