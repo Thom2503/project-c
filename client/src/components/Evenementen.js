@@ -89,8 +89,8 @@ export class Evenementen extends Component {
 				toast.error("Kan evenement niet verwijderen");
             }
 
-			await addNotification(1, `Gaat niet door: ${event.Title}`);
 			await sendMailNotification(1, `Gaat niet door: ${event.Title}`, "Dit evenement gaat helaas niet meer door");
+			await addNotification(1, `Gaat niet door: ${event.Title}`);
             window.location.replace("evenementen");
         } catch (e) {}
     }
@@ -128,7 +128,6 @@ export class Evenementen extends Component {
             });
             const data = await response.json();
 			toast.success("Je zit nu bij het evenement");
-
             window.location.replace("evenementen");
         } catch (e) {
             console.error("Error: ", e.message);

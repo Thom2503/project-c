@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { getCookie } from '../include/util_functions';
 import "../css/nieuws.css";
-import { addNotification } from '../include/notification_functions';
+import { addNotification, sendMailNotification } from '../include/notification_functions';
 import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
 import dayjs from "dayjs";
@@ -149,6 +149,11 @@ export class NieuwsDetails extends Component {
 
             if (data.id > 0 || data.success === true) {
                 toast.success("Nieuws successvol veranderd");
+                if (this.state.deleteNews === true) {
+                    await sendMailNotification(2, `Artikel verwijderd ${title}`, "");
+                } else {
+                    await sendMailNotification(2, title, description);
+                }
                 await addNotification(2, title);
                 window.location.replace("/Nieuws");
             } else {
