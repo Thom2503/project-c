@@ -20,7 +20,6 @@ import FetchUserDetails from './FetchUserDetails';
 import FetchCommentDetails from './FetchCommentDetails';
 import '../css/tab.css';
 import FetchTentative from "./FetchTentative";
-import isoWeek from 'iso-week';
 
 export class Evenementen extends Component {
 
