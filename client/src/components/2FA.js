@@ -72,7 +72,7 @@ export class TwoFactor extends Component {
 	}
 
 	async resendMail() {
-		send2FAMail(this.state.accountsid);
+		await send2FAMail(this.state.accountsid);
         window.location.replace(`twofactor?id=${this.state.accountsid}`);
 	}
 
