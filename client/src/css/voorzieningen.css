@@ -51,6 +51,28 @@ div#voorziening span.add a, div#voorzieningen span.date-picker a {
 	text-decoration: none;
 }
 
+.add {
+	transition-duration: 300ms;
+	transition-property: all;
+	height: 100%;
+	font-size: 23px;
+	gap: 2rem;
+	color: #8A8A8A;
+	font-weight: normal;
+	cursor: pointer;
+	display: flex;
+}
+
+.under-header {
+	color: #792F82;
+	font-weight: bold;
+	font-size: 25px;
+}
+
+.add:hover {
+	color: #626060;
+}
+
 @media only screen and (max-width: 600px) {
 	div#voorzieningen td a {
 		width: auto !important;

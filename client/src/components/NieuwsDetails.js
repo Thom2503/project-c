@@ -243,9 +243,9 @@ export class NieuwsDetails extends Component {
             }
             else {
                 return (
-                    <>
+                    <div>
                         <Link to="/Nieuws" className="text-[#848484] hover:bg-[#00000021] transition-all duration-300 mb-4 border-[#00000021] border-[1px] rounded-[4px] px-4 py-2" style={{ marginLeft: '30px' }}><FontAwesomeIcon icon={faArrowLeft} /> Terug</Link>
-                        <form onSubmit={this.handleSubmit} className="max-w-[400px] sm:max-w-[600px] mx-auto" style={{ marginTop: '50px' }}>
+                        <form onSubmit={this.handleSubmit} className="pb-[80px] max-w-[400px] sm:max-w-[600px] mx-auto">
                             <div className="input-field-div" style={{ marginBottom: '2rem' }}>
                                 <p className="static-text">Huidige titel: {this.state.filteredData?.Title}</p>
                                 <label
@@ -327,13 +327,13 @@ export class NieuwsDetails extends Component {
                                 value="Opslaan & Sluiten"
                             />
                         </form>
-                    </>
+                    </div>
                 );
             }
         }
         else {
             return (
-                <>
+                <div>
                     <Link to="/Nieuws" className="text-[#848484] hover:bg-[#00000021] transition-all duration-300 mb-4 border-[#00000021] border-[1px] rounded-[4px] px-4 py-2" style={{ marginLeft: '30px' }}><FontAwesomeIcon icon={faArrowLeft} /> Terug</Link>
                     {this.state.filteredData ? (
                         <div className="custom-centered-container text-center p-4">
@@ -353,7 +353,7 @@ export class NieuwsDetails extends Component {
                     ) : (
                         <p>Geen nieuws gevonden.</p>
                     )}
-                </>
+                </div>
             );
         }
     }

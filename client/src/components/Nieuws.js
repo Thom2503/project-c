@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 import "../css/nieuws.css";
 import { getCookie } from '../include/util_functions';
 import { toast } from 'react-toastify';
+import {faCirclePlus} from "@fortawesome/free-solid-svg-icons";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 
 export class Nieuws extends Component {
   static displayName = Nieuws.name;
@@ -65,25 +67,27 @@ export class Nieuws extends Component {
   render() {
     if (getCookie("isadmin") === "true") {
       return (<div className="w-[100%] sm:w-[95%] m-auto">
-        <h1 className="text-[#848484] mb-4 flex justify-start items-center  ml-2">{this.state.currentDate} </h1>
-        <Link
-          to={{ pathname: "/Artikel", search: "fromAddNews=true" }}
-          className="h-full text-[17px] gap-2 text-[#792F82] font-normal cursor-pointer flex justify-start items-center  ml-2"
-          onClick={this.toggleSidebar}
-        >
-          + Nieuws toevoegen
-        </Link>
-        <div className="flex flex-wrap">
-          {this.state.data.length > 0 ? (
-            this.state.data.map((newsItem, index) => (
-              <div
-                key={index}
-                className={`m-2 bg-purple-800  p-6 flex flex-col justify-start max-w-[100%] sm:max-w-[45%]`}
-                style={{
-                  width: '100%',
-                  minHeight: '200px',
-                  height: '350px',
-                  backgroundImage: `linear-gradient(to top right, #792F82, white)`,
+            <div className='flex flex-row justify-between items-center'>
+              <h1 className="text-[#848484] text-[23px] flex justify-start items-center  ml-2">{this.state.currentDate} </h1>
+              <Link
+                  to={{pathname: "/Artikel", search: "fromAddNews=true"}}
+                  className='duration-300 transition-all hover:text-[#626060] h-full text-[23px] gap-2 text-[#8A8A8A] font-normal cursor-pointer flex sm:justify-center sm:items-center'
+                  onClick={this.toggleSidebar}
+              >
+                Nieuws toevoegen <FontAwesomeIcon icon={faCirclePlus}/>
+              </Link>
+            </div>
+            <div className="flex flex-wrap">
+              {this.state.data.length > 0 ? (
+                  this.state.data.map((newsItem, index) => (
+                      <div
+                          key={index}
+                          className={`m-2 bg-purple-800  p-6 flex flex-col justify-start max-w-[100%] sm:max-w-[45%]`}
+                          style={{
+                            width: '100%',
+                            minHeight: '200px',
+                            height: '350px',
+                            backgroundImage: `linear-gradient(to top right, #792F82, white)`,
                   backgroundSize: 'cover',
                 }}
                 onClick={() =>

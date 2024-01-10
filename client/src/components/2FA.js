@@ -89,7 +89,7 @@ export class TwoFactor extends Component {
                     <span className="text-transparent">2FA</span>
                 </div>
                 <form onSubmit={this.handleSubmit}>
-                    <div className="w-[400px] flex m-auto justify-center flex-col">
+                    <div className="w-[400px] flex m-auto justify-center flex-col pt-[10vh]">
                         <h1 className="text-[#792F82] text-[40px] font-bold mb-[15px]">Two Factor Authentication</h1>
                         <div className="mb-[15px]">
                             <label htmlFor="2FA" className="block mb-2 text-sm font-small text-[#9E9E9E]">Vul hieronder de 2FA code in</label>
@@ -105,7 +105,7 @@ export class TwoFactor extends Component {
                             </div>
                         )}
                         <div className="flex justify-center pt-[20px] flex-col items-center">
-                            <input type="submit" className="w-[150px] bg-[#792F82] font-bold text-[20px] text-white h-[46px] rounded-[15px] flex justify-center items-center" value="Verstuur" />
+                            <input type="submit" className="w-[150px] bg-[#792F82] font-bold text-[20px] text-white h-[46px] rounded-[15px] flex justify-center items-center transition-all duration-300 hover:cursor-pointer hover:bg-[#5c2363]" value="Verstuur" />
                         </div>
                     </div>
                 </form>

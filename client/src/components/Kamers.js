@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { Sidebar } from './Sidebar';
 import { getCookie } from '../include/util_functions';
+import {faCirclePlus} from "@fortawesome/free-solid-svg-icons";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 
 export class Kamers extends Component {
     static displayName = Kamers.name;
@@ -37,10 +39,14 @@ export class Kamers extends Component {
         return (
             <div className="w-[95%] m-auto">
                 <div>
-                    <h2 className="text-[#792F82] font-bold text-[25px]">Kamers</h2>
-                    {getCookie("isadmin") === "true" && (
-                        <a href='kamers?modal=6'>Kamer Toevoegen</a>
-                    )}
+                    <div className='flex flex-row justify-between'>
+                        <h2 className="text-[#792F82] font-bold text-[25px]">Kamers</h2>
+                        {getCookie("isadmin") === "true" && (
+                            <a
+                                className='duration-300 transition-all hover:text-[#626060] h-full text-[23px] gap-2 text-[#8A8A8A] font-normal cursor-pointer flex sm:justify-center sm:items-center'
+                                href='kamers?modal=6'>Kamer Toevoegen <FontAwesomeIcon icon={faCirclePlus}/></a>
+                        )}
+                    </div>
                 </div>
                 <div className="gap-5 flex flex-col">
                     {this.state.data.length > 0 ? (

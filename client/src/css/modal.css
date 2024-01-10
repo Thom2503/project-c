@@ -116,6 +116,10 @@
   cursor: pointer;
 }
 
+.status-field:hover {
+  cursor: pointer;
+}
+
 @media only screen and (max-width: 600px) {
   div.base-modal-content {
     width: 90%;

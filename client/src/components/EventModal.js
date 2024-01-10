@@ -236,7 +236,7 @@ export class EventModal extends Component {
 
 
   render() {
-    const isFormFilled = this.state.date && this.state.description && this.state.starttime && this.state.endtime && this.state.title && this.state.location;
+    const isFormFilled = this.state.date && this.state.description && this.state.starttime && this.state.endtime && this.state.title && this.state.location && (isNaN(this.state.declinetime) === false && parseInt(this.state.declinetime) >= 0) && (isNaN(this.state.tentativetime) === false && parseInt(this.state.tentativetime) >= 0);
     return (
         <div className="modal">
           <form className={'p-7'} onSubmit={this.handleSubmit}>

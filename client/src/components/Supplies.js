@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { getCookie, getFirstDayTimeStamp, getNextDay } from '../include/util_functions';
 import '../css/voorzieningen.css';
+import {faCirclePlus} from "@fortawesome/free-solid-svg-icons";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 
 export class Supplies extends Component {
     static displayName = Supplies.name;
@@ -54,27 +56,30 @@ export class Supplies extends Component {
 			<div id='voorzieningen'>
 				<div className='under-header'>
 					<h2>Voorzieningen</h2>
-					<span className='add'><a href='voorzieningen?modal=2'>Voorziening Toevoegen</a></span>
-					&nbsp;
-					<span className='date-picker'>
+					<div className='flex flex-row gap-5'>
+						<span className='add'><a href='voorzieningen?modal=2'>Voorziening Toevoegen <FontAwesomeIcon
+							icon={faCirclePlus}/></a></span>
+						&nbsp;
+						<span className='date-picker'>
 						<a href='voorzieningen?pick-date'>
 							{date}
 						</a>
 					</span>
+					</div>
 				</div>
 				<div className="table-wrapper">
 					<table>
 						<thead>
-							<tr>
-								<th>#&emsp;ID</th>
-								<th>Naam</th>
-								<th>Totaal aantal</th>
-								<th>Vandaag gebruikt</th>
-							</tr>
+						<tr>
+							<th>#&emsp;ID</th>
+							<th>Naam</th>
+							<th>Totaal aantal</th>
+							<th>Vandaag gebruikt</th>
+						</tr>
 						</thead>
 						<tbody>
-							{this.state.data.map(supply => 
-								<tr>
+						{this.state.data.map(supply =>
+								<tr key={supply.SuppliesID || 'Empty-Row'}>
 									<td onClick={() => this.onClickHref(supply)} style={{cursor: "pointer"}}>
 										{supply.SuppliesID}
 									</td>
