@@ -42,7 +42,6 @@ export class Evenementen extends Component {
             eventid: 0,
             deelnemers: [],
             votedInt: 0,
-            // voters: [],
             commentInput: '',
             comments: [],
             confirmed: 0,
@@ -71,7 +70,6 @@ export class Evenementen extends Component {
         }
     }
 
-
     async deleteEvent(event) {
         try {
             const response = await fetch('/eventdelete/' + parseInt(event.EventsID), {
@@ -90,14 +88,8 @@ export class Evenementen extends Component {
 
             const data = await response.json();
             window.location.replace("evenementen");
-            } catch (e) {
-            }
-
+        } catch (e) {}
     }
-
-
-
-
 
     async getUsersInEvent(evenementid) {
         try {
@@ -115,7 +107,6 @@ export class Evenementen extends Component {
     }
  // Join event voor als je op de knop aanmelden drukt
     async handleJoinEvent(event) {
-
         try {
             const response = await fetch('/eventjoin/' + parseInt(event.EventsID), {
                 method: 'POST',
@@ -129,7 +120,7 @@ export class Evenementen extends Component {
             });
             const data = await response.json();
 
-                window.location.replace("evenementen");
+            window.location.replace("evenementen");
         } catch (e) {
             console.error("Error: ", e.message);
         }
@@ -138,7 +129,6 @@ export class Evenementen extends Component {
 
 
     async handleLeaveEvent(event) {
-
         try {
             const response = await fetch('/eventleave/' + parseInt(event.EventsID), {
                 method: 'DELETE',
@@ -156,6 +146,7 @@ export class Evenementen extends Component {
             console.error("Error: ", e.message);
         }
     }
+
     handleDateChange = (newDate) => {
         if (newDate) {
             const formattedDate = dayjs(newDate).format('DD/MM/YYYY');
@@ -180,20 +171,19 @@ export class Evenementen extends Component {
             const filteredData = data.filter(entry => parseInt(entry.confirmed) === 1);
             const int = filteredData.length;
 
-
-        if (data.length > 0) {
-            this.setState(
-                {
-                    confirmedPeople: int,
-                },
-                () => {
-                }
-            );
-        } else {
-            this.setState({
-                confirmedPeople: 0,
-            });
-        }
+            if (data.length > 0) {
+                this.setState(
+                    {
+                        confirmedPeople: int,
+                    },
+                    () => {
+                    }
+                );
+            } else {
+                this.setState({
+                    confirmedPeople: 0,
+                });
+            }
         } else {
             this.setState({
                 confirmedPeople: 0,
@@ -267,8 +257,7 @@ export class Evenementen extends Component {
 
             const data = await response.json();
             window.location.replace("evenementen");
-            } catch (e) {
-            }
+        } catch (e) {}
     }
 
     async postComment(event) {
@@ -292,8 +281,7 @@ export class Evenementen extends Component {
             const data = await response.json();
             window.location.reload();
             // window.location.replace("evenementen");
-            } catch (e) {
-            }
+        } catch (e) {}
     }
     calculateRemainingTime(event) {
         const eventDateTime = dayjs(`${event.Date} ${event.startTime}`);
@@ -320,387 +308,380 @@ export class Evenementen extends Component {
         }
     }
 
-
-
-
-
     paginate = (pageNumber) => {
         this.setState({ currentPage: pageNumber });
     }
 
     handleTabChange = (event, newValue) => {
         this.setState({selectedTab: newValue});
-      };
+	};
+
+    render() {
+       const {data, filteredData, currentPage, eventsPerPage, selectedEvent, drawerOpen} = this.state;
+
+       const indexOfLastEvent = currentPage * eventsPerPage;
+       const indexOfFirstEvent = indexOfLastEvent - eventsPerPage;
+        const eventsToDisplay =
+            (data && data.length > 0)
+                ? (filteredData.length === data.length)
+                    ? data.filter(event => {
+                        // Convert the event date string to a Date object
+                        const eventDate = dayjs(event.Date, { format: 'YYYY-MM-DD' }).toDate();
+
+                        // Check if the event date is within the current week
+                        return dayjs(eventDate).isAfter(dayjs().startOf('week')) && dayjs(eventDate).isBefore(dayjs().endOf('week'));
+                    }).slice(indexOfFirstEvent, indexOfLastEvent)
+                    : (Array.isArray(filteredData) ? filteredData.slice(indexOfFirstEvent, indexOfLastEvent) : data.slice(indexOfFirstEvent, indexOfLastEvent))
+                : [];
+         
+       // Logic for displaying page numbers
+       const pageNumbers = [];
+       for (let i = 1; i <= Math.ceil(filteredData.length / eventsPerPage); i++) {
+           pageNumbers.push(i);
+       }
+
+       const {selectedTab} = this.state.selectedTab;
+       return (
+           <>
+               <div className='w-[95%] m-auto pb-[80px]'>
+                   <div className="flex flex-col sm:flex-row justify-between items-stretch mb-4 items-center">
+                       <div className='flex items-center'>
+                           <h1 className="text-[#792F82] font-bold text-[25px]">Evenementen</h1>
+                       </div>
+                       <div className='items-stretch flex gap-4 flex-col sm:flex-row'>
+                           {getCookie("isadmin") === "true" && (
+                               <a href="?modal=5"
+                                  className='h-full text-[23px] gap-2 text-[#8A8A8A] font-normal cursor-pointer flex sm:justify-center sm:items-center'
+                               >
+                                   Evenement Toevoegen <FontAwesomeIcon icon={faCirclePlus}/>
+                               </a>
+                           )}
+                           <LocalizationProvider dateAdapter={AdapterDayjs}>
+                               <DatePicker
+                                   value={this.state.date ? dayjs(this.state.date, 'DD/MM/YYYY') : null}
+                                   onChange={(newDate) => this.handleDateChange(newDate ? newDate.toDate() : null)}
+                                   format="DD/MM/YYYY"
+                                   slotProps={{
+                                       textField: {
+                                           error: false,
+                                       },
+                                   }}
+                               />
+                           </LocalizationProvider>
+                       </div>
+                   </div>
+                   <div className="gap-5 grid lg:grid-cols-2 grid-cols-1" style={{gridAutoFlow: 'row'}}>
+                       {eventsToDisplay.length > 0 ? (
+                           eventsToDisplay.map((event, index) => (
+                               <div
+                                   key={index}
+                                   className='flex flex-col gap-2'>
+                                   {this.calculateTentativeTime(event) && parseInt(event.IsTentative) === 1 && (
+                                       <FetchTentative eventId={event.EventsID}
+                                                       accountId={this.state.host}/>
+                                   )}
+
+                                   <div
+                                       className={`${dayjs(event.Date).isBefore(dayjs()) ? "opacity-40" : "opacity-100"} sm:mx-[20px] max-w-[1200px] w-[100%] h-[150px] p-4 flex flex-col justify-center rounded-xl border-[2px] duration-300 transition-all hover:bg-[#FEF3FF] hover:border-[#7100a640] hover:cursor-pointer
+                                   ${dayjs(event.Date).isSame(dayjs(), 'day') ? '!opacity-100' : ''}
+                                   
+                                   `}
+                                       onClick={() => {
+                                           this.toggleDrawer(event);
+                                           this.getConfirmedPeople(event);
+                                           this.istenantive(event);
+                                       }}
+                                   >
+                                       <div className="">
+                                           <h1 className="text-[#792F82] font-medium text-[23px]">
+                                               {event.Title}
+                                               {event.IsExternal === "0" ? (
+                                                   <span
+                                                       className="px-[9px] py-[3px] bg-[#BAFFA1] rounded-[100px] p-1 text-[#02BB15] text-[13px] ml-4">Internal</span>
+                                               ) : (
+                                                   <span
+                                                       className="px-[9px] py-[3px] bg-[#FFCEA1] rounded-[100px] p-1 text-[#EE5600] text-[13px] ml-4">External</span>
+                                               )}
+                                           </h1>
+                                           <span className="text-[#848484] text-[14px]">Klik voor meer informatie</span>
+                                       </div>
+                                       <div className="mt-auto flex flex-row gap-8">
+                                           <div className="flex flex-row items-center gap-2">
+                                               <div>
+                                                   <FontAwesomeIcon icon={faUser} className="text-[#D8D8D8]"/>
+                                               </div>
+                                               <div className="flex flex-col">
+                                                   <span className="text-[#B0B0B0] text-[12px]">Host</span>
+                                                   <span className="text-[#5F5F5F] text-[13px] font-bold">
+                                                       <FetchUserDetails userId={event.Host} showNameOnly='true'/>
+                                                   </span>
+                                               </div>
+                                           </div>
+                                           <div className="flex flex-row items-center gap-2">
+                                               <div>
+                                                   <FontAwesomeIcon icon={faCalendar} className="text-[#D8D8D8]"/>
+                                               </div>
+                                               <div className="flex flex-col">
+                                                   <span className="text-[#B0B0B0] text-[12px]">Time</span>
+                                                   <span
+                                                       className="text-[#5F5F5F] text-[13px] font-bold ">{event.startTime} - {event.endTime}</span>
+                                               </div>
+                                           </div>
+                                           <div className="flex flex-row items-center gap-2">
+                                               <div>
+                                                   <FontAwesomeIcon icon={faClock} className="text-[#D8D8D8]"/>
+                                               </div>
+                                               <div className="flex flex-col">
+                                                   <span className="text-[#B0B0B0] text-[12px]">Date</span>
+                                                   <span
+                                                       className="text-[#5F5F5F] text-[13px] font-bold">{event.Date.split('-').reverse().join('-')}</span>
+                                               </div>
+                                           </div>
+                                       </div>
+                                   </div>
+                               </div>
+                           ))
+                       ) : (
+                           <p>Geen evenementen gevonden.</p>
+                       )}
+                   </div>
+                   <div className='w-full'>
+                       <Pagination
+                           className='mt-4 flex justify-end w-full'
+                           count={pageNumbers.length}
+                           page={currentPage}
+                           variant="outlined"
+                           shape="rounded"
+                           color="secondary"
+                           onChange={(event, page) => this.paginate(page)}
+                       />
+                   </div>
+               </div>
+               <Drawer
+                   anchor="right"
+                   open={drawerOpen}
+                   onClose={() => {
+                       this.setState({
+                           drawerOpen: false,
+                       });
+                   }}
+                   hideBackdrop={true}
+               >
+                   {/* Render the event information in the drawer */}
+                   <button onClick={() => this.setState({drawerOpen: false})} className='mr-auto px-10 pt-10'>
+                       <FontAwesomeIcon className='text-[#E1E1E1] text-[20px]' icon={faXmark}/></button>
+                   {selectedEvent && (
+                       <div className="px-10 w-[360px] mb-[10%]">
+                           <h1 className="mt-[10%] text-[#792F82] font-bold text-[23px] flex flex-row justify-between items-center border-b-[1px] border-[#E8E8E8] pb-5">
+                               {selectedEvent.Title}
+                               <button
+
+                                   onClick={() => window.location.replace(`evenementen?modal=5&eventid=${selectedEvent.EventsID}`)}
+                                   className='h-[40px] w-[40px] rounded-[10px] bg-gray-200 font-bold text-[15px] flex justify-center items-center'>
+                                   <FontAwesomeIcon
+                                       icon={faPenToSquare}/>
+                               </button>
+                               <button
+                                   onClick={() => this.deleteEvent(selectedEvent)}
+                                   className='bg-red-500 h-[40px] w-[40px]  rounded-[10px] text-white font-bold text-[15px]'>
+                                   <FontAwesomeIcon icon={faTrash}/>
+                               </button>
+                               {selectedEvent.IsExternal === "0" ? (
+                                   <span
+                                       className="px-[9px] py-[3px] bg-[#BAFFA1] rounded-[100px] p-1 text-[#02BB15] text-[13px] ml-4">Internal</span>
+                               ) : (
+                                   <span
+                                       className="px-[9px] py-[3px] bg-[#FFCEA1] rounded-[100px] p-1 text-[#EE5600] text-[13px] ml-4">External</span>
+                               )}
+                           </h1>
+                           <div className="mt-4 flex flex-col">
+                               <FetchUserDetails userId={selectedEvent.Host} showNameOnly='false'/>
+                           </div>
+
+                           <Tabs
+                               value={this.state.selectedTab}
+                               className="mt-4 mb-4"
+                               onChange={this.handleTabChange}
+                               aria-label="Event Details"
+                               style={{display: 'flex', justifyContent: 'space-between'}}
+                           >
+                               <Tab
+                                   label={<FontAwesomeIcon icon={faFileLines}/>}
+                                   className={
+                                       this.state.selectedTab === 0
+                                           ? 'active-tab !bg-[#FFFFFF] !rounded-r-[8px] tab-width text-black font-bold'
+                                           : '!bg-[#F6F8FC] !rounded-r-[0px] tab-width'
+                                   }
+                               />
+                               <Tab
+                                   label=<FontAwesomeIcon icon={faPeopleGroup}/>
+                               onClick={() => this.getUsersInEvent(selectedEvent.EventsID)}
+                               className={
+                               this.state.selectedTab === 1
+                                   ? 'active-tab !bg-[#FFFFFF] !rounded-l-[8px] tab-width font-bold'
+                                   : '!bg-[#F6F8FC] !rounded-r-[8px] tab-width'
+                           }
+                               />
+                               <Tab
+                                   label=<FontAwesomeIcon icon={faMessage}/>
+                               onClick={() => {
+                               this.getComments(selectedEvent);
+                           }}
+                               disabled={parseInt(selectedEvent.requestFeedback) === 0}
+
+                               className={
+                               this.state.selectedTab === 2
+                                   ? 'active-tab !bg-[#FFFFFF] !rounded-l-[8px] tab-width font-bold'
+                                   : '!bg-[#F6F8FC] !rounded-r-[8px] tab-width'
+                           }
+                               />
+                           </Tabs>
 
 
+                           {this.state.selectedTab === 0 && (
+                               <>
+                                   <div className='max-h-[270px] h-[100%] overflow-y-scroll'>
+                                       <p className='text-[#A9A9A9]'>
+                                           {selectedEvent.Description}
+                                       </p>
+                                   </div>
+                                   <div className='buttons flex flex-col gap-2'>
+                                       {/*{!dayjs(selectedEvent.Date).isBefore(dayjs()) && ()}*/}
+                                       {this.calculateRemainingTime(selectedEvent) && (
+                                           <button
+                                               onClick={() => {
+                                                   if (this.state.deelnemers.includes(parseInt(this.state.host))) {
+                                                       this.handleLeaveEvent(selectedEvent);
+                                                   } else {
+                                                       this.handleJoinEvent(selectedEvent);
+                                                   }
 
 
-     render() {
-        const {data, filteredData, currentPage, eventsPerPage, selectedEvent, drawerOpen} = this.state;
+                                               }}
+                                               className='w-full bg-[#792F82] py-3 px-8 rounded-[10px] text-white font-bold text-[20px]'>
+                                               {this.state.deelnemers.includes(parseInt(this.state.host)) ? 'Afzeggen' : 'Aanmelden'}
 
-        const indexOfLastEvent = currentPage * eventsPerPage;
-        const indexOfFirstEvent = indexOfLastEvent - eventsPerPage;
-         const eventsToDisplay =
-             (data && data.length > 0)
-                 ? (filteredData.length === data.length)
-                     ? data.filter(event => {
-                         // Convert the event date string to a Date object
-                         const eventDate = dayjs(event.Date, { format: 'YYYY-MM-DD' }).toDate();
+                                           </button>
+                                       )}
 
-                         // Check if the event date is within the current week
-                         return dayjs(eventDate).isAfter(dayjs().startOf('week')) && dayjs(eventDate).isBefore(dayjs().endOf('week'));
-                     }).slice(indexOfFirstEvent, indexOfLastEvent)
-                     : (Array.isArray(filteredData) ? filteredData.slice(indexOfFirstEvent, indexOfLastEvent) : data.slice(indexOfFirstEvent, indexOfLastEvent))
-                 : [];
-          
-        // Logic for displaying page numbers
-        const pageNumbers = [];
-        for (let i = 1; i <= Math.ceil(filteredData.length / eventsPerPage); i++) {
-            pageNumbers.push(i);
-        }
+                                   </div>
 
-        const {selectedTab} = this.state.selectedTab;
-        return (
-            <>
-                <div className='w-[95%] m-auto pb-[80px]'>
-                    <div className="flex flex-col sm:flex-row justify-between items-stretch mb-4 items-center">
-                        <div className='flex items-center'>
-                            <h1 className="text-[#792F82] font-bold text-[25px]">Evenementen</h1>
-                        </div>
-                        <div className='items-stretch flex gap-4 flex-col sm:flex-row'>
-                            {getCookie("isadmin") === "true" && (
-                                <a href="?modal=5"
-                                   className='h-full text-[23px] gap-2 text-[#8A8A8A] font-normal cursor-pointer flex sm:justify-center sm:items-center'
-                                >
-                                    Evenement Toevoegen <FontAwesomeIcon icon={faCirclePlus}/>
-                                </a>
-                            )}
-                            <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                <DatePicker
-                                    value={this.state.date ? dayjs(this.state.date, 'DD/MM/YYYY') : null}
-                                    onChange={(newDate) => this.handleDateChange(newDate ? newDate.toDate() : null)}
-                                    format="DD/MM/YYYY"
-                                    slotProps={{
-                                        textField: {
-                                            error: false,
-                                        },
-                                    }}
-                                />
-                            </LocalizationProvider>
-                        </div>
-                    </div>
-                    <div className="gap-5 grid lg:grid-cols-2 grid-cols-1" style={{gridAutoFlow: 'row'}}>
-                        {eventsToDisplay.length > 0 ? (
-                            eventsToDisplay.map((event, index) => (
-                                <div
-                                    key={index}
-                                    className='flex flex-col gap-2'>
-                                    {this.calculateTentativeTime(event) && parseInt(event.IsTentative) === 1 && (
-                                        <FetchTentative eventId={event.EventsID}
-                                                        accountId={this.state.host}/>
-                                    )}
+                                   <>
+                                       {this.state.deelnemers.includes(parseInt(this.state.host)) && selectedEvent.requestRating === "1" && dayjs(selectedEvent.Date).isBefore(dayjs()) && (
+                                           <div className="pb-4">
+                                               <h1 className='text-[#792F82] font-medium text-[18px] mt-4'>Vond het
+                                                   leuk:</h1>
 
-                                    <div
-                                        className={`${dayjs(event.Date).isBefore(dayjs()) ? "opacity-40" : "opacity-100"} sm:mx-[20px] max-w-[1200px] w-[100%] h-[150px] p-4 flex flex-col justify-center rounded-xl border-[2px] duration-300 transition-all hover:bg-[#FEF3FF] hover:border-[#7100a640] hover:cursor-pointer
-                                    ${dayjs(event.Date).isSame(dayjs(), 'day') ? '!opacity-100' : ''}
-                                    
-                                    `}
-                                        onClick={() => {
-                                            this.toggleDrawer(event);
-                                            this.getConfirmedPeople(event);
-                                            this.istenantive(event);
-                                        }}
-                                    >
-                                        <div className="">
-                                            <h1 className="text-[#792F82] font-medium text-[23px]">
-                                                {event.Title}
-                                                {event.IsExternal === "0" ? (
-                                                    <span
-                                                        className="px-[9px] py-[3px] bg-[#BAFFA1] rounded-[100px] p-1 text-[#02BB15] text-[13px] ml-4">Internal</span>
-                                                ) : (
-                                                    <span
-                                                        className="px-[9px] py-[3px] bg-[#FFCEA1] rounded-[100px] p-1 text-[#EE5600] text-[13px] ml-4">External</span>
-                                                )}
-                                            </h1>
-                                            <span className="text-[#848484] text-[14px]">Klik voor meer informatie</span>
-                                        </div>
-                                        <div className="mt-auto flex flex-row gap-8">
-                                            <div className="flex flex-row items-center gap-2">
-                                                <div>
-                                                    <FontAwesomeIcon icon={faUser} className="text-[#D8D8D8]"/>
-                                                </div>
-                                                <div className="flex flex-col">
-                                                    <span className="text-[#B0B0B0] text-[12px]">Host</span>
-                                                    <span className="text-[#5F5F5F] text-[13px] font-bold">
-                                                        <FetchUserDetails userId={event.Host} showNameOnly='true'/>
-                                                    </span>
-                                                </div>
-                                            </div>
-                                            <div className="flex flex-row items-center gap-2">
-                                                <div>
-                                                    <FontAwesomeIcon icon={faCalendar} className="text-[#D8D8D8]"/>
-                                                </div>
-                                                <div className="flex flex-col">
-                                                    <span className="text-[#B0B0B0] text-[12px]">Time</span>
-                                                    <span
-                                                        className="text-[#5F5F5F] text-[13px] font-bold ">{event.startTime} - {event.endTime}</span>
-                                                </div>
-                                            </div>
-                                            <div className="flex flex-row items-center gap-2">
-                                                <div>
-                                                    <FontAwesomeIcon icon={faClock} className="text-[#D8D8D8]"/>
-                                                </div>
-                                                <div className="flex flex-col">
-                                                    <span className="text-[#B0B0B0] text-[12px]">Date</span>
-                                                    <span
-                                                        className="text-[#5F5F5F] text-[13px] font-bold">{event.Date.split('-').reverse().join('-')}</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            ))
-                        ) : (
-                            <p>Geen evenementen gevonden.</p>
-                        )}
-                    </div>
-                    <div className='w-full'>
-                        <Pagination
-                            className='mt-4 flex justify-end w-full'
-                            count={pageNumbers.length}
-                            page={currentPage}
-                            variant="outlined"
-                            shape="rounded"
-                            color="secondary"
-                            onChange={(event, page) => this.paginate(page)}
-                        />
-                    </div>
-                </div>
-                <Drawer
-                    anchor="right"
-                    open={drawerOpen}
-                    onClose={() => {
-                        this.setState({
-                            drawerOpen: false,
-                        });
-                    }}
-                    hideBackdrop={true}
-                >
-                    {/* Render the event information in the drawer */}
-                    <button onClick={() => this.setState({drawerOpen: false})} className='mr-auto px-10 pt-10'>
-                        <FontAwesomeIcon className='text-[#E1E1E1] text-[20px]' icon={faXmark}/></button>
-                    {selectedEvent && (
-                        <div className="px-10 w-[360px] mb-[10%]">
-                            <h1 className="mt-[10%] text-[#792F82] font-bold text-[23px] flex flex-row justify-between items-center border-b-[1px] border-[#E8E8E8] pb-5">
-                                {selectedEvent.Title}
-                                <button
+                                               <div className='flex flex-col gap-2'>
+                                                   <div className='flex flex-row gap-2'>
+                                                       <button
+                                                           onClick={() => {
+                                                               this.setState({
+                                                                   votedInt: 1
+                                                               }, () => {
+                                                                   this.vote(selectedEvent);
+                                                               });
+                                                           }}
+                                                           className='bg-[#09A719BD] w-[50%] h-[40px] text-[25px] rounded-[8px]'>
+                                                           <FontAwesomeIcon className='text-white'
+                                                                            icon={faThumbsUp}/>
+                                                       </button>
 
-                                    onClick={() => window.location.replace(`evenementen?modal=5&eventid=${selectedEvent.EventsID}`)}
-                                    className='h-[40px] w-[40px] rounded-[10px] bg-gray-200 font-bold text-[15px] flex justify-center items-center'>
-                                    <FontAwesomeIcon
-                                        icon={faPenToSquare}/>
-                                </button>
-                                <button
-                                    onClick={() => this.deleteEvent(selectedEvent)}
-                                    className='bg-red-500 h-[40px] w-[40px]  rounded-[10px] text-white font-bold text-[15px]'>
-                                    <FontAwesomeIcon icon={faTrash}/>
-                                </button>
-                                {selectedEvent.IsExternal === "0" ? (
-                                    <span
-                                        className="px-[9px] py-[3px] bg-[#BAFFA1] rounded-[100px] p-1 text-[#02BB15] text-[13px] ml-4">Internal</span>
-                                ) : (
-                                    <span
-                                        className="px-[9px] py-[3px] bg-[#FFCEA1] rounded-[100px] p-1 text-[#EE5600] text-[13px] ml-4">External</span>
-                                )}
-                            </h1>
-                            <div className="mt-4 flex flex-col">
-                                <FetchUserDetails userId={selectedEvent.Host} showNameOnly='false'/>
-                            </div>
+                                                       <button
+                                                           onClick={() => {
+                                                               this.setState({
+                                                                   votedInt: 2
+                                                               }, () => {
+                                                                   this.vote(selectedEvent);
+                                                                   // window.location.reload();
+                                                               });
+                                                           }}
+                                                           className='bg-[#DB3131] text-white w-[50%] h-[40px] text-[25px] rounded-[8px]'>
+                                                           <FontAwesomeIcon icon={faThumbsDown}/>
+                                                       </button>
+                                                   </div>
+                                                   <div className='w-full justify-between flex-row flex'>
+                                                       <p className='text-[#5F5F5F]'>{selectedEvent.like} Likes</p>
+                                                       <p className='text-[#5F5F5F]'>{selectedEvent.dislike} Likes</p>
+                                                   </div>
+                                               </div>
+                                           </div>
+                                       )}
+                                   </>
+                               </>
+                           )}
 
-                            <Tabs
-                                value={this.state.selectedTab}
-                                className="mt-4 mb-4"
-                                onChange={this.handleTabChange}
-                                aria-label="Event Details"
-                                style={{display: 'flex', justifyContent: 'space-between'}}
-                            >
-                                <Tab
-                                    label={<FontAwesomeIcon icon={faFileLines}/>}
-                                    className={
-                                        this.state.selectedTab === 0
-                                            ? 'active-tab !bg-[#FFFFFF] !rounded-r-[8px] tab-width text-black font-bold'
-                                            : '!bg-[#F6F8FC] !rounded-r-[0px] tab-width'
-                                    }
-                                />
-                                <Tab
-                                    label=<FontAwesomeIcon icon={faPeopleGroup}/>
-                                onClick={() => this.getUsersInEvent(selectedEvent.EventsID)}
-                                className={
-                                this.state.selectedTab === 1
-                                    ? 'active-tab !bg-[#FFFFFF] !rounded-l-[8px] tab-width font-bold'
-                                    : '!bg-[#F6F8FC] !rounded-r-[8px] tab-width'
-                            }
-                                />
-                                <Tab
-                                    label=<FontAwesomeIcon icon={faMessage}/>
-                                onClick={() => {
-                                this.getComments(selectedEvent);
-                            }}
-                                disabled={parseInt(selectedEvent.requestFeedback) === 0}
+                           {this.state.selectedTab === 1 && (
+                               <div className='flex flex-col justify-between h-full'>
+                                   <div className='grid grid-cols-2 gap-2 max-w-[100%] break-words'>
 
-                                className={
-                                this.state.selectedTab === 2
-                                    ? 'active-tab !bg-[#FFFFFF] !rounded-l-[8px] tab-width font-bold'
-                                    : '!bg-[#F6F8FC] !rounded-r-[8px] tab-width'
-                            }
-                                />
-                            </Tabs>
+                                       {this.state.deelnemers && this.state.deelnemers.length > 0 ? (
+                                           this.state.deelnemers.map((user, index) => (
+
+                                               <div key={index} className='flex flex-col'>
+                                                   <FetchUserDetails userId={user} showNameOnly='false'/>
+                                               </div>
+                                           ))
+                                       ) : (
+                                           <p>Geen deelnemers in deze kamer</p>
+                                       )}
 
 
-                            {this.state.selectedTab === 0 && (
-                                <>
-                                    <div className='max-h-[270px] h-[100%] overflow-y-scroll'>
-                                        <p className='text-[#A9A9A9]'>
-                                            {selectedEvent.Description}
-                                        </p>
-                                    </div>
-                                    <div className='buttons flex flex-col gap-2'>
-                                        {/*{!dayjs(selectedEvent.Date).isBefore(dayjs()) && ()}*/}
-                                        {this.calculateRemainingTime(selectedEvent) && (
-                                            <button
-                                                onClick={() => {
-                                                    if (this.state.deelnemers.includes(parseInt(this.state.host))) {
-                                                        this.handleLeaveEvent(selectedEvent);
-                                                    } else {
-                                                        this.handleJoinEvent(selectedEvent);
-                                                    }
+                                   </div>
+                                   {parseInt(this.state.tentative) === 1 && (
+                                       <p className='text-[#6f6f6f6b] '>Confirmed
+                                           Deelnemers: {this.state.confirmedPeople}</p>
+                                   )}
+                               </div>
+                           )}
+
+                           {this.state.selectedTab === 2 && (
+                               <>
+                                   <div className='flex flex-row mb-3'>
+                                       <TextField
+                                           label="Feedback"
+                                           placeholder="Typ hier je feedback"
+                                           multiline
+                                           variant="standard"
+                                           className='w-full'
+                                           value={this.state.commentInput}
+                                           onChange={(e) => this.setState({commentInput: e.target.value})}
+                                       />
+                                       <button
+                                           onClick={() => {
+                                               if (selectedEvent) {
+                                                   this.postComment(selectedEvent);
+                                                   this.setState({commentInput: ''});
+                                               }
+                                           }}
+                                           className='p-3 bg-[#015fcc]'
+                                       >
+                                           <FontAwesomeIcon className='text-white' icon={faPaperPlane}/>
+                                       </button>
+                                   </div>
+
+                                   <div className='flex flex-col gap-2 overflow-y-auto'>
+                                       {this.state.comments && this.state.comments.length != null ? (
+
+                                           this.state.comments.map((comment, index) => (
+                                               <div key={index} className='flex flex-col'>
+                                                   <FetchCommentDetails comment={comment.comment}
+                                                                        userId={comment.account_id}/>
+
+                                               </div>
+                                           ))
+                                       ) : (
+                                           <p>Geen feedback in deze kamer</p>
+                                       )}
+                                   </div>
 
 
-                                                }}
-                                                className='w-full bg-[#792F82] py-3 px-8 rounded-[10px] text-white font-bold text-[20px]'>
-                                                {this.state.deelnemers.includes(parseInt(this.state.host)) ? 'Afzeggen' : 'Aanmelden'}
-
-                                            </button>
-                                        )}
-
-                                    </div>
-
-                                    <>
-                                        {this.state.deelnemers.includes(parseInt(this.state.host)) && selectedEvent.requestRating === "1" && dayjs(selectedEvent.Date).isBefore(dayjs()) && (
-                                            <div className="pb-4">
-                                                <h1 className='text-[#792F82] font-medium text-[18px] mt-4'>Vond het
-                                                    leuk:</h1>
-
-                                                <div className='flex flex-col gap-2'>
-                                                    <div className='flex flex-row gap-2'>
-                                                        <button
-                                                            onClick={() => {
-                                                                this.setState({
-                                                                    votedInt: 1
-                                                                }, () => {
-                                                                    this.vote(selectedEvent);
-                                                                });
-                                                            }}
-                                                            className='bg-[#09A719BD] w-[50%] h-[40px] text-[25px] rounded-[8px]'>
-                                                            <FontAwesomeIcon className='text-white'
-                                                                             icon={faThumbsUp}/>
-                                                        </button>
-
-                                                        <button
-                                                            onClick={() => {
-                                                                this.setState({
-                                                                    votedInt: 2
-                                                                }, () => {
-                                                                    this.vote(selectedEvent);
-                                                                    // window.location.reload();
-                                                                });
-                                                            }}
-                                                            className='bg-[#DB3131] text-white w-[50%] h-[40px] text-[25px] rounded-[8px]'>
-                                                            <FontAwesomeIcon icon={faThumbsDown}/>
-                                                        </button>
-                                                    </div>
-                                                    <div className='w-full justify-between flex-row flex'>
-                                                        <p className='text-[#5F5F5F]'>{selectedEvent.like} Likes</p>
-                                                        <p className='text-[#5F5F5F]'>{selectedEvent.dislike} Likes</p>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        )}
-                                    </>
-                                </>
-                            )}
-
-                            {this.state.selectedTab === 1 && (
-                                <div className='flex flex-col justify-between h-full'>
-                                    <div className='grid grid-cols-2 gap-2 max-w-[100%] break-words'>
-
-                                        {this.state.deelnemers && this.state.deelnemers.length > 0 ? (
-                                            this.state.deelnemers.map((user, index) => (
-
-                                                <div key={index} className='flex flex-col'>
-                                                    <FetchUserDetails userId={user} showNameOnly='false'/>
-                                                </div>
-                                            ))
-                                        ) : (
-                                            <p>Geen deelnemers in deze kamer</p>
-                                        )}
-
-
-                                    </div>
-                                    {parseInt(this.state.tentative) === 1 && (
-                                        <p className='text-[#6f6f6f6b] '>Confirmed
-                                            Deelnemers: {this.state.confirmedPeople}</p>
-                                    )}
-                                </div>
-                            )}
-
-                            {this.state.selectedTab === 2 && (
-                                <>
-                                    <div className='flex flex-row mb-3'>
-                                        <TextField
-                                            label="Feedback"
-                                            placeholder="Typ hier je feedback"
-                                            multiline
-                                            variant="standard"
-                                            className='w-full'
-                                            value={this.state.commentInput}
-                                            onChange={(e) => this.setState({commentInput: e.target.value})}
-                                        />
-                                        <button
-                                            onClick={() => {
-                                                if (selectedEvent) {
-                                                    this.postComment(selectedEvent);
-                                                    this.setState({commentInput: ''});
-                                                }
-                                            }}
-                                            className='p-3 bg-[#015fcc]'
-                                        >
-                                            <FontAwesomeIcon className='text-white' icon={faPaperPlane}/>
-                                        </button>
-                                    </div>
-
-                                    <div className='flex flex-col gap-2 overflow-y-auto'>
-                                        {this.state.comments && this.state.comments.length != null ? (
-
-                                            this.state.comments.map((comment, index) => (
-                                                <div key={index} className='flex flex-col'>
-                                                    <FetchCommentDetails comment={comment.comment}
-                                                                         userId={comment.account_id}/>
-
-                                                </div>
-                                            ))
-                                        ) : (
-                                            <p>Geen feedback in deze kamer</p>
-                                        )}
-                                    </div>
-
-
-                                </>
-                            )}
-                        </div>
-                    )}
-                </Drawer>
-            </>
-        );
-     }
+                               </>
+                           )}
+                       </div>
+                   )}
+               </Drawer>
+           </>
+       );
+    }
 }
