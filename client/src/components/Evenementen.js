@@ -20,6 +20,7 @@ import FetchUserDetails from './FetchUserDetails';
 import FetchCommentDetails from './FetchCommentDetails';
 import '../css/tab.css';
 import FetchTentative from "./FetchTentative";
+import isoWeek from 'iso-week';
 
 export class Evenementen extends Component {
 
@@ -340,16 +341,18 @@ export class Evenementen extends Component {
 
         const indexOfLastEvent = currentPage * eventsPerPage;
         const indexOfFirstEvent = indexOfLastEvent - eventsPerPage;
-        const eventsToDisplay =
-        (filteredData.length === data.length)
-          ? data.filter(event => {
-              // Convert the event date string to a Date object
-              const eventDate = dayjs(event.Date, { format: 'YYYY-MM-DD' }).toDate();
+         const eventsToDisplay =
+             (data && data.length > 0)
+                 ? (filteredData.length === data.length)
+                     ? data.filter(event => {
+                         // Convert the event date string to a Date object
+                         const eventDate = dayjs(event.Date, { format: 'YYYY-MM-DD' }).toDate();
 
-              // Check if the event date is within the current week
-              return dayjs(eventDate).isAfter(dayjs().startOf('week')) && dayjs(eventDate).isBefore(dayjs().endOf('week'));
-            }).slice(indexOfFirstEvent, indexOfLastEvent)
-          : (Array.isArray(filteredData) ? filteredData.slice(indexOfFirstEvent, indexOfLastEvent) : data.slice(indexOfFirstEvent, indexOfLastEvent));
+                         // Check if the event date is within the current week
+                         return dayjs(eventDate).isAfter(dayjs().startOf('week')) && dayjs(eventDate).isBefore(dayjs().endOf('week'));
+                     }).slice(indexOfFirstEvent, indexOfLastEvent)
+                     : (Array.isArray(filteredData) ? filteredData.slice(indexOfFirstEvent, indexOfLastEvent) : data.slice(indexOfFirstEvent, indexOfLastEvent))
+                 : [];
           
         // Logic for displaying page numbers
         const pageNumbers = [];
