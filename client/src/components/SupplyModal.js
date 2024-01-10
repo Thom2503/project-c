@@ -120,7 +120,7 @@ export class SupplyModal extends Component {
                 required
               />
             </div>
-            {Number.parseInt(this.state.room) > 0 && (
+            {Number.parseInt(this.state.supply) > 0 && (
               <div className="input-field-div">
                 <label htmlFor="supplyDelete" >Delete:</label>
                 <input

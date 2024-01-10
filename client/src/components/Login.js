@@ -37,7 +37,7 @@ export class Login extends Component {
                 const data = await response.json();
 				if (data.verified === true)
                 {
-                    send2FAMail(data.AccountsID)
+                    await send2FAMail(data.AccountsID)
                     window.location.replace(`twofactor?id=${data.AccountsID}`);
 
                 } else {
