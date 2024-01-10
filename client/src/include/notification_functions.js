@@ -348,20 +348,15 @@ export const readNotification = async (userid) => {
  */
 export const hasUserReadNotifications = async (userid) => {
 	try {
-		const response = await fetch(`usernotifications/${userid}`, {
-			method: 'GET',
-			headers: {
-				'Content-Type': 'application/json',
-			}
-		});
+		const response = await fetch(`usernotifications/${userid}`);
 		const data = await response.json();
 		if (data.SubscriptionsID > 0) {
 			return data.HasRead === "1";
 		} else {
-			toast.error("Kan geen subscription vinden van deze gebruiker");
+			return false;
 		}
 	} catch(e) {
 		console.error("Error: " + e);
-		toast.error("Er is een onverwacht probleem gevonden.");
+		toast.error("Kan geen subscription vinden van deze gebruiker");
 	}
 };

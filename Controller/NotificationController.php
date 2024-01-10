@@ -199,9 +199,14 @@ class NotificationController {
 	}
 
 	public function update(int $id): void {
+		// als de gebruiker nog geen notificatie settings heeft kan die worden toegevoegd
+		if ($this->notification->getSubscriberByID($id) == false) {
+			$this->notification->setUserSubscription(['type'   => 'mail',
+			                                          'userid' => $id,
+			                                          'wants'  => false]);
+		}
 		$data = json_decode(file_get_contents("php://input"), true);
 		header('Content-Type: application/json');
-		// zijn er errors? stuur die dan terug
 		$success = $this->notification->updateUserNotification($id, $data);
 		if ($success == true) {
 			echo json_encode(['success' => true]);
