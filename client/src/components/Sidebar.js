@@ -151,11 +151,7 @@ export class Sidebar extends Component {
 							    <div className="">
 							    <h1 className="text-[#792F82] font-medium text-[23px]">
 							    {event.Title}
-							    {event.IsExternal === 0 ? (
-							        <span className="px-[9px] py-[3px] bg-[#BAFFA1] rounded-[100px] p-1 text-[#02BB15] text-[13px] ml-4">Internal</span>
-							    ) : (
-							        <span className="px-[9px] py-[3px] bg-[#FFCEA1] rounded-[100px] p-1 text-[#EE5600] text-[13px] ml-4">External</span>
-							    )}
+							    <span className="px-[9px] py-[3px] bg-[#BAFFA1] rounded-[100px] p-1 text-[#02BB15] text-[13px] ml-4">Internal</span>
 							    </h1>
 							    </div>
 							    <div className="mt-auto flex flex-row gap-8">
