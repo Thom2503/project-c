@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
-import { NavItem, NavLink } from 'reactstrap';
-import { Link, RouterProvider, useLocation } from 'react-router-dom';
+import { NavLink } from 'reactstrap';
+import { Link, useLocation } from 'react-router-dom';
 import { getCookie, getFirstDayTimeStamp, getNextDay } from '../include/util_functions';
 import '../css/tailwind.css';
 import {NotificationTray} from './NotificationTray';
 import { toast } from 'react-toastify';
-import {faArrowLeft, faBars, faGear, faXmark} from "@fortawesome/free-solid-svg-icons";
+import { faBars, faXmark} from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import Drawer from "@mui/material/Drawer";
 export class Header extends Component {

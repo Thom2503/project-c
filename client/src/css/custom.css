@@ -9,7 +9,10 @@
 .MuiDrawer-paper {
   border-top-left-radius: 10px;
   border-bottom-left-radius: 10px;
+	width: 40%;
 }
+
+
 
 /* elk kopje van pagina */
 h2 {
@@ -137,6 +140,7 @@ footer {
 
 .MuiTab-root {
     text-transform: capitalize !important;
+	width: 33% !important;
 }
 
 .MuiTabs-scroller {
@@ -281,6 +285,10 @@ hr {
   table.agenda .table-wrapper {
     overflow-x: auto;
   }
+
+	.MuiDrawer-paper {
+		width: auto;
+	}
 
     .agenda {
         max-width: 100%;
