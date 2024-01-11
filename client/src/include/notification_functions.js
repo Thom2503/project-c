@@ -12,7 +12,7 @@ import { toast } from "react-toastify";
 export const getSubscriber = async (all = true, userid = 0) => {
 	let response, data;
 	try {
-		if (all === false && userid === 0) {
+		if (all === true && userid === 0) {
 			response = await fetch("usernotifications");
 			data = await response.json();
 		} else {
@@ -33,7 +33,7 @@ export const getSubscriber = async (all = true, userid = 0) => {
  * @returns {bool} - of de gebruiker een mailtje wilt
  */
 export const userWantsMail = async (userID) => {
-	let data = await getSubscriber(true, userID) ?? false;
+	let data = await getSubscriber(false, userID) ?? false;
 	if (data.WantsMail === "1") return true;
 	return false;
 };
@@ -46,7 +46,7 @@ export const userWantsMail = async (userID) => {
  * @returns {bool} - of de gebruiker een push notification wilt
  */
 export const userWantsPushNotification = async (userID) => {
-	let data = await getSubscriber(true, userID) ?? false;
+	let data = await getSubscriber(false, userID) ?? false;
 	if (data.WantsPush === "1") return true;
 	return false;
 };
@@ -54,36 +54,46 @@ export const userWantsPushNotification = async (userID) => {
 /**
  * Verstuur een mailtje naar de gebruiker die dat wilt ontvangen
  *
- * @param {int} userID - de gebruiker die het mailtje moet ontvangen
+ * @param {int} template - welk soort email je wilt versturen, 1 is over evenementen, 2 is nieuws
+ * @param {string} title - titel die meegegeven kan worden voor in de mail
+ * @param {string} content - content voor in de mail
  *
  * @returns
  */
-export const sendMailNotification = async (userID) => {
-	if (await userWantsMail(userID) !== true) return;
-	try {
-		const response = await fetch("mailnotification", {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-			},
-			body: JSON.stringify({user: userID, template: 1}),
-		});
-		const data = response.json();
-		if (data.success === true) {
-			toast.success("De mail is met success verzonden");
-			return;
-		} else if (data.mailerror.length > 0) {
-			toast.error(data.mailerror);
-			return;
-		} else {
-			console.log(data);
-			toast.error("Er is iets fout gegaan met het versturen van de mail");
+export const sendMailNotification = async (template, title, content) => {
+	const subscribers = await getSubscriber(true);
+	subscribers.forEach(async (subscriber) => {
+		if (subscriber.WantsMail !== "1") return;
+		try {
+			const response = await fetch("mailnotification", {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({
+					user: Number.parseInt(subscriber.GebruikerID),
+					template: template,
+					content: content,
+					title: title
+				}),
+			});
+			const data = response.json();
+			if (data.success === true) {
+				toast.success("De mail is met success verzonden");
+				return;
+			} else if (data.mailerror.length > 0) {
+				toast.error(data.mailerror);
+				return;
+			} else {
+				console.log(data);
+				toast.error("Er is iets fout gegaan met het versturen van de mail");
+				return;
+			}
+		} catch {
+			toast.error("Er is een onverwacht probleem gevonden.");
 			return;
 		}
-	} catch {
-		toast.error("Er is een onverwacht probleem gevonden.");
-		return;
-	}
+	});
 };
 
 /**

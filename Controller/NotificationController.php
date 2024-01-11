@@ -61,13 +61,15 @@ class NotificationController {
 		$data = json_decode(file_get_contents("php://input"), true);
 		$userID = (int)$data['user'];
 		$templateID = (int)$data['template'];
-		$keyLink = (string)$data['keyLink'] ? (string)$data['keyLink'] : null;
+		$content = isset($data['content']) ? (string)$data['content'] : "";
+		$title = isset($data['title']) ? (string)$data['title'] : "";
+		$keyLink = isset($data['keyLink']) ? (string)$data['keyLink'] : null;
 		// check of de template voor komt in de defined array met templates
 		if (!in_array($templateID, array_keys(TEMPLATE_ASSOC))) {
 			$errors['template'] = "Template id not found in TEMPLATE_ASSOC";
 		}
 
-		$mailContent = $this->getTemplateBody(TEMPLATE_ASSOC[$templateID]);
+		$mailContent = $this->getTemplateBody(TEMPLATE_ASSOC[$templateID], $title, $content);
 		$mailSubject = $this->getTemplateSubject(TEMPLATE_ASSOC[$templateID]);
 		$userData = $this->userModel->getAccountByID($userID);
 
@@ -137,11 +139,14 @@ class NotificationController {
 	 *
 	 * @param string $htOut - de body van de mail
 	 */
-	private function getTemplateBody(int $template): string|bool {
+	private function getTemplateBody(int $template, string $title = "", string $content = ""): string|bool {
 		$htOut = match ($template) {
-			Templates::Event => "<h2>Leuk er is een nieuw evenement toegevoegd!<h2>\n".
+			Templates::Event => "<h2>Er is een update bij evenementen!<h2>\n".
+			                    "<h3>".$title."</h3>".
+			                    "<p>".$content."</p>".
 			                    "<p>Kijk bij <a href='localhost/evenementen'>de evenementen</a> voor meer informatie</p>",
-			Templates::News  => "<h2>Iets nieuws is er!<h2>\n".
+			Templates::News  => "<h2>".$title."</h2>".
+			                    "<p>".$content."</p>".
 			                    "<p>Kijk bij <a href='localhost/nieuws'>het nieuws</a> overzicht voor het nieuwe nieuws bericht.</p>",
 			Templates::ForgotPassword  => "<h2>Wachtwoord reset<h2>\n".
 								"<p>klik de link hieronder om je wachtwoord te resetten:</p>",
