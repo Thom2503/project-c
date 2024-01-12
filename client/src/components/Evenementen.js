@@ -476,7 +476,7 @@ export class Evenementen extends Component {
                        <div className="px-10 mb-[10%]">
                            <h1 className="mt-[10%] text-[#792F82] font-bold text-[23px] flex flex-row justify-between items-center border-b-[1px] border-[#E8E8E8] pb-5">
                                {selectedEvent.Title}
-                               <div className='flex flex-row gap-3 items-center'>
+                               <div className='flex flex-row gap-4 items-center'>
                                    <button
 
                                        onClick={() => window.location.replace(`evenementen?modal=5&eventid=${selectedEvent.EventsID}`)}
