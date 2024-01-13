@@ -189,11 +189,10 @@ export class EventModal extends Component {
           }),
         });
         const data = await response.json();
-        window.location.replace("evenementen");
         if (data.id > 0 || data.success === true) {
-
-			await sendMailNotification(1, `UPDATE: ${title}`, description);
+			      await sendMailNotification(1, `UPDATE: ${title}`, description);
             await addNotification(1, `UPDATE: ${title}`);
+            window.location.replace("evenementen");
         } else {
           // Handle form validation errors or other issues
           console.log(data);

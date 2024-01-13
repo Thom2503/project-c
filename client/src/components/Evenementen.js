@@ -303,7 +303,7 @@ export class Evenementen extends Component {
         const eventDateTime = dayjs(`${event.Date} ${event.startTime}`);
         const currentDateTime = dayjs();
         const totalRemainingHours = Math.floor(eventDateTime.diff(currentDateTime) / (60 * 60 * 1000));
-        if(totalRemainingHours <= parseInt(event.TentativeTime) && totalRemainingHours > 0) {
+        if(totalRemainingHours > parseInt(event.TentativeTime) && totalRemainingHours > 0) {
             return true;
         } else {
             return false;
