@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { Header } from './Header';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
     faCalendar,
@@ -7,7 +6,7 @@ import {
     faClock, faThumbsDown, faThumbsUp,
     faUser,
     faXmark,
-    faPaperPlane, faPenToSquare, faTrash, faFileLines, faPeopleGroup, faMessage, faCheck,
+    faPaperPlane, faPenToSquare, faTrash, faFileLines, faPeopleGroup, faMessage,
 } from "@fortawesome/free-solid-svg-icons";
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
@@ -116,7 +115,7 @@ export class Evenementen extends Component {
  // Join event voor als je op de knop aanmelden drukt
     async handleJoinEvent(event) {
         try {
-            const response = await fetch('/eventjoin/' + parseInt(event.EventsID), {
+            await fetch('/eventjoin/' + parseInt(event.EventsID), {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -126,7 +125,6 @@ export class Evenementen extends Component {
                     eventid: parseInt(event.EventsID),
                 }),
             });
-            const data = await response.json();
 			toast.success("Je zit nu bij het evenement");
             window.location.replace("evenementen");
         } catch (e) {
@@ -139,7 +137,7 @@ export class Evenementen extends Component {
 
     async handleLeaveEvent(event) {
         try {
-            const response = await fetch('/eventleave/' + parseInt(event.EventsID), {
+            await fetch('/eventleave/' + parseInt(event.EventsID), {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
@@ -149,7 +147,6 @@ export class Evenementen extends Component {
                     eventid: parseInt(event.EventsID),
                 }),
             });
-            const data = await response.json();
 			toast.success("Je doet nu niet meer mee met het evenement");
             window.location.replace("evenementen");
         } catch (e) {
@@ -264,9 +261,6 @@ export class Evenementen extends Component {
             if (!response.ok) {
                 throw new Error(`Failed to vote: ${response.status} ${response.statusText}`);
             }
-
-
-            const data = await response.json();
             window.location.replace("evenementen");
         } catch (e) {}
     }
@@ -288,10 +282,7 @@ export class Evenementen extends Component {
             if (!response.ok) {
                 throw new Error(`Failed to post comment: ${response.status} ${response.statusText}`);
             }
-
-            const data = await response.json();
             window.location.reload();
-            // window.location.replace("evenementen");
         } catch (e) {}
     }
     calculateRemainingTime(event) {
@@ -351,7 +342,6 @@ export class Evenementen extends Component {
            pageNumbers.push(i);
        }
 
-       const {selectedTab} = this.state.selectedTab;
        return (
            <>
                <div className='w-[95%] m-auto pb-[80px]'>
@@ -477,33 +467,36 @@ export class Evenementen extends Component {
                        });
                    }}
                    hideBackdrop={true}
+
                >
                    {/* Render the event information in the drawer */}
                    <button onClick={() => this.setState({drawerOpen: false})} className='mr-auto px-10 pt-10'>
                        <FontAwesomeIcon className='text-[#E1E1E1] text-[20px]' icon={faXmark}/></button>
                    {selectedEvent && (
-                       <div className="px-10 w-[360px] mb-[10%]">
+                       <div className="px-10 mb-[10%]">
                            <h1 className="mt-[10%] text-[#792F82] font-bold text-[23px] flex flex-row justify-between items-center border-b-[1px] border-[#E8E8E8] pb-5">
                                {selectedEvent.Title}
-                               <button
+                               <div className='flex flex-row gap-4 items-center'>
+                                   <button
 
-                                   onClick={() => window.location.replace(`evenementen?modal=5&eventid=${selectedEvent.EventsID}`)}
-                                   className='h-[40px] w-[40px] rounded-[10px] bg-gray-200 font-bold text-[15px] flex justify-center items-center'>
-                                   <FontAwesomeIcon
-                                       icon={faPenToSquare}/>
-                               </button>
-                               <button
-                                   onClick={() => this.deleteEvent(selectedEvent)}
-                                   className='bg-red-500 h-[40px] w-[40px]  rounded-[10px] text-white font-bold text-[15px]'>
-                                   <FontAwesomeIcon icon={faTrash}/>
-                               </button>
-                               {selectedEvent.IsExternal === "0" ? (
-                                   <span
-                                       className="px-[9px] py-[3px] bg-[#BAFFA1] rounded-[100px] p-1 text-[#02BB15] text-[13px] ml-4">Internal</span>
-                               ) : (
-                                   <span
-                                       className="px-[9px] py-[3px] bg-[#FFCEA1] rounded-[100px] p-1 text-[#EE5600] text-[13px] ml-4">External</span>
-                               )}
+                                       onClick={() => window.location.replace(`evenementen?modal=5&eventid=${selectedEvent.EventsID}`)}
+                                       className='hover:bg-[#cdced1] duration-300 transition-all h-[40px] w-[40px] rounded-[10px] bg-gray-200 font-bold text-[15px] flex justify-center items-center'>
+                                       <FontAwesomeIcon
+                                           icon={faPenToSquare}/>
+                                   </button>
+                                   <button
+                                       onClick={() => this.deleteEvent(selectedEvent)}
+                                       className='bg-red-500 h-[40px] w-[40px]  rounded-[10px] text-white font-bold text-[15px] hover:bg-[#cf3a3a] duration-300 transition-all'>
+                                       <FontAwesomeIcon icon={faTrash}/>
+                                   </button>
+                                   {selectedEvent.IsExternal === "0" ? (
+                                       <span
+                                           className="px-[9px] py-[3px] bg-[#BAFFA1] rounded-[100px] p-1 text-[#02BB15] text-[13px]">Internal</span>
+                                   ) : (
+                                       <span
+                                           className="px-[9px] py-[3px] bg-[#FFCEA1] rounded-[100px] p-1 text-[#EE5600] text-[13px]">External</span>
+                                   )}
+                               </div>
                            </h1>
                            <div className="mt-4 flex flex-col">
                                <FetchUserDetails userId={selectedEvent.Host} showNameOnly='false'/>
@@ -529,7 +522,7 @@ export class Evenementen extends Component {
                                onClick={() => this.getUsersInEvent(selectedEvent.EventsID)}
                                className={
                                this.state.selectedTab === 1
-                                   ? 'active-tab !bg-[#FFFFFF] !rounded-l-[8px] tab-width font-bold'
+                                   ? 'active-tab !bg-[#FFFFFF] !rounded-[8px] tab-width font-bold'
                                    : '!bg-[#F6F8FC] !rounded-r-[8px] tab-width'
                            }
                                />
@@ -551,8 +544,8 @@ export class Evenementen extends Component {
 
                            {this.state.selectedTab === 0 && (
                                <>
-                                   <div className='max-h-[270px] h-[100%] overflow-y-scroll'>
-                                       <p className='text-[#A9A9A9]'>
+                                   <div className='max-h-[270px] h-[100%] overflow-y-auto'>
+                                       <p className='text-[#A9A9A9] break-words'>
                                            {selectedEvent.Description}
                                        </p>
                                    </div>
@@ -569,7 +562,7 @@ export class Evenementen extends Component {
 
 
                                                }}
-                                               className='w-full bg-[#792F82] py-3 px-8 rounded-[10px] text-white font-bold text-[20px]'>
+                                               className='w-full bg-[#792F82] py-3 px-8 rounded-[10px] text-white font-bold text-[20px] transition-all duration-300 hover:cursor-pointer hover:bg-[#5c2363]'>
                                                {this.state.deelnemers.includes(parseInt(this.state.host)) ? 'Afzeggen' : 'Aanmelden'}
 
                                            </button>

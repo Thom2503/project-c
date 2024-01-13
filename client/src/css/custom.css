@@ -9,7 +9,10 @@
 .MuiDrawer-paper {
   border-top-left-radius: 10px;
   border-bottom-left-radius: 10px;
+	width: 40%;
 }
+
+
 
 /* elk kopje van pagina */
 h2 {
@@ -38,7 +41,6 @@ code {
 
 .container {
   max-width: 100% !important;
-  padding: 0 !important;
 }
 
 /**( agenda )**/
@@ -137,6 +139,7 @@ footer {
 
 .MuiTab-root {
     text-transform: capitalize !important;
+	width: 33% !important;
 }
 
 .MuiTabs-scroller {
@@ -282,6 +285,10 @@ hr {
     overflow-x: auto;
   }
 
+	.MuiDrawer-paper {
+		width: auto;
+	}
+
     .agenda {
         max-width: 100%;
     }
@@ -388,4 +395,8 @@ th {
 	overflow-x: auto;
 	padding-right: 16px;
 	padding-left: 16px;
+}
+
+.footerPadding {
+	padding-bottom: 100px;
 }

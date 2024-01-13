@@ -12,13 +12,13 @@ const Layout = ({ children }) => {
 	const isLoginOrCreatePage = ['/login', '/create', '/forgotpassword', '/twofactor'].includes(location.pathname.toLowerCase());
 
     return (
-        <div>
+        <>
             {!isLoginOrCreatePage && <Header title="Kamers" />}
-            <Container tag="main" className="w-[100%] m-auto mt-5">
+            <Container tag="main" className="w-[100%] m-auto mt-5 max-h-auto overflow-y-scroll pb-[90px] footerPadding">
                 {children}
             </Container>
             {!isLoginOrCreatePage && <Footer />}
-        </div>
+        </>
     );
 };
 

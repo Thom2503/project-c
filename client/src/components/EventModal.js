@@ -174,10 +174,10 @@ export class EventModal extends Component {
             location: location,
             istentative: istentative,
             tentativetime: tentativetime,
-            declinetime: this.state.declinetime,
+            declinetime: declinetime,
             isexternal: isexternal,
-            host: getCookie('user'),
-            status: 'not set',
+            host: host,
+            status: status,
             date: date,
             starttime: starttime,
             endtime: endtime,
@@ -189,8 +189,9 @@ export class EventModal extends Component {
           }),
         });
         const data = await response.json();
-
+        window.location.replace("evenementen");
         if (data.id > 0 || data.success === true) {
+
 			await sendMailNotification(1, `UPDATE: ${title}`, description);
             await addNotification(1, `UPDATE: ${title}`);
         } else {
@@ -200,7 +201,7 @@ export class EventModal extends Component {
 
 
       } else {
-        const response = await fetch('/events', {
+        await fetch('/events', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -223,7 +224,6 @@ export class EventModal extends Component {
               requestRating: requestRating,
           }),
         });
-        const data = await response.json();
         await sendMailNotification(1, title, description);
         await addNotification(1, title);
         window.location.replace("evenementen");
@@ -401,7 +401,7 @@ export class EventModal extends Component {
             </div>
             <div className={'m-auto w-full flex justify-center'}>
               <button
-                  className='mt-3 bg-[#792F82] p-2 text-[20px] rounded-[15px] w-[175px] text-white font-bold'
+                  className='mt-3 bg-[#792F82] p-2 text-[20px] rounded-[15px] w-[175px] text-white font-bold transition-all duration-300 hover:cursor-pointer hover:bg-[#5c2363]'
                   onClick={this.handleSubmit}
                   disabled={!isFormFilled}
               >
