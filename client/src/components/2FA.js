@@ -67,6 +67,7 @@ export class TwoFactor extends Component {
 		}
 
         setCookie("user", this.state.accountsid, 7);
+        setCookie("2FA", "true", 7);
         setCookie("isadmin", Number.parseInt(this.state.accountdata.IsAdmin) === 1 ? "true" : "false", 7);
         window.location.replace('agenda');
 	}
