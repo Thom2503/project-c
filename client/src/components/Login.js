@@ -41,7 +41,7 @@ export class Login extends Component {
                     window.location.replace(`twofactor?id=${data.AccountsID}`);
 
                 } else {
-                    alert('Account not verified');
+                    alert('Wachtwoord en email komen niet overeen.');
                 }
             } else {
                 console.error('Failed to verify account');

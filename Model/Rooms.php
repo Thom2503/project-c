@@ -33,10 +33,10 @@ class Rooms extends Database {
 	}
 
 	public function getEventsInRoom(string $roomName): array {
-		$query = "SElECT * FROM `Events`".
-		         "  WHERE `Location` = :rname".
-		         "    AND DATETIME(`Timestamp`, 'unixepoch', 'localtime')".
-		         "    BETWEEN DATETIME('now', 'start of day') AND DATETIME('now', 'start of day', '+1 day')";
+		$query = "SELECT * FROM `Events`".
+		         "  WHERE Location = :rname".
+		         "    AND `Timestamp` >= strftime('%s', 'now', 'start of day', 'utc')".
+		         "    AND `Timestamp` < strftime('%s', 'now', 'start of day', '+1 day', 'utc')";
 		$stmt = $this->db->prepare($query);
 		$stmt->bindParam(":rname", $roomName, PDO::PARAM_STR);
 		$stmt->execute();
