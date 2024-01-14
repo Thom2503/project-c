@@ -3,6 +3,7 @@ import dayjs from 'dayjs';
 
 import {faCheck} from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import { toast } from 'react-toastify';
 
 class FetchTentative extends React.Component {
     constructor(props) {
@@ -52,9 +53,9 @@ class FetchTentative extends React.Component {
 
             if (!response.ok) {
                 throw new Error(`Failed to vote: ${response.status} ${response.statusText}`);
+            } else {
+                window.location.replace("evenementen");
             }
-
-            const data = await response.json();
         } catch (e) {
             console.error('Error updating account events:', e);
         }

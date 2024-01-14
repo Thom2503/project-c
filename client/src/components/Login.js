@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { setCookie } from "../include/util_functions.js";
+import { getCookie } from '../include/util_functions';
 import {send2FAMail} from "../include/notification_functions";
 
 export class Login extends Component {
@@ -35,12 +36,15 @@ export class Login extends Component {
 			});
             if (response.ok) {
                 const data = await response.json();
-				if (data.verified === true)
+				if (data.verified === true && getCookie("2FA") !== "true")
                 {
                     await send2FAMail(data.AccountsID)
                     window.location.replace(`twofactor?id=${data.AccountsID}`);
-
-                } else {
+                } else if ((data.verified === true && getCookie("2FA") === "true")) {
+                    setCookie("user", data.AccountsID, 7);
+					setCookie("isadmin", Number.parseInt(data.IsAdmin) === 1 ? "true" : "false", 7)
+                    window.location.replace('agenda');
+                } else  {
                     alert('Wachtwoord en email komen niet overeen.');
                 }
             } else {

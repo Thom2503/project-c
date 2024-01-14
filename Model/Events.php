@@ -90,7 +90,7 @@ class Events extends Database {
         return $this->db->lastInsertId();
     }
 
-    public function deleteEvent(int $id): void {
+    public function deleteEvent(int $id): bool {
         // Delete from Events table
         $queryEvents = "DELETE FROM `Events` WHERE `EventsID` = :id";
         $stmtEvents = $this->db->prepare($queryEvents);
@@ -101,16 +101,16 @@ class Events extends Database {
         $queryAccountEvents = "DELETE FROM `AccountEvents` WHERE `event_id` = :id";
         $stmtAccountEvents = $this->db->prepare($queryAccountEvents);
         $stmtAccountEvents->bindParam(":id", $id, PDO::PARAM_INT);
-        $stmtAccountEvents->execute();
+        return $stmtAccountEvents->execute();
     }
 
-    public function updateAccountEvents(array $data) {
+    public function updateAccountEvents(array $data): bool {
         $query = "UPDATE `AccountEvents` SET `confirmed` = :confirmed WHERE `account_id` = :accountid AND `event_id` = :eventid";
         $stmt = $this->db->prepare($query);
         $stmt->bindParam(":confirmed", $data['confirmed']);
         $stmt->bindParam(":accountid", $data['accountid']);
         $stmt->bindParam(":eventid", $data['eventid']);
-        $stmt->execute();
+        return $stmt->execute();
     }
 
     public function updateEvent(array $data): bool {
