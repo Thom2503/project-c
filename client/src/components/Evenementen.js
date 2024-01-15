@@ -627,7 +627,7 @@ export class Evenementen extends Component {
                                                </div>
                                            ))
                                        ) : (
-                                           <p>Geen deelnemers in deze kamer</p>
+                                           <p>Geen deelnemers bij dit evenement</p>
                                        )}
 
 
