@@ -21,9 +21,14 @@ class EventsController {
 
     public function update(): void {
         $data = json_decode(file_get_contents("php://input"), true);
-        $this->eventsModel->updateEvent($data);
+        $success = $this->eventsModel->updateEvent($data);
         header('Content-Type: application/json');
-        echo json_encode($this);
+        if ($success == true) {
+            echo json_encode(['success' => true]);
+        } else {
+            http_response_code(404);
+            echo json_encode(['success' => 'false']);
+        }
     }
 
     public function getConfirmedEvents(): void {
@@ -40,9 +45,14 @@ class EventsController {
 
     public function updateAccountEvents(): void {
         $data = json_decode(file_get_contents("php://input"), true);
-        $this->eventsModel->updateAccountEvents($data);
+        $success = $this->eventsModel->updateAccountEvents($data);
         header('Content-Type: application/json');
-        echo json_encode($this);
+        if ($success == true) {
+            echo json_encode(['success' => true]);
+        } else {
+            http_response_code(404);
+            echo json_encode(['success' => 'false']);
+        }
     }
 
     public function show(int $id): void {
