@@ -251,11 +251,11 @@ _Pvt_Extensions
 
 [Tt]ests_lokaal/
 
-db/*.db
-*.db
-*.sqlite3
-db/*.db-shm
-db/*.db-wal
+# db/*.db
+# *.db
+# *.sqlite3
+# db/*.db-shm
+# db/*.db-wal
 
 # dependencies
 client/node_modules
