@@ -65,7 +65,7 @@ export const getNextDay = (firstDay, day) => {
 export const getFirstDayTimeStamp = () => {
 	let today = new Date();
 	let dayOfWeek = today.getDay() || 7;
-	if (dayOfWeek !== 1) today.setDate(today.getDate() - dayOfWeek);
+	if (dayOfWeek !== 0) today.setDate(today.getDate() - dayOfWeek);
 	today.setHours(0,0,0,0);
 	return today.getTime();
 };
