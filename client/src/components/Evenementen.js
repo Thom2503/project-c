@@ -396,7 +396,7 @@ export class Evenementen extends Component {
                                        <div className="">
                                            <h1 className="text-[#792F82] font-medium text-[23px]">
                                                {event.Title}
-                                               {event.IsExternal === 0 ? (
+                                               {parseInt(event.IsExternal) === 0 ? (
                                                    <span
                                                        className="px-[9px] py-[3px] bg-[#BAFFA1] rounded-[100px] p-1 text-[#02BB15] text-[13px] ml-4">Internal</span>
                                                ) : (
@@ -489,7 +489,7 @@ export class Evenementen extends Component {
                                        className='bg-red-500 h-[40px] w-[40px]  rounded-[10px] text-white font-bold text-[15px] hover:bg-[#cf3a3a] duration-300 transition-all'>
                                        <FontAwesomeIcon icon={faTrash}/>
                                    </button>
-                                   {selectedEvent.IsExternal === 0 ? (
+                                   {parseInt(selectedEvent.IsExternal) === 0 ? (
                                        <span
                                            className="px-[9px] py-[3px] bg-[#BAFFA1] rounded-[100px] p-1 text-[#02BB15] text-[13px]">Internal</span>
                                    ) : (

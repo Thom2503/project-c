@@ -56,7 +56,7 @@ export class EventModal extends Component {
         this.fetchEventsData(paramID);
       }
     }
-}
+  }
 
   async fetchEventsData(eventid) {
     try {
@@ -97,7 +97,7 @@ export class EventModal extends Component {
 
   handleChange(event) {
     const { name, value, type, checked } = event.target;
-  
+
     if (type === "checkbox" && name === "isExternal") {
       // If checkbox for showRooms is checked, update showRooms state
       this.setState({ isexternal: checked ? 0 : 1 });
@@ -135,7 +135,7 @@ export class EventModal extends Component {
     dayjs.extend(utc);
     event.preventDefault();
 
-    if (this.state.istentative && this.state.tentativetime <= 0) {
+    if (this.state.istentative === 1 && this.state.tentativetime <= 0) {
       alert("Tentative time must be greater than 0");
       return;
     }
@@ -190,9 +190,10 @@ export class EventModal extends Component {
         });
         const data = await response.json();
         if (data.id > 0 || data.success === true) {
-			      await sendMailNotification(1, `UPDATE: ${title}`, description);
-            await addNotification(1, `UPDATE: ${title}`);
-            window.location.replace("evenementen");
+
+          await sendMailNotification(1, `UPDATE: ${title}`, description);
+          await addNotification(1, `UPDATE: ${title}`);
+          window.location.replace("evenementen");
         } else {
           // Handle form validation errors or other issues
           console.log(data);
@@ -206,21 +207,21 @@ export class EventModal extends Component {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-              title: title,
-              description: description,
-              location: location,
-              istentative: istentative,
-              tentativetime: 0,
-              declinetime: this.state.declinetime,
-              isexternal: isexternal,
-              host: getCookie('user'),
-              status: 'not set',
-              date: date,
-              starttime: starttime,
-              endtime: endtime,
-              epochint: unixTimestamp,
-              requestFeedback: requestFeedback,
-              requestRating: requestRating,
+            title: title,
+            description: description,
+            location: location,
+            istentative: istentative,
+            tentativetime: 0,
+            declinetime: this.state.declinetime,
+            isexternal: isexternal,
+            host: getCookie('user'),
+            status: 'not set',
+            date: date,
+            starttime: starttime,
+            endtime: endtime,
+            epochint: unixTimestamp,
+            requestFeedback: requestFeedback,
+            requestRating: requestRating,
           }),
         });
         await sendMailNotification(1, title, description);
@@ -366,7 +367,7 @@ export class EventModal extends Component {
                   />
               )}
               <div className='flex flex-row-reverse gap-2'>
-                {this.state.istentative ? (
+                {parseInt(this.state.istentative) === 1 || this.state.istentative === 1 ? (
                     <div className='flex flex-col'>
                       <TextField
                           id="outlined-basic"
@@ -383,19 +384,19 @@ export class EventModal extends Component {
                 ) : (
                     <p className='hidden'></p>
                 )}
-         <div className='flex flex-col'>
-           <TextField
-               id="outlined-basic"
-               placeholder="Aantal uren voor het evenement mogen ze wijzigen (bijv. 4)"
-               label="Decline Tijd"
-               variant="outlined"
-               className={"w-[100%]"}
-               name="declinetime"
-               value={this.state.declinetime}
-               onChange={this.handleChange}
-           />
-           <small>Hoeveel uur van te voren van het evenement mogen ze aanmelden / afmelden</small>
-         </div>
+                <div className='flex flex-col'>
+                  <TextField
+                      id="outlined-basic"
+                      placeholder="Aantal uren voor het evenement mogen ze wijzigen (bijv. 4)"
+                      label="Decline Tijd"
+                      variant="outlined"
+                      className={"w-[100%]"}
+                      name="declinetime"
+                      value={this.state.declinetime}
+                      onChange={this.handleChange}
+                  />
+                  <small>Hoeveel uur van te voren van het evenement mogen ze aanmelden / afmelden</small>
+                </div>
               </div>
             </div>
             <div className={'m-auto w-full flex justify-center'}>
