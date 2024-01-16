@@ -89,7 +89,7 @@ export class AgendaItemsModal extends Component {
     if (!title) formValidation.push('Een titel is verplicht');
     if (title.length > 30) formValidation.push('Titel is te lang, maximale lengte is 30');
     if (note.length > 120) formValidation.push('Beschrijving is te lang, maximale lengte is 120');
-    if (!roomID) formValidation.push('Een Kamer is verplicht');
+    if (!roomID && status !== "uit") formValidation.push('Een Kamer is verplicht');
     if (formValidation.length > 0) {
       this.setState({ formValidation });
       return;
