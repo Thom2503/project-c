@@ -60,6 +60,10 @@ $ npm install
 $ npm start
 ```
 open dan [localhost:3000](http://localhost:3000) om de website te bekijken en gebruiken
+##### Extra - admin account
+Het is misschien handig om het in het begin met een admin account te openen. Dit is het account:
+email: `admin@cavero.nl` en als wachtwoord: `Admin1234`
+Voor de 2FA zou er waarschijnlijk in de database gekeken moeten worden in de `TempKeys` tabel.
 ## Contributers
 - [Thom Veldhuis](https://github.com/Thom2503)
 - [Joel Verveer](https://github.com/joelhogeschool)
