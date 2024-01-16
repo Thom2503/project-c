@@ -1,9 +1,7 @@
 import React from 'react';
-import dayjs from 'dayjs';
 
 import {faCheck} from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import { toast } from 'react-toastify';
 
 class FetchTentative extends React.Component {
     constructor(props) {
@@ -22,9 +20,7 @@ class FetchTentative extends React.Component {
         try {
             const response = await fetch(`/accountevents/` + this.props.eventId);
             const data = await response.json();
-
-            const accountEntry = data.find(entry => entry.account_id === this.props.accountId);
-
+            const accountEntry = data.find(entry => entry.account_id == this.props.accountId);
             // Update state based on the found entry
             if (accountEntry) {
                 this.setState({
