@@ -24,8 +24,9 @@ class Rooms extends Database {
 		$query = "SELECT `Accounts`.`AccountsID`, `FirstName`, `Function`, `LastName` FROM `AgendaItems`".
 		         "  LEFT JOIN `Accounts` ON `Accounts`.`AccountsID` = `AgendaItems`.`AccountsID`".
 		         "  WHERE `RoomID` = :rid".
-		         "    AND DATETIME(`Date` / 1000, 'unixepoch', 'localtime')".
-		         "    BETWEEN DATETIME('now', 'start of day') AND DATETIME('now', 'start of day', '+1 day')";
+		         "    AND `Status` = 'in'".
+		         "    AND `Date` >= strftime('%s', 'now', 'start of day', 'utc')".
+		         "    AND `Date` < strftime('%s', 'now', 'start of day', '+1 day', 'utc')";
 		$stmt = $this->db->prepare($query);
 		$stmt->bindParam(":rid", $roomID, PDO::PARAM_INT);
 		$stmt->execute();
