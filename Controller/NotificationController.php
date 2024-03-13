@@ -1,7 +1,7 @@
 <?php
 define("TEMPLATE_ASSOC", [1 => Templates::Event, 2 => Templates::News, 3 => Templates::ForgotPassword, 4 => Templates::TwoFactor,]);
 define("SEND_MAIL", "socialekalenderteam4@gmail.com");
-define("SEND_PASSWORD", "hgev lxeu iqzg mibp");
+define("SEND_PASSWORD", "");
 
 use PHPMailer\PHPMailer\PHPMailer;
 
